@@ -1,0 +1,67 @@
+{% extends "_layouts/cp" %}
+{% set title = 'Add a Custom Field'|t %}
+{% import "_includes/forms" as forms %}
+
+{% set crumbs = {
+	customFields: { label: "Custom Fields"|t, url: url('linkvault/customfields') },
+	addCustomField: { label: "Add a Custom Field"|t, url: url('linkvault/customfields/new') }
+} %}
+
+{% block content %}
+
+<form method="post" accept-charset="UTF-8" data-saveshortcut="1">
+	<input type="hidden" name="action" value="linkvault/custom-fields/custom-field-submit">
+	{{ redirectInput('linkvault/customfields') }}
+	{{ getCsrfInput() }}
+
+	{{ forms.textField({
+		first: true,
+		label: "Field Label"|t,
+		id: 'fieldLabel',
+		name: 'fieldLabel',
+		required: true,
+		instructions: "The field's form label."|t,
+		autofocus: true,
+		value: customField.fieldLabel,
+		errors: customField.getErrors('fieldLabel')
+	}) }}
+
+	{{ forms.textField({
+		label: "Field Handle"|t,
+		id: 'fieldName',
+		name: 'fieldName',
+		required: true,
+		instructions: "No spaces."|t,
+		value: customField.fieldName,
+		errors: customField.getErrors('fieldName')
+	}) }}
+
+	{{ forms.selectField({
+		label: "Type"|t,
+		id: 'fieldType',
+		name: 'fieldType',
+		required: true,
+		instructions: "The type of database column to use."|t,
+		options: {
+			'varchar(250)' : 'Varchar',
+			'text' : 'Text',
+			'int(11)' : 'Integer',
+			'float' : 'Float'
+		},
+		value: customField.fieldType,
+		errors: customField.getErrors('fieldType')
+	}) }}
+
+	<hr>
+
+	<div class="buttons">
+		<input type="submit" class="btn submit" value="{{ 'Add Custom Field'|t }}" data-redirect="linkVault/customFields">
+	</div>
+</form>
+
+{% endblock %}
+
+{% set js %}
+	{% if not customField.fieldName %}new Craft.HandleGenerator('#fieldLabel', '#fieldName');{% endif %}
+{% endset %}
+{% includeJs js %}

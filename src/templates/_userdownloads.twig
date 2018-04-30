@@ -1,0 +1,91 @@
+{% extends "_layouts/cp" %}
+{% set title = 'User'|t ~ ' ' ~ type ~ 's - ' ~ user.username %}
+
+{% set crumbs = {
+    downloads: { label: "Download History"|t, url: url('linkvault') },
+	userDownloads: { label: user.username~" Downloads/Leech Attempts", url: url('linkvault/user', {userId:user.id})}
+} %}
+
+{% includeCssResource 'linkvault/css/linkvault.css' %}
+
+{% paginate craft.linkVault.downloads.userId(user.id).type(type).order('dateCreated desc').limit(50) as pageInfo, pageDownloads %}
+
+{% block content %}
+
+<table class="data" style="width:100%" >
+	<thead>
+		<tr>
+			<th scope="col" class="header" >Date</th>
+			<th scope="col" class="header" >File Name</th>
+			<th scope="col" class="header" >Element Title</th>
+			<th scope="col" class="header" >Asset</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for download in pageDownloads %}
+		<tr>
+			<td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
+			<td class="textual" >{{ download.fileName }}</td>
+			<td class="textual" >
+				{% set entry = craft.entries.id(download.elementId).first() %}
+				{% if entry is not empty %}
+					<a href="{{ entry.cpEditUrl }}" >{{ entry.title }}</a>
+					{% if entry.url is not empty %}
+						&nbsp;|&nbsp;<a href="{{ entry.url }}" target="_blank">Entry Page &rarr;</a>
+					{% endif %}
+				{% endif %}
+			</td>
+			<td class="textual" >
+				{% set asset = craft.assets.id(download.assetId).first() %}
+				{% if asset is not empty %}
+					{% if asset.url is not empty %}
+						<a href="{{ asset.url }}" >{{ asset.title }}</a>
+					{% else %}
+						{{ asset.title }}
+					{% endif %}
+				{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+{% set queryString = '?' ~ craft.request.getQueryStringWithoutPath() %}
+<div>
+	<ul class="lvPagination">
+		<li><a href="{{ pageInfo.firstUrl ~ queryString }}">&#171;</a></li>
+		{% if pageInfo.prevUrl %}<li><a href="{{ pageInfo.prevUrl  ~ queryString}}">&#60;</a></li>{% endif %}
+		{% for page, url in pageInfo.getPrevUrls(5) %}
+			<li><a href="{{ url ~ queryString }}">{{ page }}</a></li>
+		{% endfor %}
+		<li><span class="current">{{ pageInfo.currentPage }}</span></li>
+		{% for page, url in pageInfo.getNextUrls(5) %}
+			<li><a href="{{ url ~ queryString }}">{{ page }}</a></li>
+		{% endfor %}
+		{% if pageInfo.nextUrl %}<li><a href="{{ pageInfo.nextUrl ~ queryString }}">&#62;</a></li>{% endif %}
+		<li><a href="{{ pageInfo.lastUrl ~ queryString }}">&#187;</a></li>
+	</ul>
+</div>
+
+{% endblock %}
+
+{% block sidebar %}
+	<div class="buttons">
+		<div class="select" >
+			<select id="lvTypeFilter" name="type" data-refresh >
+				<option value="{{ url('linkvault/user', {userId : user.id, type : 'Download'}) }}" {% if type == 'Download' %}selected="selected"{% endif %} >Downloads</option>
+				<option value="{{ url('linkvault/user', {userId : user.id, type : 'Leech Attempt'}) }}" {% if type == 'Leech Attempt' %}selected="selected"{% endif %} >Leech Attempts</option>
+			</select>
+		</div>
+	</div>
+	{{ parent() }}
+{% endblock %}
+
+{% set js %}
+$(document).ready(function() {
+	$('[data-refresh]').change(function() {
+		window.location.href = $(this).val();
+	});
+});
+{% endset %}
+{% includeJs js %}

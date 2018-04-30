@@ -1,0 +1,18 @@
+<table class="data">
+	<thead>
+		<tr>
+			<th></th>
+			<th>File Name</th>
+			<th>Downloads</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for row in rows %}
+		<tr>
+			<td>{{ loop.index }}.</td>
+			<td>{{ row.fileName|e }}</td>
+			<td>{{ row.census|number_format(0) }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
