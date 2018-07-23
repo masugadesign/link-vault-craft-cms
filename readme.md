@@ -1,6 +1,4 @@
-# DO NOT USE THIS
-
-# Link Vault for Craft 3
+# Link Vault for Craft CMS
 
 ### Protect and track downloads on your site. Prevent and track leech attempts.
 
@@ -11,8 +9,11 @@
 
 ### Installation
 
-1. Place the "linkvault" folder in the craft/plugins/ folder of your project.
-2. Install the plugin the usual way from the Craft CMS control panel.
+Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
+
+```
+"masugadesign/linkvault": "3.0.0",
+```
 
 ### Settings
 

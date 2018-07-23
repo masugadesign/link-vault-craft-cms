@@ -1,7 +1,7 @@
 {
   "name": "masugadesign/linkvault",
   "description": "Protect and track downloads on your site. Prevent and track leech attempts.",
-  "version": "3.0.0-RC1",
+  "version": "3.0.0-RC2",
   "type": "craft-plugin",
   "minimum-stability": "stable",
   "require": {
@@ -19,6 +19,7 @@
     "handle": "linkvault",
     "name": "Link Vault",
     "developer": "Masuga Design",
+    "schemaVersion": "3.0.0",
     "developerUrl": "https://gomasuga.com",
 	"class": "Masuga\\LinkVault\\LinkVault"
   }

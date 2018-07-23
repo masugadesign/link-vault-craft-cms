@@ -48,24 +48,6 @@ class LinkVault extends Plugin
 	}
 
 	/**
-	 * The plugin version.
-	 * @return string
-	 */
-	public function getVersion(): string
-	{
-		return '3.0.0';
-	}
-
-	/**
-	 * The plugin DB schema version. Craft uses this during the update process.
-	 * @return string
-	 */
-	public function getSchemaVersion(): string
-	{
-		return '3.0.0';
-	}
-
-	/**
 	 * The brief description of the plugin that appears in the control panel
 	 * on the plugin settings page.
 	 * @return string
