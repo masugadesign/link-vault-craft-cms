@@ -58,33 +58,6 @@ class LinkVault extends Plugin
 	}
 
 	/**
-	 * The developer name.
-	 * @return string
-	 */
-	public function getDeveloper(): string
-	{
-		return 'Masuga';
-	}
-
-	/**
-	 * The full URL to the developer website.
-	 * @return string
-	 */
-	public function getDeveloperUrl(): string
-	{
-		return 'https://gomasuga.com';
-	}
-
-	/**
-	 * The full URL to the plugin's JSON release history.
-	 * @return string
-	 */
-	public function getReleaseFeedUrl(): string
-	{
-		return 'https://gomasuga.com/plugin-releases/link-vault';
-	}
-
-	/**
 	 * This method returns the plugin's Settings model instance.
 	 * @return Settings
 	 */
