@@ -3,6 +3,7 @@
 <img src="https://github.com/masugadesign/link-vault-craft-cms/blob/master/src/icon.svg" width="100" height="100">
 
 ### Protect and track downloads on your site. Prevent and track leech attempts.
+This is a commercial plugin for Craft CMS 3.
 
 ### Requirements
 
