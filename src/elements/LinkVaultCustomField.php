@@ -6,6 +6,7 @@ use Craft;
 use craft\base\Element;
 use craft\controllers\ElementIndexesController;
 use craft\elements\db\ElementQueryInterface;
+use craft\helpers\DateTimeHelper;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\actions\LinkVaultDeleteCustomField;
 use Masuga\LinkVault\elements\db\LinkVaultCustomFieldQuery;
@@ -111,7 +112,7 @@ class LinkVaultCustomField extends Element
 			case 'dateCreated': {
 				$date = $this->$attribute;
 				if ($date) {
-					return $date->localeDate();
+					return DateTimeHelper::toDateTime($date)->format('F j, Y H:i');
 				} else {
 					return '';
 				}

@@ -11,6 +11,7 @@ use craft\elements\actions\Delete;
 use craft\elements\Asset;
 use craft\elements\User;
 use craft\helpers\ArrayHelper;
+use craft\helpers\DateTimeHelper;
 use craft\helpers\UrlHelper;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\db\LinkVaultDownloadQuery;
@@ -137,6 +138,7 @@ class LinkVaultDownload extends Element
 			$tableAttributes[$name] = $fieldModel->fieldLabel;
 		}
 		return array_merge([
+			'id' => Craft::t('linkvault', 'ID'),
 			'dateCreated' => Craft::t('linkvault', 'Date'),
 			'fileName' => Craft::t('linkvault', 'File'),
 			'dirName' => Craft::t('linkvault', 'Directory/Bucket'),
@@ -152,7 +154,7 @@ class LinkVaultDownload extends Element
 	 */
 	protected static function defineDefaultTableAttributes(string $source): array
 	{
-		return ['dateCreated', 'fileName', 'dirName', 'userId', 'type'];
+		return ['id', 'dateCreated', 'fileName', 'dirName', 'userId', 'type'];
 	}
 
 	/**
@@ -185,7 +187,7 @@ class LinkVaultDownload extends Element
 			case 'dateCreated': {
 				$date = $this->$attribute;
 				if ($date) {
-					return $date->localeDate();
+					return DateTimeHelper::toDateTime($date)->format('F j, Y H:i');
 				} else {
 					return '';
 				}
