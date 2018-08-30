@@ -50,6 +50,7 @@ class LinkVaultDownloadQuery extends ElementQuery
 		foreach($customFields as $index => &$customField) {
 			$this->{$customField->fieldName} = null;
 		}
+		parent::init();
 	}
 
 	/**
