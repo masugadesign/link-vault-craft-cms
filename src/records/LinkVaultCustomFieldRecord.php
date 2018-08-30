@@ -13,7 +13,7 @@ class LinkVaultCustomFieldRecord extends ActiveRecord
 	 */
 	public static function tableName(): string
 	{
-		return 'linkvault_customfields';
+		return '{{%linkvault_customfields}}';
 	}
 
 	/**

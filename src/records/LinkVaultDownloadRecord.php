@@ -15,7 +15,7 @@ class LinkVaultDownloadRecord extends ActiveRecord
 	 */
 	public static function tableName(): string
 	{
-		return 'linkvault_downloads';
+		return '{{%linkvault_downloads}}';
 	}
 
 	/**

@@ -214,7 +214,7 @@ class GeneralService extends Component
 	 */
 	public function groupCount($columnName, $criteria=null, $order='COUNT(*) desc', $limit=100): array
 	{
-		$tableName = 'linkvault_downloads';
+		$tableName = '{{%linkvault_downloads}}';
 		$results = (new Query)->select([$columnName, "COUNT(*) AS `census`"])
 				->from($tableName)
 				->where($criteria)

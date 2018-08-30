@@ -368,7 +368,7 @@ class LinkVaultDownload extends Element
 			$sourceElementIds = ArrayHelper::getColumn($sourceElements, 'id');
 			$map = (new Query())
 				->select(['id as source', 'userId as target'])
-				->from(['linkvault_downloads'])
+				->from(['{{%linkvault_downloads}}'])
 				->where(['and', ['id' => $sourceElementIds], ['not', ['userId' => null]]])
 				->all();
 			return [
@@ -379,7 +379,7 @@ class LinkVaultDownload extends Element
 			$sourceElementIds = ArrayHelper::getColumn($sourceElements, 'id');
 			$map = (new Query())
 				->select(['id as source', 'assetId as target'])
-				->from(['linkvault_downloads'])
+				->from(['{{%linkvault_downloads}}'])
 				->where(['and', ['id' => $sourceElementIds], ['not', ['assetId' => null]]])
 				->all();
 			return [

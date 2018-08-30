@@ -89,7 +89,7 @@ class CustomFieldsService extends Component
 	 */
 	public function destroyField($customField)
 	{
-		$affectedRows = Craft::$app->db->createCommand()->delete('linkvault_customfields', array('id' => $customField->id));
+		$affectedRows = Craft::$app->db->createCommand()->delete('{{%linkvault_customfields}}', array('id' => $customField->id));
 		$this->dropCustomFieldColumn($customField->fieldName);
 	}
 
@@ -102,7 +102,7 @@ class CustomFieldsService extends Component
 	private function addCustomFieldColumn($columnName, $columnType='varchar(200)')
 	{
 		// Fetch the table schema
-		$tableName = Craft::$app->db->tablePrefix.'linkvault_downloads';
+		$tableName = '{{%linkvault_downloads}}';
 		$tableSchema = Craft::$app->db->getTableSchema($tableName);
 		if ( ! isset( $tableSchema->columns[$columnName] )) {
 			$command = Craft::$app->db->createCommand();
@@ -118,7 +118,7 @@ class CustomFieldsService extends Component
 	private function dropCustomFieldColumn($columnName)
 	{
 		// Fetch the table schema. Add table prefix? No longer a function for that?
-		$tableName = 'linkvault_downloads';
+		$tableName = '{{%linkvault_downloads}}';
 		$tableSchema = Craft::$app->db->getTableSchema($tableName);
 		if ( isset( $tableSchema->columns[$columnName] )) {
 			$command = Craft::$app->db->createCommand();

@@ -12,8 +12,8 @@ class Install extends Migration
 		if ($this->_upgradeFromCraft2()) {
 			return;
 		}
-		if (!$this->db->tableExists('linkvault_downloads')) {
-			$this->createTable('linkvault_downloads', [
+		if (!$this->db->tableExists('{{%linkvault_downloads}}')) {
+			$this->createTable('{{%linkvault_downloads}}', [
 				'id' => $this->primaryKey(),
 				'elementId' => $this->integer(),
 				'assetId' => $this->integer(),
@@ -33,8 +33,8 @@ class Install extends Migration
 			]);
 		}
 
-		if (!$this->db->tableExists('linkvault_customfields')) {
-			$this->createTable('linkvault_customfields', [
+		if (!$this->db->tableExists('{{%linkvault_customfields}}')) {
+			$this->createTable('{{%linkvault_customfields}}', [
 				'id' => $this->primaryKey(),
 				'fieldLabel' => $this->string(255),
 				'fieldName' => $this->string(255),
@@ -82,11 +82,11 @@ class Install extends Migration
 
 	public function safeDown()
 	{
-		if ( $this->db->tableExists('linkvault_downloads') ) {
-			$this->dropTable('linkvault_downloads');
+		if ( $this->db->tableExists('{{%linkvault_downloads}}') ) {
+			$this->dropTable('{{%linkvault_downloads}}');
 		}
-		if ( $this->db->tableExists('linkvault_customfields') ) {
-			$this->dropTable('linkvault_customfields');
+		if ( $this->db->tableExists('{{%linkvault_downloads}}') ) {
+			$this->dropTable('{{%linkvault_downloads}}');
 		}
 	}
 }
