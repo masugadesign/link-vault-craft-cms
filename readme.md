@@ -15,7 +15,7 @@ This is a commercial plugin for Craft CMS 3.
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "3.0.0",
+"masugadesign/linkvault": "3.0.2",
 ```
 
 ### Settings
@@ -49,7 +49,7 @@ return array(
 
 ### Template Variables
 
-#### downloadURL
+#### downloadUrl
 
 The download URL accepts two parameters:
 
@@ -61,20 +61,20 @@ The download URL accepts two parameters:
 ```
 {# Example 1: Passing an AssetFileModel instance. #}
 {% for download in entry.downloadableAssets %}
-    <a href="{{ craft.linkVault.downloadURL(download) }}" >Download This</a>
+    <a href="{{ craft.linkvault.downloadUrl(download) }}" >Download This</a>
 {% endfor %}
 
 {# Example 2: Passing a system path. This method will vary based on your Asset source path setting. #}
 {% for download in entry.downloadableAssets %}
-    {% set filePath = craft.linkVault.parseEnvironmentString( download.source.settings['path']~download.getFolder().path )~download.filename %}
-    <a href="{{ craft.linkVault.downloadURL(filePath) }}" >Download This</a>
+    {% set filePath = craft.linkvault.parseEnvironmentString( download.source.settings['path']~download.getFolder().path )~download.filename %}
+    <a href="{{ craft.linkvault.downloadUrl(filePath) }}" >Download This</a>
 {% endfor %}
 
 {# Example 3: A hard-coded full system path. #}
-<a href="{{ craft.linkVault.downloadURL('/home/user1337/www/uploads/songs/love.mp3') }}" >Download This</a>
+<a href="{{ craft.linkvault.downloadUrl('/home/user1337/www/uploads/songs/love.mp3') }}" >Download This</a>
 
 {# Example 4: A full URL to a remote file. #}
-<a href="{{ craft.linkVault.downloadURL('http://example.com/downloads/art/cat-rides-bike.zip') }}" >Download This</a>
+<a href="{{ craft.linkvault.downloadUrl('http://example.com/downloads/art/cat-rides-bike.zip') }}" >Download This</a>
 ```
 
 As you can see, passing an instance of an _AssetFileModel_ is the simplest way to create a Link Vault download URL. This method also works for files stored on an S3 source.
@@ -84,12 +84,12 @@ Below are some examples that make use of the second parameter to pass along elem
 ```
 {# Example 5: The asset's parent entry's ID is stored in the elementId column. #}
 {% for download in entry.downloadableAssets %}
-    <a href="{{ craft.linkVault.downloadURL(download, {elementId : entry.id}) }}" >Download This</a>
+    <a href="{{ craft.linkvault.downloadUrl(download, {elementId : entry.id}) }}" >Download This</a>
 {% endfor %}
 
 {# Example 6: The asset's ID is stored in the elementId column. #}
 {% for download in entry.downloadableAssets %}
-    <a href="{{ craft.linkVault.downloadURL(download, {elementId : download.id}) }}" >Download This</a>
+    <a href="{{ craft.linkvault.downloadUrl(download, {elementId : download.id}) }}" >Download This</a>
 {% endfor %}
 ```
 
@@ -98,13 +98,13 @@ You can create custom fields to store any data you like with Link Vault. These f
 ```
 {# Example 7: Passing along a value for a user-defined field. #}
 {% for download in entry.downloadableAssets %}
-    <a href="{{ craft.linkVault.downloadURL(download, {userEmail : craft.session.getUser().email}) }}" >Download This</a>
+    <a href="{{ craft.linkvault.downloadUrl(download, {userEmail : craft.session.getUser().email}) }}" >Download This</a>
 {% endfor %}
 ```
 
 #### totalDownloads
 
-The __totalDownloads__ variable returns the total downloads for a given set of criteria. It is very similar to the **downloadURL** variable except it only has one parameter which can be one of three things:
+The __totalDownloads__ variable returns the total downloads for a given set of criteria. It is very similar to the **downloadUrl** variable except it only has one parameter which can be one of three things:
 
 * An instance of an _AssetFileModel_
 * An array of parameters
@@ -115,19 +115,19 @@ The __totalDownloads__ variable returns the total downloads for a given set of c
 ```
 {# Example 8: Passing an AssetFileModel. #}
 {% for download in entry.downloadableAssets %}
-    <p>The {{ download.filename }} file has been downloaded {{ craft.linkVault.totalDownloads(download) }} times!</p>
+    <p>The {{ download.filename }} file has been downloaded {{ craft.linkvault.totalDownloads(download) }} times!</p>
 {% endfor %}
 
 {# Example 9: Passing an array of parameters. #}
 {% for download in entry.downloadableAssets %}
-    <p>Your bird.txt Downloads: {{ craft.linkVault.totalDownloads({userId:craft.session.getUser().id, fileName:"bird.txt" }) }}</p>
+    <p>Your bird.txt Downloads: {{ craft.linkvault.totalDownloads({userId:craft.session.getUser().id, fileName:"bird.txt" }) }}</p>
 {% endfor %}
 
 {# Example 10: Passing a string containing the full system path. #}
-Total face.gif downloads: {{ craft.linkVault.totalDownloads('/home/user1337/www/uploads/face.gif') }}
+Total face.gif downloads: {{ craft.linkvault.totalDownloads('/home/user1337/www/uploads/face.gif') }}
 
 {# Example 11: Passing a URL. #}
-Downloads: {{ craft.linkVault.totalDownloads('https://example.com/documents/contract.docx') }}
+Downloads: {{ craft.linkvault.totalDownloads('https://example.com/documents/contract.docx') }}
 ```
 
 #### fileSize
@@ -138,13 +138,13 @@ The __fileSize__ template variable fetches a human-readable file size string for
 
 ```
 {# Example 12: Passing a file path. #}
-bees.jpg is {{ craft.linkVault.fileSize('/home/user1337/hidden-files/bees.jpg') }}.
+bees.jpg is {{ craft.linkvault.fileSize('/home/user1337/hidden-files/bees.jpg') }}.
 
 {# Example 13: Passing an instance of an AssetFileModel #}
-{{ file.filename }} is {{ craft.linkVault.fileSize(file) }}.
+{{ file.filename }} is {{ craft.linkvault.fileSize(file) }}.
 
 {# Example 14: Passing a URL. WARNING: The fileSize variable is sometimes inconsistent with remote files any may not always return a file size. #}
-{{ craft.linkVault.fileSize('https://example.com/songs/dance-me-to-the-end-of-love.flac') }}
+{{ craft.linkvault.fileSize('https://example.com/songs/dance-me-to-the-end-of-love.flac') }}
 ```
 
 #### downloads
@@ -155,17 +155,17 @@ The __downloads__ template variable fetches download records based on the specif
 
 ```
 {# Example 15: Fetch the ten most recent download records for cheese.mpg. #}
-{% for record in craft.linkVault.downloads.fileName('cheese.mpg).limit(10) %}
+{% for record in craft.linkvault.downloads.fileName('cheese.mpg).limit(10) %}
     <p>User {{ record.userId }} downloaded it on {{ record.dateCreated }}</p>
 {% endfor %}
 
 {# Example 16: Fetch 5 most recent downloads that occurred prior to March 1, 2016. #}
-{% for record in craft.linkVault.downloads.before('2016-03-01').limit(10) %}
+{% for record in craft.linkvault.downloads.before('2016-03-01').limit(10) %}
     <p>User {{ record.userId }} downloaded {{ record.filename }} before March 1.</p>
 {% endfor %}
 
 {# Example 17: Fetch records based on custom field value. In this example, assume existence of "downloadPage" field. #}
-{% for record in craft.linkVault.downloads.downloadPage('super-mega-rockstar/free-songs') %}
+{% for record in craft.linkvault.downloads.downloadPage('super-mega-rockstar/free-songs') %}
     <p>User {{ record.userId }} downloaded {{ record.filename }} song file on {{ record.dateCreated }}</p>
 {% endfor %}
 ```
@@ -184,7 +184,7 @@ The __groupCount__ template variable queries record counts and groups them by a 
 
 ```
 {# Example 1: Fetch a particular user's top file downloads. Order the results by the count variable, descending. #}
-{% set topDownloads = craft.linkVault.groupCount('fileName', {
+{% set topDownloads = craft.linkvault.groupCount('fileName', {
     'userId' : currentUser.id,
     'order' : 'census desc'
 }) %}
