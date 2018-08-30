@@ -1,6 +1,6 @@
 # Changelog
 
-# 3.0.3 - 2018-08-30
+## 3.0.3 - 2018-08-30
 ### Fixed
 * Fixed table name references where the designated table prefix was not taken into consideration.
 
