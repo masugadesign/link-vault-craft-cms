@@ -296,13 +296,13 @@ class GeneralService extends Component
 	public function download($parameters=[])
 	{
 		//Craft::$app->plugins->call('linkVaultDownloadStart', array(&$parameters) );
-		$files		= isset($parameters['files']) ? $parameters['files'] : null;
-		$zipName	  = isset($parameters['zipName']) ? $parameters['zipName'] : null;
-		$filePath	 = isset($parameters['filePath']) ? $parameters['filePath'] : null;
-		$assetId	  = isset($parameters['assetId']) ? $parameters['assetId'] : null;
-		$downloadAs   = isset($parameters['downloadAs']) ? $parameters['downloadAs'] : basename($filePath);
-		$s3Bucket	 = isset($parameters['s3Bucket']) ? $parameters['s3Bucket'] : null;
-		$googleBucket = isset($parameters['googleBucket']) ? $parameters['googleBucket'] : null;
+		$files		= $parameters['files'] ?? null;
+		$zipName	  = $parameters['zipName'] ?? null;
+		$filePath	 = $parameters['filePath'] ?? null;
+		$assetId	  = $parameters['assetId'] ?? null;
+		$downloadAs   = $parameters['downloadAs'] ?? basename($filePath);
+		$s3Bucket	 = $parameters['s3Bucket'] ?? null;
+		$googleBucket = $parameters['googleBucket'] ?? null;
 		$isUrl		= isset($parameters['isUrl']) && $parameters['isUrl'] == 1 ? true : false;
 		$this->log("Download Attempt - filePath: $filePath | s3Bucket: $s3Bucket | googleBucket: $googleBucket");
 		// The file is a valid URL.
@@ -310,7 +310,7 @@ class GeneralService extends Component
 			$this->logDownload($parameters);
 			Craft::$app->getRequest()->redirect($filePath);
 		// The file path is a valid file found on the server.
-		} elseif ( file_exists($filePath) ) {
+		} elseif ( $filePath && file_exists($filePath) ) {
 			$this->logDownload($parameters);
 			//$this->plugin->files->serveFile($filePath, $downloadAs);
 			Craft::$app->response->sendFile($filePath, $downloadAs);
@@ -320,16 +320,14 @@ class GeneralService extends Component
 			$this->logDownload($parameters);
 			$file = Craft::$app->assets->getAssetById($assetId);
 			$localPath = $file->getCopyOfFile();
-			//$this->plugin->files->serveFile($localPath, $downloadAs);
 			Craft::$app->response->sendFile($localPath, $downloadAs);
 			//Craft::$app->plugins->call('linkVaultDownloadEnd', array(&$parameters) );
 		// Zip some files on-the-fly. (Link Vault Zipper)
 		} elseif ( $files && $zipName ) {
+			$archivePath = $this->plugin->archive->trackAndZipFiles($files, $zipName, $parameters);
 			$parameters['filePath'] = $archivePath;
 			$this->logDownload($parameters);
-			$archivePath = $this->plugin->archive->trackAndZipFiles($files, $zipName, $parameters);
-			//$this->plugin->files->serveFile($archivePath, $downloadAs);
-			Craft::$app->response->sendFile($localPath, $downloadAs);
+			Craft::$app->response->sendFile($archivePath, $zipName);
 			//Craft::$app->plugins->call('linkVaultDownloadEnd', array(&$parameters) );
 			// Delete the temporary zip file from the storage folder.
 			unlink($archivePath);
@@ -369,7 +367,7 @@ class GeneralService extends Component
 	public function log($message='', $level=Logger::LEVEL_INFO)
 	{
 		if ( $this->debug === true ) {
-			LinkVault::log($message, $level);
+			Craft::getLogger()->log($message, $level, 'linkvault');
 		}
 	}
 

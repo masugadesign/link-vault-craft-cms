@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.4 - 2018-09-04
+
+### Fixed
+- Fixed zipUrl template variable logic for creating zip archives on-the-fly.
+- Fixed Link Vault's plugin logging.
+- Removed LinkVaultDownload::getAsset() return type in case the asset no longer exists and null is returned.
+
 ## 3.0.3 - 2018-08-30
 
 ### Fixed

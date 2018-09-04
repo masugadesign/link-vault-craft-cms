@@ -15,7 +15,7 @@ This is a commercial plugin for Craft CMS 3.
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "3.0.2",
+"masugadesign/linkvault": "3.0.4",
 ```
 
 ### Settings
@@ -100,6 +100,19 @@ You can create custom fields to store any data you like with Link Vault. These f
 {% for download in entry.downloadableAssets %}
     <a href="{{ craft.linkvault.downloadUrl(download, {userEmail : craft.session.getUser().email}) }}" >Download This</a>
 {% endfor %}
+```
+
+#### zipUrl
+
+The __zipUrl__ template variable generates a Link Vault download URL for a collection of files that will be zipped on-the-fly when the URL is followed. Each file is tracked individually in the logs. Zipping files on-the-fly could require a lot of memory depending on the size of the files being zipped. It is recommended to only use this feature on smaller files <10MB.
+
+The first parameter may be an array of Craft Asset elements or Craft Asset IDs. The second parameter is the base name for the zip file that will be generated.
+
+**Examples**
+
+```
+{% set assetIds = craft.assets.volume('misc').limit(5).ids() %}
+<a href="{{ craft.linkvault.zipUrl(assetIds, 'some-misc-assets') }}" >Download Now</a>
 ```
 
 #### totalDownloads

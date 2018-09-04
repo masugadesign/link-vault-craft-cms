@@ -3,6 +3,7 @@
 namespace Masuga\LinkVault\services;
 
 use Craft;
+use ZipArchive;
 use craft\elements\Asset;
 use craft\elements\User;
 use yii\base\Component;
@@ -17,9 +18,16 @@ class ArchiveService extends Component
 	 */
 	protected $runtimePath = null;
 
+	/**
+	 * The instance of the Link Vault plugin.
+	 * @var LinkVault
+	 */
+	private $plugin = null;
+
 	public function __construct()
 	{
-		$this->runtimePath = rtrim(Craft::$app->path->storagePath, '/').'/runtime/linkvault/';
+		$this->plugin = LinkVault::getInstance();
+		$this->runtimePath = rtrim(Craft::$app->path->getRuntimePath(), '/').'/';
 	}
 
 	/**
@@ -42,11 +50,13 @@ class ArchiveService extends Component
 				// Numeric values should only be asset IDs. Fetch asset and full path.
 				if (is_numeric($file)) {
 					$asset = Craft::$app->assets->getAssetById($file);
-					$path = Craft::$app->linkVault_file->getLocalAssetPath($asset);
+					$path = $this->plugin->files->getLocalAssetPath($asset);
+					$fileParams['filePath'] = $path;
 				// The $file is already an instance of an Asset.
 				} elseif ($file instanceof Asset) {
 					$asset = $file;
-					Craft::$app->linkVault_file->getLocalAssetPath($file);
+					$path = $this->plugin->files->getLocalAssetPath($file);
+					$fileParams['filePath'] = $path;
 				// If the path is a URL, attempt copy the contents to the archive.
 				} elseif ( filter_var($file, FILTER_VALIDATE_URL) !== false ) {
 					$fileParams['isUrl'] = 1;
@@ -62,7 +72,7 @@ class ArchiveService extends Component
 				if ( !empty($asset) ) {
 					$downloadAs = $asset->filename;
 					$fileParams['assetId'] = $asset->id;
-					$fileParams['filePath'] = Craft::$app->linkVault_file->getAssetPath($asset);
+					$fileParams['filePath'] = $this->plugin->files->getAssetPath($asset);
 					$fileParams['downloadAs'] = $downloadAs;
 				}
 				// Add the item to the archive.
@@ -71,7 +81,7 @@ class ArchiveService extends Component
 				} else {
 					$zipArchive->addFile($path, $downloadAs);
 				}
-				Craft::$app->linkVault->logDownload($fileParams);
+				$this->plugin->general->logDownload($fileParams);
 			}
 			$zipArchive->close();
 		} else {

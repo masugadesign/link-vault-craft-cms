@@ -303,9 +303,9 @@ class LinkVaultDownload extends Element
 
 	/**
 	 * This method returns the Asset element associated with this record.
-	 * @return Asset
+	 * @return Asset|null
 	 */
-	public function getAsset(): Asset
+	public function getAsset()
 	{
 		$asset = null;
 		if ( $this->_asset !== null ) {

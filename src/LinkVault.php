@@ -7,6 +7,7 @@ use craft\base\Plugin;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\log\FileTarget;
 use craft\services\Dashboard;
 use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
@@ -91,6 +92,11 @@ class LinkVault extends Plugin
 			'customFields' => CustomFieldsService::class,
 			'files' => FilesService::class,
 			'general' => GeneralService::class,
+		]);
+		// Register the Link Vault plugin log.
+		$fileTarget = new FileTarget([
+			'logFile' => Craft::$app->getPath()->getLogPath().'/linkvault.log',
+			'categories' => ['linkvault']
 		]);
 		// Register the site front-end routes.
 		Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) use($downloadTrigger) {
