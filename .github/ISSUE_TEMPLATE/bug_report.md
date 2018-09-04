@@ -4,6 +4,11 @@ about: Create a report to help us improve
 
 ---
 
+- Plugin version: 
+- Craft version: 
+- PHP version: 
+- Database driver & version: 
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
@@ -22,8 +27,3 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
-
-- Craft version:
-- PHP version:
-- Database driver & version:
-- Plugin version:
