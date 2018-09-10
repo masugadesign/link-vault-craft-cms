@@ -81,11 +81,11 @@
 	{{ parent() }}
 {% endblock %}
 
-{% set js %}
+{% set lvJs %}
 $(document).ready(function() {
 	$('[data-refresh]').change(function() {
 		window.location.href = $(this).val();
 	});
 });
 {% endset %}
-{% includeJs js %}
+{% js lvJs %}

@@ -12,7 +12,7 @@
 <form method="post" accept-charset="UTF-8" data-saveshortcut="1">
 	<input type="hidden" name="action" value="linkvault/custom-fields/custom-field-submit">
 	{{ redirectInput('linkvault/customfields') }}
-	{{ getCsrfInput() }}
+	{{ csrfInput() }}
 
 	{{ forms.textField({
 		first: true,
@@ -61,7 +61,7 @@
 
 {% endblock %}
 
-{% set js %}
+{% set lvJs %}
 	{% if not customField.fieldName %}new Craft.HandleGenerator('#fieldLabel', '#fieldName');{% endif %}
 {% endset %}
-{% includeJs js %}
+{% js lvJs %}
