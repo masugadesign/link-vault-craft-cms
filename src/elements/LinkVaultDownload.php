@@ -202,8 +202,7 @@ class LinkVaultDownload extends Element
 				return $display;
 			case 'userId':
 				$user = $this->user;
-				//return isset($user->username) ? '<a href="'.UrlHelper::cpUrl('linkvault/user', ['userId' => $user->id]).'" >'.$user->username.'</a>' : '--';
-				return isset($user->username) ? $user->username : '--';
+				return isset($user->username) ? '<a href="'.UrlHelper::cpUrl('linkvault/user', ['userId' => $user->id]).'" >'.$user->username.'</a>' : '--';
 			case 'elementId':
 				$element = $this->relatedElement;
 				if ( $element ) {

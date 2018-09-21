@@ -43,6 +43,18 @@ class LinkVaultDownloadQuery extends ElementQuery
 		$this->{$name} = $value;
 	}
 
+	/**
+	 * Definitely not going to write a bunch of setters for all the properties
+	 * on a Link Vault download.
+	 */
+	public function __call($name, $args)
+	{
+		if ( ! method_exists($this, $name) && property_exists($this, $name) && count($args) === 1 ) {
+			$this->$name = $args[0];
+			return $this;
+		}
+	}
+
 	public function init()
 	{
 		// Initialize class properties for the Link Vault custom fields.
