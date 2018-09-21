@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.5 - 2018-09-21
+
+### Fixed
+- Fixed __records__ and __downloads__ template variable parameter setters.
+- Fixed issues with the user downloads report page in the control panel.
+
 ## 3.0.4 - 2018-09-04
 
 ### Fixed
