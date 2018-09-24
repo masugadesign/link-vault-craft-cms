@@ -10,6 +10,7 @@ use craft\googlecloud\Volume as GoogleCloud;
 use craft\helpers\UrlHelper;
 use craft\volumes\Local;
 use yii\base\Component;
+use yii\helpers\Inflector;
 use yii\log\Logger;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\LinkVaultDownload;
@@ -369,6 +370,49 @@ class GeneralService extends Component
 		if ( $this->debug === true ) {
 			Craft::getLogger()->log($message, $level, 'linkvault');
 		}
+	}
+
+	/**
+	 * This method returns an associative array of LinkVaultDownloadQuery criteria
+	 * attributes and their respective option label.
+	 * @return array
+	 */
+	public function reportAttributeOptions(): array
+	{
+		$omittedCriteria = [
+			'ancestorDist',
+			'ancestorOf',
+			'archived',
+			'descendantDist',
+			'descendantOf',
+			'enabledForSite',
+			'fixedOrder',
+			'hasDescendants',
+			'inReverse',
+			'leaves',
+			'level',
+			'nextSiblingOf',
+			'prevSiblingOf',
+			'positionedAfter',
+			'positionedBefore',
+			'orderBy',
+			'siblingOf',
+			'status',
+			'structureId',
+			'title',
+			'with',
+			'withStructure'
+		];
+		$elementQuery = new LinkVaultDownloadQuery(LinkVaultDownload::class, []);
+		$criteriaAttributes = array_diff($elementQuery->criteriaAttributes(), $omittedCriteria);
+		$customFields = array_keys($this->plugin->customFields->fetchAllCustomFields('fieldName'));
+		$criteriaAttributes = array_merge($criteriaAttributes, $customFields);
+		sort($criteriaAttributes);
+		$options = [];
+		foreach($criteriaAttributes as $attr) {
+			$options[$attr] = Inflector::camel2words($attr);
+		}
+		return $options;
 	}
 
 }

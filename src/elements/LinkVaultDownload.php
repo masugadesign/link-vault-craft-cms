@@ -40,6 +40,12 @@ class LinkVaultDownload extends Element
 	private $_relatedElement = null;
 
 	/**
+	 * The instance of the Link Vault plugin.
+	 * @var LinkVault
+	 */
+	private $plugin = null;
+
+	/**
 	 * Override the great-great-great-great grandparent __set() so we can add
 	 * properties on-the-fly from the init() method. Remember that Link Vault
 	 * custom fields are not true Craft custom fields.
@@ -53,7 +59,8 @@ class LinkVaultDownload extends Element
 
 	public function init()
 	{
-		$customFields = LinkVault::getInstance()->customFields->fetchAllCustomFields('fieldName');
+		$this->plugin = LinkVault::getInstance();
+		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
 		foreach($customFields as $name => $field) {
 			$this->{$name} = null;
 		}
@@ -133,7 +140,7 @@ class LinkVaultDownload extends Element
 	public static function defineTableAttributes($source = null): array
 	{
 		$tableAttributes = [];
-		$customFields = LinkVault::getInstance()->customFields->fetchAllCustomFields('fieldName');
+		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
 		foreach($customFields as $name => $fieldModel) {
 			$tableAttributes[$name] = $fieldModel->fieldLabel;
 		}
@@ -281,7 +288,7 @@ class LinkVaultDownload extends Element
 		$record->isUrl = $this->isUrl;
 		$record->remoteIP = $this->remoteIP;
 		// Fetch the Link Vault custom fields and add the values to the record.
-		$customFields = LinkVault::getInstance()->customFields->fetchAllCustomFields('fieldName');
+		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
 		foreach($customFields as $name => $field) {
 			$record->{$name} = $this->{$name};
 		}

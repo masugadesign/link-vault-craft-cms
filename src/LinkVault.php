@@ -106,6 +106,7 @@ class LinkVault extends Plugin
 		Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
 			$event->rules['linkvault'] = 'linkvault/downloads/download-index';
 			$event->rules['linkvault/user'] = 'linkvault/downloads/user-downloads';
+			$event->rules['linkvault/reports'] = 'linkvault/reports/index';
 			$event->rules['linkvault/customfields'] = 'linkvault/custom-fields/custom-fields';
 			$event->rules['linkvault/customfields/new'] = 'linkvault/custom-fields/custom-field-form';
 			$event->rules['linkvault/customfields/create'] = 'linkvault/custom-fields/custom-field-submit';

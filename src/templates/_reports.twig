@@ -1,0 +1,164 @@
+{% extends '_layouts/cp' %}
+{% set title = 'Link Vault'|t %}
+{% set elementType = 'Masuga\\LinkVault\\elements\\LinkVaultDownload' %}
+
+{% set tabs = {
+	downloads: { label: "Download History"|t, url: url('linkvault') },
+	reports: { label: "Reports"|t, url: url('linkvault/reports') },
+	customFields: { label: "Custom Fields"|t, url: url('linkvault/customfields') }
+} %}
+
+{% set selectedTab = 'reports' %}
+
+{% set crumbs = {
+	downloads: { label: "Download History"|t, url: url('linkvault') }
+} %}
+
+{% do view.registerAssetBundle("Masuga\\LinkVault\\resources\\ReportsAssetBundle") %}
+
+{% block content %}
+
+{% set orderBy = craft.app.request.getParam('orderBy') ?? 'dateCreated' %}
+{% set orderByParam = orderBy %}
+{% set sort = craft.app.request.getParam('sort') ?? 'desc' %}
+{# Timestamps are ambiguous. Let's prefix with the table name. #}
+{% if orderBy in ['dateCreated', 'dateUpdated'] %}
+	{% set orderByParam = 'linkvault_downloads.' ~ orderBy %}
+{% endif %}
+{# The "criteria" variable is defined in the ReportsController@actionIndex method. #}
+{% paginate craft.linkvault.downloads(criteria).orderBy(orderByParam ~ ' ' ~ sort).limit(50) as pageInfo, pageDownloads %}
+
+<h1>Download Reports</h1>
+
+<div class="pane" >
+	<p>Report filters support the <a href="https://docs.craftcms.com/v3/searching.html#supported-syntaxes" target="_blank" >Craft CMS search syntax</a>.</p>
+	<div class="field" >
+		<div class="select" >
+			<select id="downloadAttributes" name="downloadAttributes" >
+				<option value="" >Select Attribute Filter</option>
+				{% for value,label in criteriaAttributes %}
+				<option value="{{ value }}" >{{ label }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+	<div class="field" >
+		<button id="addFilter" class="btn submit" >Add Filter</button>
+	</div>
+</div>
+
+<form id="reportsForm" action="" method="get" >
+
+<div class="pane" >
+	<div id="criteriaFields" >
+		{# Existing criteria filters should be displayed. #}
+		{% for fieldName,value in criteria  %}
+		<div class="field" >
+			<div class="heading">
+				<label>{{ fieldName }}</label>
+			</div>
+			<div class="input ltr" >
+				<input type="text" class="text" name="criteria[{{ fieldName }}]" value="{{ value }}" >
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	<div class="field" >
+		<div class="heading">
+			<label>Order By</label>
+		</div>
+		<div class="select" >
+			<select name="orderBy" >
+			{% for fieldName,label in criteriaAttributes %}
+				<option value="{{ fieldName }}" {% if orderBy == fieldName %}selected="selected"{% endif %} >{{ label }}</option>
+			{% endfor %}
+			</select>
+		</div>
+	</div>
+	<div class="field" >
+		<div class="heading">
+			<label>Sort</label>
+		</div>
+		<div class="select" >
+			<select name="sort" >
+				<option value="desc" {% if sort == 'desc' %}selected="selected"{% endif %} >DESC</option>
+				<option value="asc" {% if sort == 'asc' %}selected="selected"{% endif %} >ASC</option>
+			</select>
+		</div>
+	</div>
+</div>
+
+<table class="data" style="width:100%;margin-top:1rem;" >
+	<thead>
+		<tr>
+			<th scope="col" class="header" >Date</th>
+			<th scope="col" class="header" >File Name</th>
+			<th scope="col" class="header" >Element Title</th>
+			<th scope="col" class="header" >Asset</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for download in pageDownloads %}
+		<tr>
+			<td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
+			<td class="textual" >{{ download.fileName }}</td>
+			<td class="textual" >
+				{% set entry = craft.entries.id(download.elementId).one() %}
+				{% if entry is not empty %}
+					<a href="{{ entry.cpEditUrl }}" >{{ entry.title }}</a>
+					{% if entry.url is not empty %}
+						&nbsp;|&nbsp;<a href="{{ entry.url }}" target="_blank">Entry Page &rarr;</a>
+					{% endif %}
+				{% endif %}
+			</td>
+			<td class="textual" >
+				{% set asset = craft.assets.id(download.assetId).one() %}
+				{% if asset is not empty %}
+					{% if asset.url is not empty %}
+						<a href="{{ asset.url }}" >{{ asset.title }}</a>
+					{% else %}
+						{{ asset.title }}
+					{% endif %}
+				{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+</form>
+
+{% set queryString = '?' ~ craft.app.request.getQueryStringWithoutPath() %}
+<div>
+	<ul class="lvPagination">
+		<li><a href="{{ pageInfo.firstUrl ~ queryString }}">&#171;</a></li>
+		{% if pageInfo.prevUrl %}<li><a href="{{ pageInfo.prevUrl  ~ queryString}}">&#60;</a></li>{% endif %}
+		{% for page, url in pageInfo.getPrevUrls(5) %}
+			<li><a href="{{ url ~ queryString }}">{{ page }}</a></li>
+		{% endfor %}
+		<li><span class="current">{{ pageInfo.currentPage }}</span></li>
+		{% for page, url in pageInfo.getNextUrls(5) %}
+			<li><a href="{{ url ~ queryString }}">{{ page }}</a></li>
+		{% endfor %}
+		{% if pageInfo.nextUrl %}<li><a href="{{ pageInfo.nextUrl ~ queryString }}">&#62;</a></li>{% endif %}
+		<li><a href="{{ pageInfo.lastUrl ~ queryString }}">&#187;</a></li>
+	</ul>
+</div>
+
+{% endblock %}
+
+{% block sidebar %}
+	<div class="buttons">
+		<table class="data fullwidth collapsible">
+			<tbody>
+				<tr>
+					<td><button id="refreshResults" class="btn submit fullwidth" >Refresh Results</button></td>
+				</tr>
+				<tr>
+					<td><button class="btn submit fullwidth" >Export as CSV</button></td>
+				</tr>
+			<tr>
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

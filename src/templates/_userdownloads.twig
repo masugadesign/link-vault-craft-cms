@@ -6,25 +6,7 @@
 	userDownloads: { label: user.username~" Downloads/Leech Attempts", url: url('linkvault/user', {userId:user.id})}
 } %}
 
-{% css %}
-ul.lvPagination {
-	list-style-type: none;
-	margin: 1rem 0;
-	padding: 0;
-}
-
-ul.lvPagination li {
-	disply: inline-block;
-	float: left;
-	padding: 5px;
-	text-align: center;
-}
-
-ul.lvPagination li a {
-	padding: 3px 8px 3px 8px;
-	border: 1px dotted #e3e5e8;
-}
-{% endcss %}
+{% do view.registerAssetBundle("Masuga\\LinkVault\\resources\\PaginationAssetBundle") %}
 
 {% paginate craft.linkvault.downloads.userId(user.id).type(type).orderBy('linkvault_downloads.dateCreated desc').limit(50) as pageInfo, pageDownloads %}
 
@@ -45,7 +27,7 @@ ul.lvPagination li a {
 			<td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
 			<td class="textual" >{{ download.fileName }}</td>
 			<td class="textual" >
-				{% set entry = craft.entries.id(download.elementId).first() %}
+				{% set entry = craft.entries.id(download.elementId).one() %}
 				{% if entry is not empty %}
 					<a href="{{ entry.cpEditUrl }}" >{{ entry.title }}</a>
 					{% if entry.url is not empty %}
@@ -54,7 +36,7 @@ ul.lvPagination li a {
 				{% endif %}
 			</td>
 			<td class="textual" >
-				{% set asset = craft.assets.id(download.assetId).first() %}
+				{% set asset = craft.assets.id(download.assetId).one() %}
 				{% if asset is not empty %}
 					{% if asset.url is not empty %}
 						<a href="{{ asset.url }}" >{{ asset.title }}</a>

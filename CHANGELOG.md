@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.6 - 2018-09-24
+
+### Added
+- Added a reporting tool to the control panel.
+
+### Fixed
+- Fixed numerous deprecation errors in control panel templates.
+
 ## 3.0.5 - 2018-09-21
 
 ### Fixed
