@@ -15,21 +15,12 @@ class m170117_215325_linkvault_AddGoogleBucketColumn extends Migration
 	 */
 	public function safeUp()
 	{
-		if ( ! Craft::$app->db->columnExists('{{%linkvault_downloads}}', 'googleBucket') ) {
-			$this->addColumnAfter('{{%linkvault_downloads}}', 'googleBucket', array(
-				'column' => ColumnType::Varchar,
-				'null'   => true,
-				),
-				's3Bucket'
-			);
+		$downloadsTable = $this->db->schema->getTableSchema('{{%linkvault_downloads}}');
+		if ( ! isset($downloadsTable->columns['googleBucket']) ) {
+			$this->addColumn('{{%linkvault_downloads}}', 'googleBucket', 'VARCHAR(255) AFTER `s3Bucket`');
 		}
-		if ( ! Craft::$app->db->columnExists('{{%linkvault_downloads}}', 'zipName') ) {
-			$this->addColumnAfter('{{%linkvault_downloads}}', 'zipName', array(
-				'column' => ColumnType::Varchar,
-				'null'   => true,
-				),
-				'downloadAs'
-			);
+		if ( ! isset($downloadsTable->columns['zipName']) ) {
+			$this->addColumn('{{%linkvault_downloads}}', 'zipName', 'VARCHAR(255) AFTER `downloadAs`');
 		}
 		return true;
 	}
