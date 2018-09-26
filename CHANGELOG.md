@@ -1,10 +1,5 @@
 a# Changelog
 
-# 3.0.5.1 - 2018-09-26
-
-### Fixed
-- Fixed installation migration so it adds potential missing columns from old versions of Link Vault.
-
 ## 3.0.6 - YYYY-MM-DD
 
 ### Added
@@ -13,6 +8,11 @@ a# Changelog
 ### Fixed
 - Fixed numerous deprecation errors in control panel templates.
 - Fixed date parameters issues that occurred when querying download records.
+
+# 3.0.5.1 - 2018-09-26
+
+### Fixed
+- Fixed installation migration so it adds potential missing columns from old versions of Link Vault.
 
 ## 3.0.5 - 2018-09-21
 
