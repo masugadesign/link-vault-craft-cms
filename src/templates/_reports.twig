@@ -35,25 +35,28 @@
 	<div class="field" >
 		<div class="select" >
 			<select id="downloadAttributes" name="downloadAttributes" >
-				<option value="" >Select Attribute Filter</option>
+				<option value="" >Add Attribute Filter</option>
 				{% for value,label in criteriaAttributes %}
 				<option value="{{ value }}" >{{ label }}</option>
 				{% endfor %}
 			</select>
 		</div>
 	</div>
+	{#
 	<div class="field" >
 		<button id="addFilter" class="btn submit" >Add Filter</button>
 	</div>
+	#}
 </div>
 
-<form id="reportsForm" action="" method="get" >
+<form id="reportsForm" action="" method="get" data-export-action="{{ url('linkvault/export') }}" >
 
 <div class="pane" >
 	<div id="criteriaFields" >
 		{# Existing criteria filters should be displayed. #}
 		{% for fieldName,value in criteria  %}
 		<div class="field" >
+			<a href="#" class="remove-criteria" data-remove-criteria >X</a>
 			<div class="heading">
 				<label>{{ fieldName }}</label>
 			</div>
@@ -88,12 +91,19 @@
 	</div>
 </div>
 
-<table class="data" style="width:100%;margin-top:1rem;" >
+{% if pageInfo.total > 0 %}
+<p>Showing {{ pageInfo.first }} &ndash; {{ pageInfo.last }} of {{ pageInfo.total|number_format }} results.</p>
+{% else %}
+<p>0 results.</p>
+{% endif %}
+
+<table class="data fullwidth collapsible" style="margin-top:1rem;" >
 	<thead>
 		<tr>
 			<th scope="col" class="header" >Date</th>
+			<th scope="col" class="header" >Bucket/Directory</th>
 			<th scope="col" class="header" >File Name</th>
-			<th scope="col" class="header" >Element Title</th>
+			<th scope="col" class="header" >User</th>
 			<th scope="col" class="header" >Asset</th>
 		</tr>
 	</thead>
@@ -101,18 +111,16 @@
 	{% for download in pageDownloads %}
 		<tr>
 			<td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
-			<td class="textual" >{{ download.fileName }}</td>
+			<td class="textual" >{{ (download.s3Bucket ?? download.googleBucket ?? download.dirName )|e }}</td>
+			<td class="textual" >{{ download.fileName|e }}</td>
 			<td class="textual" >
-				{% set entry = craft.entries.id(download.elementId).one() %}
-				{% if entry is not empty %}
-					<a href="{{ entry.cpEditUrl }}" >{{ entry.title }}</a>
-					{% if entry.url is not empty %}
-						&nbsp;|&nbsp;<a href="{{ entry.url }}" target="_blank">Entry Page &rarr;</a>
-					{% endif %}
+				{% set user = download.userId ? craft.users.id(download.userId).one() : null %}
+				{% if user is not empty %}
+					<a href="{{ url('linkvault/user?userId=' ~ user.id) }}" >{{ (user.fullName ?: user.email)|e }}</a>
 				{% endif %}
 			</td>
 			<td class="textual" >
-				{% set asset = craft.assets.id(download.assetId).one() %}
+				{% set asset = download.assetId ? craft.assets.id(download.assetId).one() : null %}
 				{% if asset is not empty %}
 					{% if asset.url is not empty %}
 						<a href="{{ asset.url }}" >{{ asset.title }}</a>
@@ -155,7 +163,7 @@
 					<td><button id="refreshResults" class="btn submit fullwidth" >Refresh Results</button></td>
 				</tr>
 				<tr>
-					<td><button class="btn submit fullwidth" >Export as CSV</button></td>
+					<td><button id="exportAsCsv" class="btn submit fullwidth" >Export as CSV</button></td>
 				</tr>
 			<tr>
 			</tbody>

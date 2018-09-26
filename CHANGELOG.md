@@ -1,12 +1,13 @@
 # Changelog
 
-## 3.0.6 - 2018-09-24
+## 3.0.6 - YYYY-MM-DD
 
 ### Added
 - Added a reporting tool to the control panel.
 
 ### Fixed
 - Fixed numerous deprecation errors in control panel templates.
+- Fixed date parameters issues that occurred when querying download records.
 
 ## 3.0.5 - 2018-09-21
 

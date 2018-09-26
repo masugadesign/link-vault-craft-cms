@@ -12,7 +12,7 @@
 
 {% block content %}
 
-<table class="data" style="width:100%" >
+<table class="data fullwidth collapsible" >
 	<thead>
 		<tr>
 			<th scope="col" class="header" >Date</th>
@@ -27,7 +27,7 @@
 			<td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
 			<td class="textual" >{{ download.fileName }}</td>
 			<td class="textual" >
-				{% set entry = craft.entries.id(download.elementId).one() %}
+				{% set entry = download.elementId ? craft.entries.id(download.elementId).one() : null %}
 				{% if entry is not empty %}
 					<a href="{{ entry.cpEditUrl }}" >{{ entry.title }}</a>
 					{% if entry.url is not empty %}
@@ -36,7 +36,7 @@
 				{% endif %}
 			</td>
 			<td class="textual" >
-				{% set asset = craft.assets.id(download.assetId).one() %}
+				{% set asset = download.assetId ? craft.assets.id(download.assetId).one() : null %}
 				{% if asset is not empty %}
 					{% if asset.url is not empty %}
 						<a href="{{ asset.url }}" >{{ asset.title }}</a>

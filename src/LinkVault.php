@@ -17,6 +17,7 @@ use yii\base\Event;
 use Masuga\LinkVault\models\Settings;
 use Masuga\LinkVault\services\ArchiveService;
 use Masuga\LinkVault\services\CustomFieldsService;
+use Masuga\LinkVault\services\ExportService;
 use Masuga\LinkVault\services\FilesService;
 use Masuga\LinkVault\services\GeneralService;
 use Masuga\LinkVault\variables\LinkVaultVariable;
@@ -90,6 +91,7 @@ class LinkVault extends Plugin
 		$this->setComponents([
 			'archive' => ArchiveService::class,
 			'customFields' => CustomFieldsService::class,
+			'export' => ExportService::class,
 			'files' => FilesService::class,
 			'general' => GeneralService::class,
 		]);
@@ -107,6 +109,7 @@ class LinkVault extends Plugin
 			$event->rules['linkvault'] = 'linkvault/downloads/download-index';
 			$event->rules['linkvault/user'] = 'linkvault/downloads/user-downloads';
 			$event->rules['linkvault/reports'] = 'linkvault/reports/index';
+			$event->rules['linkvault/export'] = 'linkvault/reports/export-csv';
 			$event->rules['linkvault/customfields'] = 'linkvault/custom-fields/custom-fields';
 			$event->rules['linkvault/customfields/new'] = 'linkvault/custom-fields/custom-field-form';
 			$event->rules['linkvault/customfields/create'] = 'linkvault/custom-fields/custom-field-submit';

@@ -6,6 +6,7 @@ use Craft;
 use craft\awss3\Volume as S3;
 use craft\elements\Asset;
 use craft\googlecloud\Volume as GoogleCloud;
+use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use craft\volumes\Local;
 use yii\base\Component;
@@ -22,6 +23,11 @@ class ExportService extends Component
 	 */
 	public function convertArrayToDelimitedContent($array=array(), $delimiter=",")
 	{
+		// Prefix the rows with a row of column names.
+		$firstRow = $array[0] ?? null;
+		if ( $firstRow ) {
+			array_unshift($array, array_keys($firstRow));
+		}
 		ob_start();
 		$f = fopen('php://output', 'w') or show_error("Can't open php://output");
 		$n = 0;
@@ -35,6 +41,26 @@ class ExportService extends Component
 		$str = ob_get_contents();
 		ob_end_clean();
 		return $str;
+	}
+
+	/**
+	 * This method generates a filename-friendly report name based on the criteria.
+	 * @param array $criteria
+	 * @return string
+	 */
+	public function generateReportFileName($criteria=[])
+	{
+		$currentDate = date('Ymd_Hi');
+		// Set a fallback report name.
+		$reportName = 'linkvault-records-'.$currentDate;
+		if ( !empty($criteria) ) {
+			$reportName = 'linkvault-';
+			foreach($criteria as $name => &$value) {
+				$reportName .= "{$name} {$value}";
+			}
+			$reportName = StringHelper::toKebabCase($reportName)."-{$currentDate}";
+		}
+		return $reportName;
 	}
 
 }

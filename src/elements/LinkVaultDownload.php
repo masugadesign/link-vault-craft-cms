@@ -140,7 +140,7 @@ class LinkVaultDownload extends Element
 	public static function defineTableAttributes($source = null): array
 	{
 		$tableAttributes = [];
-		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
+		$customFields = LinkVault::getInstance()->customFields->fetchAllCustomFields('fieldName');
 		foreach($customFields as $name => $fieldModel) {
 			$tableAttributes[$name] = $fieldModel->fieldLabel;
 		}
