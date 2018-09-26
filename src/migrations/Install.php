@@ -96,8 +96,8 @@ class Install extends Migration
 		if ( $this->db->tableExists('{{%linkvault_downloads}}') ) {
 			$this->dropTable('{{%linkvault_downloads}}');
 		}
-		if ( $this->db->tableExists('{{%linkvault_downloads}}') ) {
-			$this->dropTable('{{%linkvault_downloads}}');
+		if ( $this->db->tableExists('{{%linkvault_customfields}}') ) {
+			$this->dropTable('{{%linkvault_customfields}}');
 		}
 	}
 }
