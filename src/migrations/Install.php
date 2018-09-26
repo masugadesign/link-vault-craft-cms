@@ -77,6 +77,17 @@ class Install extends Migration
 			'type' => LinkVaultTopDownloadsWidget::class
 		], ['type' => 'LinkVault_TopDownloadsWidget']);
 
+		$downloadsTable = $this->db->schema->getTableSchema('{{%linkvault_downloads}}');
+		if ( ! isset($downloadsTable->columns['googleBucket']) ) {
+			$this->addColumn('{{%linkvault_downloads}}', 'googleBucket', 'VARCHAR(255) AFTER `s3Bucket`');
+		}
+		if ( ! isset($downloadsTable->columns['zipName']) ) {
+			$this->addColumn('{{%linkvault_downloads}}', 'zipName', 'VARCHAR(255) AFTER `downloadAs`');
+		}
+		if ( ! isset($downloadsTable->columns['isUrl']) ) {
+			$this->addColumn('{{%linkvault_downloads}}', 'isUrl', 'INT(10) UNSIGNED DEFAULT 0 AFTER `downloadAs`');
+		}
+
 		return true;
 	}
 
