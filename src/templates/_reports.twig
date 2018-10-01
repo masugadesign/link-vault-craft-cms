@@ -18,9 +18,12 @@
 
 {% block content %}
 
-{% set orderBy = craft.app.request.getParam('orderBy') ?? 'dateCreated' %}
+<script type="text/javascript">
+window.csrfTokenName = "{{ craft.config.get('csrfTokenName') }}";
+window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
+</script>
+
 {% set orderByParam = orderBy %}
-{% set sort = craft.app.request.getParam('sort') ?? 'desc' %}
 {# Timestamps are ambiguous. Let's prefix with the table name. #}
 {% if orderBy in ['dateCreated', 'dateUpdated'] %}
 	{% set orderByParam = 'linkvault_downloads.' ~ orderBy %}
@@ -28,13 +31,17 @@
 {# The "criteria" variable is defined in the ReportsController@actionIndex method. #}
 {% paginate craft.linkvault.downloads(criteria).orderBy(orderByParam ~ ' ' ~ sort).limit(50) as pageInfo, pageDownloads %}
 
-<h1>Download Reports</h1>
+<h1>Download Reports{% if report %} &ndash; {{ report.title|e }}{% endif %}</h1>
+
+<form id="reportsForm" action="" method="get"
+		data-export-action="{{ url('linkvault/export') }}"
+		data-save-report-action="{{ url('linkvault/reports/save-report') }}" >
 
 <div class="pane" >
 	<p>Report filters support the <a href="https://docs.craftcms.com/v3/searching.html#supported-syntaxes" target="_blank" >Craft CMS search syntax</a>.</p>
 	<div class="field" >
 		<div class="select" >
-			<select id="downloadAttributes" name="downloadAttributes" >
+			<select id="downloadAttributes" >
 				<option value="" >Add Attribute Filter</option>
 				{% for value,label in criteriaAttributes %}
 				<option value="{{ value }}" >{{ label }}</option>
@@ -42,14 +49,23 @@
 			</select>
 		</div>
 	</div>
+	<div class="field" >
+		<input type="text" class="text" id="reportTitle" name="title" style="width:300px" placeholder="Report Title" >
+	</div>
+	<div class="field" >
+		<button id="saveReport" class="btn submit fullwidth" >Save Report Criteria</button>
+	</div>
+	{% if report %}
+	<div class="field" >
+		<a href="{{ url('linkvault/reports/delete', {'reportId' : report.id}) }}" >Delete Report</a>
+	</div>
+	{% endif %}
 	{#
 	<div class="field" >
 		<button id="addFilter" class="btn submit" >Add Filter</button>
 	</div>
 	#}
 </div>
-
-<form id="reportsForm" action="" method="get" data-export-action="{{ url('linkvault/export') }}" >
 
 <div class="pane" >
 	<div id="criteriaFields" >
@@ -61,7 +77,7 @@
 				<label>{{ fieldName }}</label>
 			</div>
 			<div class="input ltr" >
-				<input type="text" class="text" name="criteria[{{ fieldName }}]" value="{{ value }}" >
+				<input type="text" class="text" id="criteria_{{ fieldName }}" name="criteria[{{ fieldName }}]" value="{{ value }}" >
 			</div>
 		</div>
 		{% endfor %}
@@ -90,6 +106,8 @@
 		</div>
 	</div>
 </div>
+
+</form>
 
 {% if pageInfo.total > 0 %}
 <p>Showing {{ pageInfo.first }} &ndash; {{ pageInfo.last }} of {{ pageInfo.total|number_format }} results.</p>
@@ -134,7 +152,7 @@
 	</tbody>
 </table>
 
-</form>
+
 
 {% set queryString = '?' ~ craft.app.request.getQueryStringWithoutPath() %}
 <div>
@@ -169,4 +187,15 @@
 			</tbody>
 		</table>
 	</div>
+	{% set savedReports = craft.linkvault.reports.orderBy('title asc').all() %}
+	{% if savedReports|length %}
+	<h3>Run Saved Reports</h3>
+	<nav>
+		<ul>
+		{% for savedReport in savedReports %}
+			<li><a href="{{ savedReport.getUrl() }}" >{{ savedReport.title|e }}</a></li>
+		{% endfor %}
+		</ul>
+	</nav>
+	{% endif %}
 {% endblock %}

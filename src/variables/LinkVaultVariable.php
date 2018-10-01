@@ -5,6 +5,7 @@ namespace Masuga\LinkVault\variables;
 use Craft;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\db\LinkVaultDownloadQuery;
+use Masuga\LinkVault\elements\db\LinkVaultReportQuery;
 
 class LinkVaultVariable
 {
@@ -28,7 +29,7 @@ class LinkVaultVariable
 	 * @param array $parameters
 	 * @return string
 	 */
-	public function downloadUrl($file, $parameters=array())
+	public function downloadUrl($file, $parameters=[])
 	{
 		return $this->plugin->general->downloadUrl($file, $parameters);
 	}
@@ -40,7 +41,7 @@ class LinkVaultVariable
 	 * @param string $zipBaseName
 	 * @param array $parameters
 	 */
-	public function zipUrl($files, $zipBaseName=null, $parameters=array())
+	public function zipUrl($files, $zipBaseName=null, $parameters=[])
 	{
 		return $this->plugin->general->zipUrl($files, $zipBaseName, $parameters);
 	}
@@ -75,7 +76,7 @@ class LinkVaultVariable
 	 * @param array $criteria
 	 * @return LinkVaultDownloadQuery
 	 */
-	public function records($criteria=array()): LinkVaultDownloadQuery
+	public function records($criteria=[]): LinkVaultDownloadQuery
 	{
 		return $this->plugin->general->records($criteria);
 	}
@@ -98,7 +99,7 @@ class LinkVaultVariable
 	 * @param array $criteria
 	 * @return LinkVaultDownloadQuery
 	 */
-	public function downloads($criteria=array()): LinkVaultDownloadQuery
+	public function downloads($criteria=[]): LinkVaultDownloadQuery
 	{
 		$criteria['type'] = 'Download';
 		return $this->plugin->general->records($criteria);
@@ -110,7 +111,7 @@ class LinkVaultVariable
 	 * @param array $criteria
 	 * @return LinkVaultDownloadQuery
 	 */
-	public function leechAttempts($criteria=array()): LinkVaultDownloadQuery
+	public function leechAttempts($criteria=[]): LinkVaultDownloadQuery
 	{
 		$criteria['type'] = 'Leech Attempt';
 		return $this->plugin->general->records($criteria);
@@ -124,6 +125,16 @@ class LinkVaultVariable
 	public function parseEnvironmentString($string): string
 	{
 		return $this->plugin->files->parseEnvironmentString($string);
+	}
+
+	/**
+	 * This method allows for querying saved Link Vault reports.
+	 * @param array $criteria
+	 * @return LinkVaultReportQuery
+	 */
+	public function reports($criteria=[]): LinkVaultReportQuery
+	{
+		return $this->plugin->reports->reports($criteria);
 	}
 
 }

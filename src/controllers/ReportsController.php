@@ -4,8 +4,11 @@ namespace Masuga\LinkVault\controllers;
 
 use Craft;
 use craft\helpers\ArrayHelper;
+use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use Masuga\LinkVault\LinkVault;
+use Masuga\LinkVault\elements\LinkVaultReport;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 class ReportsController extends Controller
@@ -33,9 +36,15 @@ class ReportsController extends Controller
 		$request = Craft::$app->getRequest();
 		$options = $this->plugin->general->reportAttributeOptions();
 		$criteria = $request->getParam('criteria');
+		$orderBy = $request->getParam('orderBy');
+		$sort = $request->getParam('sort');
+		$reportId = $request->getParam('reportId');
 		return $this->renderTemplate('linkvault/_reports', [
 			'criteria' => $criteria,
-			'criteriaAttributes' => $options
+			'criteriaAttributes' => $options,
+			'orderBy' => $orderBy ?: 'dateCreated',
+			'sort' => $sort ?: 'desc',
+			'report' => $reportId ? $this->plugin->reports->fetchReportById($reportId) : null
 		]);
 	}
 
@@ -59,6 +68,57 @@ class ReportsController extends Controller
 		$response = Craft::$app->getResponse();
 		$reportName = $this->plugin->export->generateReportFileName($criteria);
 		return $response->sendContentAsFile($csvContent, $reportName.'.csv', ['mimeType' => 'text/csv']);
+	}
+
+	/**
+	 * This controller action method either creates or updates an existing report
+	 * element.
+	 * @return Response
+	 */
+	public function actionSaveReport(): Response
+	{
+		$this->requirePostRequest();
+		$request = Craft::$app->getRequest();
+		$id = $request->post('reportId');
+		$fields = [
+			'title' => $request->post('title'),
+			'criteria' => json_encode($request->post('criteria')),
+			'orderBy' => $request->post('orderBy'),
+			'sort' => $request->post('sort')
+		];
+		$report = $this->plugin->reports->saveReport($fields, $id);
+		if ( $report ) {
+			Craft::$app->getSession()->setNotice(Craft::t('linkvault', 'Link Vault report criteria saved!'));
+			$response = $this->asJson(['url' => $report->getUrl()]);
+		} else {
+			Craft::$app->getSession()->setError(Craft::t('linkvault', 'Error saving the Link Vault report criteria.'));
+			$response = $this->asJsoin(['error' => Craft::t('linkvault', 'Unable to save report')]);
+		}
+		return $response;
+	}
+
+	/**
+	 * This controller action method deletes a Link Vault report element by ID.
+	 * @return Response
+	 * @throws NotFoundHttpException
+	 */
+	public function actionDelete(): Response
+	{
+		$request = Craft::$app->getRequest();
+		$id = $request->getParam('reportId');
+		$report = $this->plugin->reports->fetchReportById($id);
+		if ( ! $report ) {
+			throw new NotFoundHttpException('Report not found.');
+		}
+		Craft::$app->db->createCommand()->delete('{{%linkvault_reports}}', ['id' => $report->id]);
+		$deleted = Craft::$app->getElements()->deleteElementById($report->id);
+		if ( $deleted ) {
+			Craft::$app->getSession()->setNotice(Craft::t('linkvault', 'Link Vault report criteria deleted!'));
+		} else {
+			Craft::$app->getSession()->setError(Craft::t('linkvault', 'Error deleting the Link Vault report criteria.'));
+		}
+		$response = $this->redirect(UrlHelper::cpUrl('linkvault/reports'));
+		return $response;
 	}
 
 }

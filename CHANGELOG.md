@@ -8,6 +8,7 @@ a# Changelog
 ### Fixed
 - Fixed numerous deprecation errors in control panel templates.
 - Fixed date parameters issues that occurred when querying download records.
+- Fixed the installation migration to properly drop the custom fields table on uninstall.
 
 # 3.0.5.1 - 2018-09-26
 

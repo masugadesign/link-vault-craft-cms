@@ -20,6 +20,7 @@ use Masuga\LinkVault\services\CustomFieldsService;
 use Masuga\LinkVault\services\ExportService;
 use Masuga\LinkVault\services\FilesService;
 use Masuga\LinkVault\services\GeneralService;
+use Masuga\LinkVault\services\ReportsService;
 use Masuga\LinkVault\variables\LinkVaultVariable;
 use Masuga\LinkVault\widgets\LinkVaultTopDownloadsWidget;
 
@@ -94,6 +95,7 @@ class LinkVault extends Plugin
 			'export' => ExportService::class,
 			'files' => FilesService::class,
 			'general' => GeneralService::class,
+			'reports' => ReportsService::class
 		]);
 		// Register the Link Vault plugin log.
 		$fileTarget = new FileTarget([
@@ -109,6 +111,8 @@ class LinkVault extends Plugin
 			$event->rules['linkvault'] = 'linkvault/downloads/download-index';
 			$event->rules['linkvault/user'] = 'linkvault/downloads/user-downloads';
 			$event->rules['linkvault/reports'] = 'linkvault/reports/index';
+			$event->rules['linkvault/reports/delete'] = 'linkvault/reports/delete';
+			$event->rules['linkvault/reports/save-report'] = 'linkvault/reports/save-report';
 			$event->rules['linkvault/export'] = 'linkvault/reports/export-csv';
 			$event->rules['linkvault/customfields'] = 'linkvault/custom-fields/custom-fields';
 			$event->rules['linkvault/customfields/new'] = 'linkvault/custom-fields/custom-field-form';
