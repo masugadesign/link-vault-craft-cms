@@ -50,7 +50,10 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 		</div>
 	</div>
 	<div class="field" >
-		<input type="text" class="text" id="reportTitle" name="title" style="width:300px" placeholder="Report Title" >
+		<input type="text" class="text" id="reportTitle" name="title" style="width:300px" placeholder="Report Title" {% if report %}value="{{ report.title }}"{% endif %} >
+		{% if report %}
+		<input type="hidden" name="reportId" value="{{ report.id }}" >
+		{% endif %}
 	</div>
 	<div class="field" >
 		<button id="saveReport" class="btn submit fullwidth" >Save Report Criteria</button>

@@ -396,6 +396,7 @@ class GeneralService extends Component
 			'positionedAfter',
 			'positionedBefore',
 			'orderBy',
+			'relatedTo',
 			'siblingOf',
 			'status',
 			'structureId',
