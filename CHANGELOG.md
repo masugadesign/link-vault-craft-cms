@@ -1,4 +1,4 @@
-a# Changelog
+# Changelog
 
 ## 3.0.6 - YYYY-MM-DD
 
@@ -10,7 +10,7 @@ a# Changelog
 - Fixed date parameters issues that occurred when querying download records.
 - Fixed the installation migration to properly drop the custom fields table on uninstall.
 
-# 3.0.5.1 - 2018-09-26
+## 3.0.5.1 - 2018-09-26
 
 ### Fixed
 - Fixed installation migration so it adds potential missing columns from old versions of Link Vault.
