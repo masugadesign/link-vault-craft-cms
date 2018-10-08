@@ -1,0 +1,15 @@
+<div>
+	<ul class="lvPagination">
+		<li><a href="{{ pageInfo.firstUrl ~ queryString }}">&#171;</a></li>
+		{% if pageInfo.prevUrl %}<li><a href="{{ pageInfo.prevUrl  ~ queryString}}">&#60;</a></li>{% endif %}
+		{% for page, url in pageInfo.getPrevUrls(5) %}
+			<li><a href="{{ url ~ queryString }}">{{ page }}</a></li>
+		{% endfor %}
+		<li><span class="current">{{ pageInfo.currentPage }}</span></li>
+		{% for page, url in pageInfo.getNextUrls(5) %}
+			<li><a href="{{ url ~ queryString }}">{{ page }}</a></li>
+		{% endfor %}
+		{% if pageInfo.nextUrl %}<li><a href="{{ pageInfo.nextUrl ~ queryString }}">&#62;</a></li>{% endif %}
+		<li><a href="{{ pageInfo.lastUrl ~ queryString }}">&#187;</a></li>
+	</ul>
+</div>
