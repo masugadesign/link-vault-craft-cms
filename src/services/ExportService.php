@@ -6,6 +6,7 @@ use Craft;
 use craft\awss3\Volume as S3;
 use craft\elements\Asset;
 use craft\googlecloud\Volume as GoogleCloud;
+use craft\helpers\FileHelper;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use craft\volumes\Local;
@@ -21,11 +22,11 @@ class ExportService extends Component
 	 * @param string $delimiter
 	 * @return string
 	 */
-	public function convertArrayToDelimitedContent($array=array(), $delimiter=",")
+	public function convertArrayToDelimitedContent($array=array(), $delimiter=",", $includeColumnHeader=false)
 	{
 		// Prefix the rows with a row of column names.
 		$firstRow = $array[0] ?? null;
-		if ( $firstRow ) {
+		if ( $firstRow && $includeColumnHeader ) {
 			array_unshift($array, array_keys($firstRow));
 		}
 		ob_start();
@@ -41,6 +42,16 @@ class ExportService extends Component
 		$str = ob_get_contents();
 		ob_end_clean();
 		return $str;
+	}
+
+	/**
+	 * This method appends content to a specified file path.
+	 * @param string $filePath
+	 * @param string $content
+	 */
+	public function writeToFile($filePath, $content)
+	{
+		FileHelper::writeToFile($filePath, $content, ['append' => true]);
 	}
 
 	/**

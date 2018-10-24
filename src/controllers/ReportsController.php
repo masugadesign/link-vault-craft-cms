@@ -59,15 +59,33 @@ class ReportsController extends Controller
 		$criteria = $request->getParam('criteria');
 		$orderBy = $request->getParam('orderBy');
 		$sort = $request->getParam('sort');
+		// This is simply uses as a pagination limit so we don't load all report records at once.
+		$limit = 10;
+		$offset = $count = 0;
 		if ( in_array($orderBy, ['dateCreated', 'dateUpdated']) ) {
 			$orderBy = 'linkvault_downloads.'.$orderBy;
 		}
-		$records = $this->plugin->general->records($criteria)->orderBy($orderBy.' '.$sort)->limit(null)->all();
-		$recordsArray = ArrayHelper::toArray($records);
-		$csvContent = $this->plugin->export->convertArrayToDelimitedContent($recordsArray);
+		// Determine an appropriate filename and file path for the generated file.
+		$reportName = $this->plugin->export->generateReportFileName($criteria).'.csv';
+		$reportPath = Craft::$app->getPath()->getRuntimePath().'/'.$reportName;
+		// Query the records in batches to prevent the request from using too much memory.
+		do {
+			$offset += $count;
+			$records = $this->plugin->general->records($criteria)->orderBy($orderBy.' '.$sort)->limit($limit)->offset($offset)->all();
+			$count = count($records);
+			$recordsArray = ArrayHelper::toArray($records);
+			// Clean up odd criteria columns out of the record array, by reference.
+			foreach($recordsArray as &$record) {
+				// This method is also a "by reference" call, hence no return value.
+				$this->plugin->general->cleanRecordArray($record);
+			}
+			// Set a boolean to determine whether or not we should include the column header.
+			$includeColumnHeader = ( $offset === 0 ) ? true : false;
+			$csvContent = $this->plugin->export->convertArrayToDelimitedContent($recordsArray, ',', $includeColumnHeader);
+			$this->plugin->export->writeToFile($reportPath, $csvContent);
+		} while ($count > 0);
 		$response = Craft::$app->getResponse();
-		$reportName = $this->plugin->export->generateReportFileName($criteria);
-		return $response->sendContentAsFile($csvContent, $reportName.'.csv', ['mimeType' => 'text/csv']);
+		return $response->sendFile($reportPath);
 	}
 
 	/**
