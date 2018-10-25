@@ -114,6 +114,11 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 
 </form>
 
+<p>
+<button id="refreshResults" class="btn submit " >Refresh Results</button>
+<button id="exportAsCsv" class="btn submit " >Export as CSV</button>
+</p>
+
 {% if pageInfo.total > 0 %}
 <p>Showing {{ pageInfo.first }} &ndash; {{ pageInfo.last }} of {{ pageInfo.total|number_format }} results.</p>
 {% include 'linkvault/_partials/pagination' %}
@@ -163,6 +168,7 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 {% endblock %}
 
 {% block sidebar %}
+{#
 	<div class="buttons">
 		<table class="data fullwidth collapsible">
 			<tbody>
@@ -176,6 +182,7 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 			</tbody>
 		</table>
 	</div>
+#}
 	{% set savedReports = craft.linkvault.reports.orderBy('title asc').all() %}
 	{% if savedReports|length %}
 	<h3>Run Saved Reports</h3>

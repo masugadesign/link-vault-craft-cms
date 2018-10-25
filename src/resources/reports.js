@@ -12,12 +12,12 @@ $(document).ready(function() {
 		$(this).parent().remove();
 	});
 
-	$("#sidebar").on("click", "#refreshResults", function() {
+	$("#content").on("click", "#refreshResults", function() {
 		$("#reportsForm").attr('action', '');
 		$("#reportsForm").submit();
 	});
 
-	$("#sidebar").on("click", "#exportAsCsv", function() {
+	$("#content").on("click", "#exportAsCsv", function() {
 		$("#reportsForm").attr('action', $("#reportsForm").attr('data-export-action'));
 		$("#reportsForm").submit();
 	});
