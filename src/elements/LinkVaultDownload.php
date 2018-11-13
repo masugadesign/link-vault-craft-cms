@@ -95,6 +95,14 @@ class LinkVaultDownload extends Element
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public static function isLocalized(): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Returns this element type's sources.
 	 * @param string|null $context
 	 * @return array|false

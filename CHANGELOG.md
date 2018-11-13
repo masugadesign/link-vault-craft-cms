@@ -1,6 +1,11 @@
 a# Changelog
 
-# 3.0.5.1 - 2018-09-26
+## 3.0.5.2 - 2018-11-13
+
+### Fixed
+- Fixed multi-site localization of download elements.
+
+## 3.0.5.1 - 2018-09-26
 
 ### Fixed
 - Fixed installation migration so it adds potential missing columns from old versions of Link Vault.
