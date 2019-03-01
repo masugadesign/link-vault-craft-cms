@@ -198,13 +198,12 @@ class LinkVaultDownload extends Element
 	 */
 	protected function tableAttributeHtml(string $attribute): string
 	{
+		$displayValue = '';
 		switch ($attribute) {
 			case 'dateCreated': {
 				$date = $this->$attribute;
 				if ($date) {
-					return DateTimeHelper::toDateTime($date)->format('F j, Y H:i');
-				} else {
-					return '';
+					$displayValue = DateTimeHelper::toDateTime($date)->format('F j, Y H:i');
 				}
 			}
 			case 'assetId':
@@ -214,20 +213,20 @@ class LinkVaultDownload extends Element
 				} else {
 					$display = $this->$attribute;
 				}
-				return $display;
+				$displayValue = $display;
 			case 'userId':
 				$user = $this->user;
-				return isset($user->username) ? '<a href="'.UrlHelper::cpUrl('linkvault/user', ['userId' => $user->id]).'" >'.$user->username.'</a>' : '--';
+				$displayValue = isset($user->username) ? '<a href="'.UrlHelper::cpUrl('linkvault/user', ['userId' => $user->id]).'" >'.$user->username.'</a>' : '--';
 			case 'elementId':
 				$element = $this->relatedElement;
 				if ( $element ) {
-					$title = (string)$element ?: '--';
+					$title = (string) $element ?: '--';
 					$url = $this->getCpEditUrl();
 					$output = $url ? '<a href="'.$url.'" >'.$title.'</a>' : $title;
 				} else {
 					$output = '--';
 				}
-				return $output;
+				$displayValue = $output;
 			case 'dirName':
 				if ( $this->s3Bucket ) {
 					$dir = $this->s3Bucket.':'.$this->$attribute;
@@ -236,13 +235,13 @@ class LinkVaultDownload extends Element
 				} else {
 					$dir = $this->$attribute;
 				}
-				return $dir;
+				$displayValue = $dir;
 			case 'id':
-				return $this->$attribute;
-			default: {
-				return parent::tableAttributeHtml($attribute);
-			}
+				$displayValue = $this->$attribute;
+			default:
+				$displayValue = parent::tableAttributeHtml($attribute);
 		}
+		return (string) $displayValue;
 	}
 
 	/**

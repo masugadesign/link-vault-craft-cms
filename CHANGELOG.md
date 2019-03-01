@@ -10,6 +10,12 @@
 - Fixed date parameters issues that occurred when querying download records.
 - Fixed the installation migration to properly drop the custom fields table on uninstall.
 
+## 3.0.5.3 - 2019-03-01
+
+### Fixed
+- Fixed issue when upgrading Craft from v2 to v3.1. The upgrade process referenced the plugins table _settings_ column, which no longer exists.
+- Fixed the LinkVaultDownload element's _tableAttributeHtml_ method so it never returns a NULL value.
+
 ## 3.0.5.2 - 2018-11-13
 
 ### Fixed
