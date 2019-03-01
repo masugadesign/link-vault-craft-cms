@@ -1,13 +1,22 @@
 <?php
 namespace Masuga\LinkVault\migrations;
 
+use Craft;
 use craft\db\Migration;
 use Masuga\LinkVault\widgets\LinkVaultTopDownloadsWidget;
 
 class Install extends Migration
 {
+
+	/**
+	 * The currently installed version of Craft.
+	 * @var string
+	 */
+	protected $craftVersion = null;
+
 	public function safeUp()
 	{
+		$this->craftVersion = (string) Craft::$app->getVersion();
 		// If we just updated from Craft 2, no need to go further.
 		if ($this->_upgradeFromCraft2()) {
 			return;
@@ -48,9 +57,13 @@ class Install extends Migration
 
 	private function _upgradeFromCraft2()
 	{
+		// Determine which columns may or may not be available based on Craft 3 version.
+		$selectColumns = version_compare($this->craftVersion, '3.1.0', '>=') ?
+			['id', 'handle'] :
+			['id', 'settings', 'handle'];
 		// Fetch the old plugin row, if it was installed
 		$row = (new \craft\db\Query())
-			->select(['id', 'settings', 'handle'])
+			->select($selectColumns)
 			->from(['{{%plugins}}'])
 			->where(['handle' => 'linkVault'])
 			->andWhere(['<', 'version', '3.0.0'])
@@ -59,10 +72,12 @@ class Install extends Migration
 		if (!$row) {
 			return false;
 		}
-		// Update this one's settings to old values
-		$this->update('{{%plugins}}', [
-			'settings' => $row['settings']
-		], ['handle' => 'linkvault']);
+		// Update this one's settings to old values if Craft is 3.0.*.
+		if ( version_compare($this->craftVersion, '3.1.0', '<') ) {
+			$this->update('{{%plugins}}', [
+				'settings' => $row['settings']
+			], ['handle' => 'linkvault']);
+		}
 		// Delete the old row
 		$this->delete('{{%plugins}}', ['id' => $row['id']]);
 		// Update the element types.
