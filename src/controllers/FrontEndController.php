@@ -23,6 +23,7 @@ class FrontEndController extends Controller
 
 	public function init()
 	{
+		parent::init();
 		$this->plugin = LinkVault::getInstance();
 	}
 
