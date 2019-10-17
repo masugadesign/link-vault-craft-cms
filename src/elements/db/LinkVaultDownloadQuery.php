@@ -162,7 +162,12 @@ class LinkVaultDownloadQuery extends ElementQuery
 		// We need to manually populate the Link Vault custom field attributes on each element.
 		foreach($elements as $index => &$element) {
 			foreach($customFields as $name => &$customField) {
-				$element->{$name} = $rows[$index][$name] ?? null;
+				// Elements might be objects or arrays. Be sure to check for that.
+				if ( $this->asArray ) {
+					$element[$name] = $rows[$index][$name] ?? null;
+				} else {
+					$element->{$name} = $rows[$index][$name] ?? null;
+				}
 			}
 		}
 		return $elements;

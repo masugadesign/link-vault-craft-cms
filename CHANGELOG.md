@@ -9,6 +9,7 @@
 - Fixed numerous deprecation errors in control panel templates.
 - Fixed date parameters issues that occurred when querying download records.
 - Fixed the installation migration to properly drop the custom fields table on uninstall.
+- Fixed a bug where element arrays were treated as objects.
 
 ## 3.0.5.3 - 2019-03-01
 
