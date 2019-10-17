@@ -1,5 +1,10 @@
 a# Changelog
 
+## 3.0.5.4 - 2019-10-17
+
+### Fixed
+- **FrontEndController** now calls `parent::init()` so Craft can convert the boolean _allowAnonymous_ property into an integer. This fixes an issue that prevented unauthenticated users from downloading files.
+
 ## 3.0.5.3 - 2019-03-01
 
 ### Fixed
