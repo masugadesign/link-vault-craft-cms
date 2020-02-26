@@ -373,50 +373,6 @@ class GeneralService extends Component
 	}
 
 	/**
-	 * This method returns an associative array of LinkVaultDownloadQuery criteria
-	 * attributes and their respective option label.
-	 * @return array
-	 */
-	public function reportAttributeOptions(): array
-	{
-		$omittedCriteria = [
-			'ancestorDist',
-			'ancestorOf',
-			'archived',
-			'descendantDist',
-			'descendantOf',
-			'enabledForSite',
-			'fixedOrder',
-			'hasDescendants',
-			'inReverse',
-			'leaves',
-			'level',
-			'nextSiblingOf',
-			'prevSiblingOf',
-			'positionedAfter',
-			'positionedBefore',
-			'orderBy',
-			'relatedTo',
-			'siblingOf',
-			'status',
-			'structureId',
-			'title',
-			'with',
-			'withStructure'
-		];
-		$elementQuery = new LinkVaultDownloadQuery(LinkVaultDownload::class, []);
-		$criteriaAttributes = array_diff($elementQuery->criteriaAttributes(), $omittedCriteria);
-		$customFields = array_keys($this->plugin->customFields->fetchAllCustomFields('fieldName'));
-		$criteriaAttributes = array_merge($criteriaAttributes, $customFields);
-		sort($criteriaAttributes);
-		$options = [];
-		foreach($criteriaAttributes as $attr) {
-			$options[$attr] = Inflector::camel2words($attr);
-		}
-		return $options;
-	}
-
-	/**
 	 * This method cleans up a download record array so odd criteria attributes
 	 * aren't displayed or taking up space in memory.
 	 * @param array $r

@@ -3,8 +3,7 @@
 {% set elementType = 'Masuga\\LinkVault\\elements\\LinkVaultDownload' %}
 
 {% set tabs = {
-	downloads: { label: "Download History"|t, url: url('linkvault') },
-	reports: { label: "Reports"|t, url: url('linkvault/reports') },
+	reports: { label: "Download History Reporting"|t, url: url('linkvault/reports') },
 	customFields: { label: "Custom Fields"|t, url: url('linkvault/customfields') }
 } %}
 
@@ -14,9 +13,8 @@
 	downloads: { label: "Download History"|t, url: url('linkvault') }
 } %}
 
-{% set queryString = '?' ~ craft.app.request.getQueryStringWithoutPath() %}
-
 {% do view.registerAssetBundle("Masuga\\LinkVault\\resources\\ReportsAssetBundle") %}
+
 
 {% block content %}
 
@@ -30,6 +28,7 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 {% if orderBy in ['dateCreated', 'dateUpdated'] %}
 	{% set orderByParam = 'linkvault_downloads.' ~ orderBy %}
 {% endif %}
+
 {# The "criteria" variable is defined in the ReportsController@actionIndex method. #}
 {% paginate craft.linkvault.downloads(criteria).orderBy(orderByParam ~ ' ' ~ sort).limit(50) as pageInfo, pageDownloads %}
 
@@ -73,16 +72,16 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 </div>
 
 <div class="pane" >
-	<div id="criteriaFields" >
+	<div id="criteriaFields" class="lvCriteria" >
 		{# Existing criteria filters should be displayed. #}
 		{% for fieldName,value in criteria  %}
 		<div class="field" >
-			<a href="#" class="remove-criteria" data-remove-criteria >X</a>
 			<div class="heading">
 				<label>{{ fieldName }}</label>
 			</div>
 			<div class="input ltr" >
 				<input type="text" class="text" id="criteria_{{ fieldName }}" name="criteria[{{ fieldName }}]" value="{{ value }}" >
+				<a href="#" class="submit remove-criteria" data-remove-criteria >X</a>
 			</div>
 		</div>
 		{% endfor %}
@@ -134,6 +133,9 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 			<th scope="col" class="header" >File Name</th>
 			<th scope="col" class="header" >User</th>
 			<th scope="col" class="header" >Asset</th>
+			{% for fieldName,value in criteria  %}
+			<th scope="col" class="header" >{{ fieldName|e }}</th>
+			{% endfor %}
 		</tr>
 	</thead>
 	<tbody>
@@ -158,6 +160,9 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 					{% endif %}
 				{% endif %}
 			</td>
+			{% for fieldName,value in criteria %}
+			<td>{{  attribute(download, fieldName) }}</td>
+			{% endfor %}
 		</tr>
 	{% endfor %}
 	</tbody>

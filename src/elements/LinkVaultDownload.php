@@ -17,6 +17,11 @@ use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\db\LinkVaultDownloadQuery;
 use Masuga\LinkVault\records\LinkVaultDownloadRecord;
 
+/**
+ * The Link Vault Download element class. This class is being deprecated so the
+ * records are stored in the DB without all the "element" pieces.
+ * @deprecated
+ */
 class LinkVaultDownload extends Element
 {
 
@@ -190,7 +195,13 @@ class LinkVaultDownload extends Element
 	 */
 	protected static function defineSearchableAttributes(): array
 	{
-		return ['dirName', 'fileName'];
+		/*
+		Sites with a lot of download records end up with a HUGE search index and
+		nobody is going to be "searching" download elements. It's easy enough to
+		query them directly.
+		*/
+		//return ['dirName', 'fileName'];
+		return [];
 	}
 
 	/**

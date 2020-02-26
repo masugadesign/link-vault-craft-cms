@@ -34,7 +34,7 @@ class ReportsController extends Controller
 	public function actionIndex(): Response
 	{
 		$request = Craft::$app->getRequest();
-		$options = $this->plugin->general->reportAttributeOptions();
+		$options = $this->plugin->reports->reportAttributeOptions();
 		$criteria = $request->getParam('criteria');
 		$orderBy = $request->getParam('orderBy');
 		$sort = $request->getParam('sort');

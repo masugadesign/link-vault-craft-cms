@@ -50,7 +50,7 @@ function addCriteriaFilter()
 	var fieldName = $("#downloadAttributes").val();
 	// Make sure the specified criteria field doesn't already exist.
 	if ( fieldName && ! $("#criteria_"+fieldName).length ) {
-		var html = $("<div class='field' ><a href='#' class='remove-criteria' data-remove-criteria >X</a><div class='heading'><label>"+fieldName+"</label></div><div class='input ltr' ><input type='text' class='text' name='criteria["+fieldName+"]' ></div></div>");
+		var html = $("<div class='field' ><div class='heading'><label>"+fieldName+"</label></div><div class='input ltr' ><input type='text' class='text' name='criteria["+fieldName+"]' ><a href='#' class='submit remove-criteria' data-remove-criteria >X</a></div></div>");
 		$(html).appendTo("#criteriaFields");
 	}
 }

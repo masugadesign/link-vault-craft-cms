@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.6 - YYYY-MM-DD
+## 3.1.0 - YYYY-MM-DD
 
 ### Added
 - Added a reporting tool to the control panel.
@@ -10,6 +10,10 @@
 - Fixed date parameters issues that occurred when querying download records.
 - Fixed the installation migration to properly drop the custom fields table on uninstall.
 - Fixed a bug where element arrays were treated as objects.
+
+### Removed
+- Removed the LinkVaultDownload element index page.
+- Removed searchable columns from LinkVaultDownload element.
 
 ## 3.0.5.4 - 2019-10-17
 

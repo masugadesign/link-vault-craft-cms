@@ -14,11 +14,31 @@ use yii\helpers\Inflector;
 use yii\log\Logger;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\LinkVaultReport;
+use Masuga\LinkVault\elements\db\LinkVaultDownloadQuery;
 use Masuga\LinkVault\elements\db\LinkVaultReportQuery;
 use Masuga\LinkVault\records\LinkVaultReportRecord;
 
 class ReportsService extends Component
 {
+
+	/**
+	 * The instance of the LinkVault plugin.
+	 * @var LinkVault
+	 */
+	private $plugin = null;
+
+	/**
+	 * A boolean variable to determine if debug is enabled for Link Vault.
+	 * @var boolean
+	 */
+	public $debug = false;
+
+	public function init()
+	{
+		$this->plugin = LinkVault::getInstance();
+		$this->debug = $this->plugin->getSettings()->debug;
+	}
+
 	/**
 	 * This method creates/updates a LinkVaultReport element based on whether or
 	 * not an existing report ID is supplied.
@@ -68,4 +88,68 @@ class ReportsService extends Component
 		}
 		return $query;
 	}
+
+	/**
+	 * This method returns an associative array of LinkVaultDownloadQuery criteria
+	 * attributes and their respective option label.
+	 * @return array
+	 */
+	public function reportAttributeOptions(): array
+	{
+		// This is a long list of criteria that don't apply to Link Vault downloads.
+		$omittedCriteria = [
+			'after',
+			'ancestorDist',
+			'ancestorOf',
+			'archived',
+			'before',
+			'descendantDist',
+			'descendantOf',
+			'draftCreator',
+			'draftId',
+			'draftOf',
+			'drafts',
+			'enabledForSite',
+			'fixedOrder',
+			'hasDescendants',
+			'ignorePlaceholders',
+			'inReverse',
+			'leaves',
+			'level',
+			'nextSiblingOf',
+			'preferSites',
+			'prevSiblingOf',
+			'positionedAfter',
+			'positionedBefore',
+			'orderBy',
+			'ref',
+			'relatedTo',
+			'revisionCreator',
+			'revisionId',
+			'revisionOf',
+			'revisions',
+			'search',
+			'siblingOf',
+			'status',
+			'structureId',
+			'title',
+			'trashed',
+			'type',
+			'unique',
+			'uri',
+			'with',
+			'withStructure'
+		];
+		$elementQuery = new LinkVaultDownloadQuery(LinkVaultDownload::class, []);
+		$criteriaAttributes = array_diff($elementQuery->criteriaAttributes(), $omittedCriteria);
+		$customFields = array_keys($this->plugin->customFields->fetchAllCustomFields('fieldName'));
+		$criteriaAttributes = array_merge($criteriaAttributes, $customFields);
+		sort($criteriaAttributes);
+		$options = [];
+		foreach($criteriaAttributes as $attr) {
+			$options[$attr] = Inflector::camel2words($attr);
+		}
+		return $options;
+	}
+
 }

@@ -8,6 +8,11 @@ use craft\helpers\Db;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\LinkVaultDownload;
 
+/**
+ * This is the Link Vault Download element query class. It has been deprecated
+ * but should still be included with the plugin in case of updates.
+ * @deprecated
+ */
 class LinkVaultDownloadQuery extends ElementQuery
 {
 

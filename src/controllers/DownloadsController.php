@@ -15,7 +15,7 @@ class DownloadsController extends Controller
 	 */
 	public function actionDownloadIndex()
 	{
-		return $this->renderTemplate('linkvault/_index');
+		return $this->redirect('linkvault/reports');
 	}
 
 	/**

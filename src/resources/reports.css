@@ -1,9 +1,27 @@
+
+.content-pane {
+	overflow: auto;
+}
+
 .field {
 	display: inline-block;
 	margin-right: 24px;
 	margin-bottom: 24px;
 	margin-top: 0px;
 	margin-left: 0px;
+}
+
+.text:not(.selectize-text) {
+	border-radius: 2px 0px 0px 2px;
+}
+
+.field .input .remove-criteria {
+	color: #fff;
+	background-color: #E5422B;
+	min-height: 3px;
+	padding: 5px 7px;
+	border-radius: 0px 2px 2px 0px;
+	margin: 0px;
 }
 
 .pane .field {
