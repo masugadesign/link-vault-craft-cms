@@ -90,13 +90,50 @@ class ReportsService extends Component
 	}
 
 	/**
+	 * This method cleans up a download record array by reference so odd criteria
+	 * attributes aren't displayed or taking up space in memory.
+	 * @param array $r
+	 */
+	public function cleanRecordArray(&$r)
+	{
+		unset($r['title'],
+			$r['slug'],
+			$r['uri'],
+			$r['before'],
+			$r['after'],
+			$r['tempId'],
+			$r['fieldLayoutId'],
+			$r['contentId'],
+			$r['hasDescendants'],
+			$r['ref'],
+			$r['structureId'],
+			$r['totalDescendants'],
+			$r['newSiteIds'],
+			$r['archived'],
+			$r['enabled'],
+			$r['draftId'],
+			$r['revisionId'],
+			$r['dateDeleted'],
+			$r['trashed'],
+			$r['propogateAll'],
+			$r['resaving'],
+			$r['duplicateOf'],
+			$r['previewing'],
+			$r['hardDelete']
+		);
+	}
+
+	/**
 	 * This method returns an associative array of LinkVaultDownloadQuery criteria
 	 * attributes and their respective option label.
 	 * @return array
 	 */
 	public function reportAttributeOptions(): array
 	{
-		// This is a long list of criteria that don't apply to Link Vault downloads.
+		/*
+		This is a long list of criteria that don't apply to Link Vault downloads.
+		This list seems to get longer with each release of Craft.
+		*/
 		$omittedCriteria = [
 			'after',
 			'ancestorDist',
@@ -117,6 +154,7 @@ class ReportsService extends Component
 			'leaves',
 			'level',
 			'nextSiblingOf',
+			'newSiteIds',
 			'preferSites',
 			'prevSiblingOf',
 			'positionedAfter',

@@ -23,7 +23,7 @@ class ExportService extends Component
 	 * @return string
 	 */
 	public function convertArrayToDelimitedContent($array=array(), $delimiter=",", $includeColumnHeader=false)
-	{
+	{ //exit("<pre>".print_r($array,true)."</pre>");
 		// Prefix the rows with a row of column names.
 		$firstRow = $array[0] ?? null;
 		if ( $firstRow && $includeColumnHeader ) {

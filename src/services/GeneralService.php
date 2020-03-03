@@ -372,25 +372,4 @@ class GeneralService extends Component
 		}
 	}
 
-	/**
-	 * This method cleans up a download record array so odd criteria attributes
-	 * aren't displayed or taking up space in memory.
-	 * @param array $r
-	 */
-	public function cleanRecordArray(&$r)
-	{
-		unset($r['title'],
-			$r['slug'],
-			$r['uri'],
-			$r['before'],
-			$r['after'],
-			$r['tempId'],
-			$r['fieldLayoutId'],
-			$r['contentId'],
-			$r['hasDescendants'],
-			$r['ref'],
-			$r['structureId'],
-			$r['totalDescendants']);
-	}
-
 }

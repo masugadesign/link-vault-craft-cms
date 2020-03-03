@@ -9,7 +9,7 @@ $(document).ready(function() {
 
 	$("#criteriaFields").on("click", "[data-remove-criteria]", function(e) {
 		e.preventDefault();
-		$(this).parent().remove();
+		$(this).closest('.field').remove();
 	});
 
 	$("#content").on("click", "#refreshResults", function() {

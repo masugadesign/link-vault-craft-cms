@@ -74,10 +74,15 @@ class ReportsController extends Controller
 			$records = $this->plugin->general->records($criteria)->orderBy($orderBy.' '.$sort)->limit($limit)->offset($offset)->all();
 			$count = count($records);
 			$recordsArray = ArrayHelper::toArray($records);
+			/*
+			@TODO: Instead of cleaning unwanted attributes out, let's just SELECT what we need.
+			Craft keeps adding new attributes that break the export of elements and it will be
+			tough to keep up with that.
+			*/
 			// Clean up odd criteria columns out of the record array, by reference.
 			foreach($recordsArray as &$record) {
 				// This method is also a "by reference" call, hence no return value.
-				$this->plugin->general->cleanRecordArray($record);
+				$this->plugin->reports->cleanRecordArray($record);
 			}
 			// Set a boolean to determine whether or not we should include the column header.
 			$includeColumnHeader = ( $offset === 0 ) ? true : false;
