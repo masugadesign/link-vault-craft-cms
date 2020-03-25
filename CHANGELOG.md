@@ -15,6 +15,11 @@
 - Removed the LinkVaultDownload element index page.
 - Removed searchable columns from LinkVaultDownload element.
 
+## 3.0.5.5 - 2020-03-25
+
+### Fixed
+- Fixed bug for Link Vault'd remote URL redirects.
+
 ## 3.0.5.4 - 2019-10-17
 
 ### Fixed

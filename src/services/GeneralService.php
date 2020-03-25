@@ -309,7 +309,7 @@ class GeneralService extends Component
 		// The file is a valid URL.
 		if ( $isUrl ) {
 			$this->logDownload($parameters);
-			Craft::$app->getRequest()->redirect($filePath);
+			Craft::$app->getResponse()->redirect($filePath);
 		// The file path is a valid file found on the server.
 		} elseif ( $filePath && file_exists($filePath) ) {
 			$this->logDownload($parameters);
