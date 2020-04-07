@@ -8,9 +8,16 @@ use craft\elements\Asset;
 use craft\elements\User;
 use yii\base\Component;
 use Masuga\LinkVault\LinkVault;
+use Masuga\LinkVault\events\ModifyZipUrlFilesEvent;
 
 class ArchiveService extends Component
 {
+
+	/**
+	 * The event that is triggered prior to adding files to the zip download.
+	 * @event ModifyZipUrlFilesEvent
+	 */
+	const EVENT_MODIFY_ZIP_URL_FILES = 'modifyZipUrlFiles';
 
 	/**
 	 * The system path where zip files are temporarily stored.
@@ -39,6 +46,12 @@ class ArchiveService extends Component
 	 */
 	public function trackAndZipFiles($files, $zipName, $parameters=array())
 	{
+		// Allow developers to add/remove/tweak files included in the zip.
+		$event = new ModifyZipUrlFilesEvent([
+			'files' => $files
+		]);
+		$this->trigger(self::EVENT_MODIFY_ZIP_URL_FILES, $event);
+		$files = $event->files;
 		$parameters['zipName'] = $zipName;
 		$zipPath = $this->runtimePath.$zipName;
 		$zipArchive = new ZipArchive;
