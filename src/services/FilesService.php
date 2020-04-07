@@ -64,7 +64,13 @@ class FilesService extends Component
 		// Disable error reporting to prevent "headers already sent" errors.
 		$originalErrorReporting = error_reporting();
 		//error_reporting(0);
-		set_time_limit(0);
+		/*
+		Some hosting PHP configurations disable this function so be careful.
+		It's probably better to advise people to increase their max_execution_time.
+		*/
+		if ( function_exists('set_time_limit') ) {
+			set_time_limit(0);
+		}
 		// Serve the file.
 		ob_start();
 		header("Pragma: public");
