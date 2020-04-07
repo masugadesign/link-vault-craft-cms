@@ -6,6 +6,7 @@ use Craft;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use Masuga\LinkVault\LinkVault;
+use yii\log\Logger;
 
 class FrontEndController extends Controller
 {
@@ -41,7 +42,7 @@ class FrontEndController extends Controller
 			// Log/download the file or render the "missing" template if the file isn't found.
 			$status = $this->plugin->general->download($parameters);
 			if ( $status == 404 ) {
-				$this->plugin->general->log("Download file does not exist: ".var_export($parameters,true), LogLevel::Error);
+				$this->plugin->general->log("Download file does not exist: ".var_export($parameters,true), Logger::LEVEL_ERROR);
 				header("HTTP/1.1 404 Not Found");
 				$this->renderErrorTemplate(404);
 			}
