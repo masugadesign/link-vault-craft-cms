@@ -15,6 +15,11 @@
 - Removed the LinkVaultDownload element index page.
 - Removed searchable columns from LinkVaultDownload element.
 
+## 3.0.5.7 - 2020-04-07
+
+### Fixed
+- Fixed bug with **zipUrl** template variable where the array contains assets (or asset IDs) followed by one or more hard-coded file paths.
+
 ## 3.0.5.6 - 2020-04-07
 
 ### Fixed
