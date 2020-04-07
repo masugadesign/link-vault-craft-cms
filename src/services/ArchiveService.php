@@ -45,7 +45,7 @@ class ArchiveService extends Component
 		$openCode = $zipArchive->open($zipPath, ZipArchive::CREATE|ZipArchive::OVERWRITE);
 		if ( $openCode === true ) {
 			foreach($files as &$file) {
-				$path = null;
+				$path = $asset = null;
 				$fileParams = $parameters;
 				// Numeric values should only be asset IDs. Fetch asset and full path.
 				if (is_numeric($file)) {
@@ -60,12 +60,14 @@ class ArchiveService extends Component
 				// If the path is a URL, attempt copy the contents to the archive.
 				} elseif ( filter_var($file, FILTER_VALIDATE_URL) !== false ) {
 					$fileParams['isUrl'] = 1;
+					$fileParams['assetId'] = null;
 					$fileParams['filePath'] = $file;
 					$downloadAs = end(explode('/', parse_url($file, PHP_URL_PATH)));
 				// Otherwise, add the file to the archive the usual way.
 				} elseif (is_string($file) && file_exists($file)) {
 					$path = $file;
 					$downloadAs = pathinfo($path, PATHINFO_BASENAME);
+					$fileParams['assetId'] = null;
 					$fileParams['filePath'] = $path;
 				}
 				// Update some parameters if file is reference/instance of an asset.
