@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.5.6 - 2020-04-07
+
+### Fixed
+- Fixed deprecated log level reference that caused a logging error when Link Vault determined a file was missing.
+- Wrapped a set_time_limit() call in function_exists() since that function can be disabled in php.ini.
+
 ## 3.0.5.5 - 2020-03-25
 
 ### Fixed
