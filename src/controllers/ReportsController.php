@@ -7,6 +7,7 @@ use craft\helpers\ArrayHelper;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use Masuga\LinkVault\LinkVault;
+use Masuga\LinkVault\elements\LinkVaultDownload;
 use Masuga\LinkVault\elements\LinkVaultReport;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -141,6 +142,27 @@ class ReportsController extends Controller
 			Craft::$app->getSession()->setError(Craft::t('linkvault', 'Error deleting the Link Vault report criteria.'));
 		}
 		$response = $this->redirect(UrlHelper::cpUrl('linkvault/reports'));
+		return $response;
+	}
+
+	/**
+	 * This controller action method deletes one or more Link Vault download records.
+	 * @return Response
+	 * @throws NotFoundHttpException
+	 */
+	public function actionDeleteRecords(): Response
+	{
+		$request = Craft::$app->getRequest();
+		$ids = $request->getParam('linkvaultrecords');
+		$deleted = 0;
+		$records = LinkVaultDownload::find()->id($ids)->limit(null)->all();
+		// Each record must be deleted in a loop in order to trigger the element events.
+		foreach($records as &$record) {
+			$success = Craft::$app->elements->deleteElementById($record->id);
+			$deleted += $success ? 1 : 0;
+		}
+		Craft::$app->getSession()->setNotice(Craft::t('linkvault', $deleted.' Link Vault download record(s) deleted!'));
+		$response = $this->redirectToPostedUrl();
 		return $response;
 	}
 

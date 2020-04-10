@@ -16,8 +16,6 @@
 }
 
 .field .input .remove-criteria {
-	color: #fff;
-	background-color: #E5422B;
 	min-height: 3px;
 	padding: 5px 7px;
 	border-radius: 0px 2px 2px 0px;
@@ -26,4 +24,11 @@
 
 .pane .field {
 	margin-bottom: 0px;
+}
+
+.actions-container {
+	display: inline-block;
+	position: relative;
+	float: right;
+	margin: 1rem 0;
 }

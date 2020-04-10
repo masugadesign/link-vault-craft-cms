@@ -43,6 +43,18 @@ $(document).ready(function() {
 			}
 		});
 	});
+
+	$("#content").on('click', "#linkVaultCheckAll", function(event) {
+		if(this.checked) {
+			$("[data-linkvault-checkbox]").each(function() {
+				this.checked = true;
+			});
+		} else {
+			$("[data-linkvault-checkbox]").each(function() {
+				this.checked = false;
+			});
+		}
+	});
 });
 
 function addCriteriaFilter()

@@ -38,10 +38,13 @@
 			<td class="textual" >
 				{% set asset = download.assetId ? craft.assets.id(download.assetId).one() : null %}
 				{% if asset is not empty %}
-					{% if asset.url is not empty %}
-						<a href="{{ asset.url }}" >{{ asset.title }}</a>
+					{% if asset.cpEditUrl %}
+						<a href="{{ asset.cpEditUrl }}" >{{ asset.title|e }}</a>
 					{% else %}
-						{{ asset.title }}
+						{{ asset.title|e }}
+					{% endif %}
+					{% if asset.url is not empty %}
+						&nbsp;<a href="{{ asset.url }}" class="light smalltext" target="_blank">open</a>
 					{% endif %}
 				{% endif %}
 			</td>

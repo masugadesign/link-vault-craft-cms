@@ -112,6 +112,7 @@ class LinkVault extends Plugin
 			$event->rules['linkvault/user'] = 'linkvault/downloads/user-downloads';
 			$event->rules['linkvault/reports'] = 'linkvault/reports/index';
 			$event->rules['linkvault/reports/delete'] = 'linkvault/reports/delete';
+			$event->rules['linkvault/reports/delete-records'] = 'linkvault/reports/delete-records';
 			$event->rules['linkvault/reports/save-report'] = 'linkvault/reports/save-report';
 			$event->rules['linkvault/export'] = 'linkvault/reports/export-csv';
 			$event->rules['linkvault/customfields'] = 'linkvault/custom-fields/custom-fields';

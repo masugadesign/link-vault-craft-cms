@@ -32,7 +32,9 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 {# The "criteria" variable is defined in the ReportsController@actionIndex method. #}
 {% paginate craft.linkvault.downloads(criteria).orderBy(orderByParam ~ ' ' ~ sort).limit(50) as pageInfo, pageDownloads %}
 
-<h1>Download Reports{% if report %} &ndash; {{ report.title|e }}{% endif %}</h1>
+{% if report %}
+<h1>{{ report.title|e }}</h1>
+{% endif %}
 
 <form id="reportsForm" action="" method="get"
 		data-export-action="{{ url('linkvault/export') }}"
@@ -125,9 +127,15 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 <p>0 results.</p>
 {% endif %}
 
+<form id="lvRecordsForm"  action="" method="post" >
+{{ csrfInput() }}
+{{ redirectInput(craft.app.request.url) }}
+<input type="hidden" name="action" value="linkvault/reports/delete-records" >
+
 <table class="data fullwidth collapsible" style="margin-top:1rem;" >
 	<thead>
 		<tr>
+			<th scope="col" class="header" style="text-align:center"><input type="checkbox" id="linkVaultCheckAll" name="linkvaultrecords[]" value="ALL" ></th>
 			<th scope="col" class="header" >Date</th>
 			<th scope="col" class="header" >Bucket/Directory</th>
 			<th scope="col" class="header" >File Name</th>
@@ -140,9 +148,11 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 	</thead>
 	<tbody>
 	{% for download in pageDownloads %}
+		{% set displayDirName = download.dirName|length > 25 ? '...' ~ download.dirName[0:24] : download.dirName %}
 		<tr>
+			<td style="text-align:center" ><input type="checkbox" name="linkvaultrecords[]" value="{{ download.id }}" data-linkvault-checkbox ></td>
 			<td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
-			<td class="textual" >{{ (download.s3Bucket ?? download.googleBucket ?? download.dirName )|e }}</td>
+			<td class="textual" >{{ (download.s3Bucket ?? download.googleBucket ?? displayDirName )|e }}</td>
 			<td class="textual" >{{ download.fileName|e }}</td>
 			<td class="textual" >
 				{% set user = download.userId ? craft.users.id(download.userId).one() : null %}
@@ -153,10 +163,13 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 			<td class="textual" >
 				{% set asset = download.assetId ? craft.assets.id(download.assetId).one() : null %}
 				{% if asset is not empty %}
-					{% if asset.url is not empty %}
-						<a href="{{ asset.url }}" >{{ asset.title }}</a>
+					{% if asset.cpEditUrl %}
+						<a href="{{ asset.cpEditUrl }}" >{{ asset.title|e }}</a>
 					{% else %}
-						{{ asset.title }}
+						{{ asset.title|e }}
+					{% endif %}
+					{% if asset.url is not empty %}
+						&nbsp;<a href="{{ asset.url }}" class="light smalltext" target="_blank">open</a>
 					{% endif %}
 				{% endif %}
 			</td>
@@ -169,6 +182,11 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 </table>
 
 {% include 'linkvault/_partials/pagination' %}
+<div class="actions-container" >
+	<input type="submit" class="btn submit" value="Deleted Checked Records" >
+</div>
+
+</form> {# lvRecordsForm #}
 
 {% endblock %}
 
