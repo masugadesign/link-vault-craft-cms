@@ -83,7 +83,7 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 			</div>
 			<div class="input ltr" >
 				<input type="text" class="text" id="criteria_{{ fieldName }}" name="criteria[{{ fieldName }}]" value="{{ value }}" >
-				<a href="#" class="submit remove-criteria" data-remove-criteria >X</a>
+				<a href="#" class="light remove-criteria" title="Remove criteria" data-remove-criteria >X</a>
 			</div>
 		</div>
 		{% endfor %}
