@@ -207,3 +207,45 @@ The __groupCount__ template variable queries record counts and groups them by a 
 {% endfor %}
 </ol>
 ```
+
+### Events
+
+**LinkVaultDownload** elements inherit all the standard Craft element events. Below is an example of the [craft\base\Element::EVENT_BEFORE_SAVE](https://github.com/craftcms/cms/blob/3.4.15/src/base/Element.php#L232) event:
+
+```
+<?php
+
+use craft\events\ModelEvent;
+use Masuga\LinkVault\elements\LinkVaultDownload;
+use yii\base\Event;
+
+Event::on(LinkVaultDownload::class,
+LinkVaultDownload::EVENT_BEFORE_SAVE,
+function (ModelEvent $event) {
+    $linkVaultDownloadElement = $event->sender;
+    $isNew = $event->isNew;
+});
+```
+
+Additionally, Link Vault contains the following events:
+
+#### ModifyZipUrlFilesEvent
+
+This event is triggered immediately before the Link Vault zipUrl tag creates an on-the-fly zip file. The event allows for adding files or removing files from the array of files to be zipped.
+
+```
+<?php
+
+use Masuga\LinkVault\events\ModifyZipUrlFilesEvent;
+use Masuga\LinkVault\services\ArchiveService;
+use yii\base\Event;
+
+...
+
+Event::on(ArchiveService::class,
+ArchiveService::EVENT_MODIFY_ZIP_URL_FILES,
+function (ModifyZipUrlFilesEvent $event) {
+	$event->files[] = '/path/to/file.jpg';
+    $event->files[] = 5; // Asset ID
+});
+```
