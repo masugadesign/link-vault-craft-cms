@@ -104,7 +104,7 @@ class LinkVault extends Plugin
 		]);
 		// Register the site front-end routes.
 		Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) use($downloadTrigger) {
-			$event->rules[$downloadTrigger] = 'linkvault/front-end/serve';
+			$event->rules[$downloadTrigger] = 'linkvault/link-vault/serve';
 		});
 		// Register the control panel routes.
 		Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {

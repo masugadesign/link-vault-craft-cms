@@ -229,6 +229,27 @@ function (ModelEvent $event) {
 
 Additionally, Link Vault contains the following events:
 
+#### LinkClickEvent
+
+This event is triggered immediately after someone clicks/follows a Link Vault URL and the encrypted parameters are decrypted.
+
+```
+<?php
+
+use Masuga\LinkVault\controllers\LinkVaultController;
+use Masuga\LinkVault\events\LinkClickEvent;
+use yii\base\Event;
+
+Event::on(LinkVaultController::class,
+LinkVaultController::EVENT_LINK_CLICK,
+function (LinkClickEvent $event) {
+	$event->parameters['additional_parameter'] = 'a value';
+    if ( $event->parameters['assetId'] == 5 ) {
+        ...
+    }
+});
+```
+
 #### ModifyZipUrlFilesEvent
 
 This event is triggered immediately before the Link Vault zipUrl tag creates an on-the-fly zip file. The event allows for adding files or removing files from the array of files to be zipped.
