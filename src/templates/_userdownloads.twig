@@ -49,11 +49,15 @@
 				{% endif %}
 			</td>
 		</tr>
+	{% else %}
+		<tr><td colspan="4">There are no records associated with this user.</td></tr>
 	{% endfor %}
 	</tbody>
 </table>
 
-{% include 'linkvault/_partials/pagination' %}
+{% if pageInfo.totalPages > 1 %}
+	{% include 'linkvault/_partials/pagination' %}
+{% endif %}
 
 {% endblock %}
 
