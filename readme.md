@@ -5,6 +5,15 @@
 ### Protect and track downloads on your site. Prevent and track leech attempts.
 This is a commercial plugin for Craft CMS 3.
 
+### Table of Contents
+
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Settings](#settings)
+* [Config Variables](#config-variables)
+* [Template Variables](#template-variables)
+* [Events](#events)
+
 ### Requirements
 
 * Craft CMS v3.0.0+
@@ -15,7 +24,7 @@ This is a commercial plugin for Craft CMS 3.
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "3.0.5",
+"masugadesign/linkvault": "3.1.0",
 ```
 
 ### Settings
@@ -210,7 +219,7 @@ The __groupCount__ template variable queries record counts and groups them by a 
 
 ### Events
 
-**LinkVaultDownload** elements inherit all the standard Craft element events. Below is an example of the [craft\base\Element::EVENT_BEFORE_SAVE](https://github.com/craftcms/cms/blob/3.4.15/src/base/Element.php#L232) event:
+**LinkVaultDownload** elements inherit all the standard Craft element events. Below is an example of the [craft\base\Element::EVENT\_BEFORE\_SAVE](https://github.com/craftcms/cms/blob/3.4.15/src/base/Element.php#L232) event:
 
 ```
 <?php
@@ -229,7 +238,7 @@ function (ModelEvent $event) {
 
 Additionally, Link Vault contains the following events:
 
-#### LinkClickEvent
+#### LinkClickEvent (Added in v3.1.0)
 
 This event is triggered immediately after someone clicks/follows a Link Vault URL and the encrypted parameters are decrypted.
 
@@ -250,7 +259,7 @@ function (LinkClickEvent $event) {
 });
 ```
 
-#### ModifyZipUrlFilesEvent
+#### ModifyZipUrlFilesEvent (Added in v3.1.0)
 
 This event is triggered immediately before the Link Vault zipUrl tag creates an on-the-fly zip file. The event allows for adding files or removing files from the array of files to be zipped.
 
