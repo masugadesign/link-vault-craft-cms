@@ -1,0 +1,90 @@
+{% extends "_layouts/cp" %}
+{% set title = 'Link Vault Reporting Examples' %}
+
+{% set crumbs = {
+	reports: { label: "Download History Reporting"|t, url: url('linkvault/reports') },
+	examples: { label: "Reporting Examples", url: url('linkvault/reports/examples') }
+} %}
+
+{% block content %}
+
+<style type="text/css" >
+#lvExamplesTable code {
+	background: #333;
+	color: #fff;
+	padding: 1rem;
+	text-align: left;
+	display: inline-block;
+}
+</style>
+
+<table id="lvExamplesTable" class="data fullwidth collapsible" >
+	<tbody>
+		<tr>
+			<td>String field <strong>equals</strong> "birds.jpg"</td>
+			<td>
+				<code>
+				birds.jpg
+				</code>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%">String field <strong>starts with</strong> "bir"</td>
+			<td>
+				<code>
+				bir*
+			</code>
+			</td>
+		</tr>
+		<tr>
+			<td>String field <strong>ends with</strong> "jpg"</td>
+			<td>
+				<code>
+				*jpg
+				</code>
+			</td>
+		</tr>
+		<tr>
+			<td>String field <strong>contains</strong> "birds"</td>
+			<td>
+				<code>
+				*birds*
+				</code>
+			</td>
+		</tr>
+		<tr>
+			<td>String field <strong>is not</strong> "birds.jpg"</td>
+			<td>
+				<code>
+				not birds.jpg
+				</code>
+			</td>
+		</tr>
+		<tr>
+			<td>Numeric field <strong>equals</strong> <em>5</em></td>
+			<td>
+				<code>
+				5
+				</code>
+			</td>
+		</tr>
+		<tr>
+			<td>Numeric field <strong>is greater than</strong> <em>5</em></td>
+			<td>
+				<code>
+				> 5
+				</code>
+			</td>
+		</tr>
+		<tr>
+			<td>Numeric field <strong>is less than</strong> <em>5</em></td>
+			<td>
+				<code>
+				< 5
+				</code>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+{% endblock %}

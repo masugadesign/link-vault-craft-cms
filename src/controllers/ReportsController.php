@@ -166,4 +166,13 @@ class ReportsController extends Controller
 		return $response;
 	}
 
+	/**
+	 * A page of reporting filter examples.
+	 * @return response
+	 */
+	public function actionExamples(): Response
+	{
+		return $this->renderTemplate('linkvault/_examples');
+	}
+
 }
