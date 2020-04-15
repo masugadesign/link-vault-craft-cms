@@ -1,5 +1,5 @@
 {% extends "_layouts/cp" %}
-{% set title = 'Link Vault Reporting Examples' %}
+{% set title = 'Link Vault Reporting Filter Criteria Examples' %}
 
 {% set crumbs = {
 	reports: { label: "Download History Reporting"|t, url: url('linkvault/reports') },
@@ -81,6 +81,22 @@
 			<td>
 				<code>
 				< 5
+				</code>
+			</td>
+		</tr>
+		<tr>
+			<td>Field is <strong>not empty</strong></td>
+			<td>
+				<code>
+				:notempty:
+				</code>
+			</td>
+		</tr>
+		<tr>
+			<td>Field is <strong>empty</strong></td>
+			<td>
+				<code>
+				:empty:
 				</code>
 			</td>
 		</tr>
