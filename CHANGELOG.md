@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.1.0 - YYYY-MM-DD
+## 3.1.0 - 2020-04-15
 
 ### Added
 - Added a reporting tool to the control panel.
