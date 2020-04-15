@@ -1,0 +1,27 @@
+div.lvPaginationContainer {
+	display: inline-block;
+	position: relative;
+	float: left;
+}
+
+div.lvPaginationContainer ul.lvPagination {
+	display: inline-block;
+	position: relative;
+	list-style-type: none;
+	margin: 1rem 0;
+	padding: 0;
+}
+
+div.lvPaginationContainer ul.lvPagination li {
+	display: inline-block;
+	float: left;
+	padding: 5px;
+	text-align: center;
+}
+
+div.lvPaginationContainer ul.lvPagination li span {
+	display: inline-block;
+	float: left;
+	padding: 5px;
+	text-align: center;
+}

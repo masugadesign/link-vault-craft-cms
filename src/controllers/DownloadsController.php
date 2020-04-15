@@ -5,6 +5,7 @@ namespace Masuga\LinkVault\controllers;
 use Craft;
 use craft\web\Controller;
 use Masuga\LinkVault\LinkVault;
+use yii\web\NotFoundHttpException;
 
 class DownloadsController extends Controller
 {
@@ -14,7 +15,7 @@ class DownloadsController extends Controller
 	 */
 	public function actionDownloadIndex()
 	{
-		return $this->renderTemplate('linkvault/_index');
+		return $this->redirect('linkvault/reports');
 	}
 
 	/**
@@ -29,7 +30,7 @@ class DownloadsController extends Controller
 		if ( $user ) {
 			return $this->renderTemplate('linkvault/_userdownloads', array('user' => $user, 'type' => $type));
 		} else {
-			throw new HttpException(404);
+			throw new NotFoundHttpException('Invalid user ID.');
 		}
 	}
 

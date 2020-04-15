@@ -6,10 +6,18 @@ use Craft;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use Masuga\LinkVault\LinkVault;
+use Masuga\LinkVault\events\LinkClickEvent;
 use yii\log\Logger;
 
-class FrontEndController extends Controller
+class LinkVaultController extends Controller
 {
+	/**
+	 * The event that is triggered as soon as the query string parameters are parsed
+	 * from a Link Vault link click.
+	 * @event ModifyZipUrlFilesEvent
+	 */
+	const EVENT_LINK_CLICK = 'linkClick';
+
 	/**
 	 * Do not require an authenticated user for this controller.
 	 * @var boolean
@@ -37,6 +45,14 @@ class FrontEndController extends Controller
 		$request = Craft::$app->getRequest();
 		$lvParam = rawurldecode( $request->getParam('lv') );
 		$parameters = $lvParam ? unserialize( $this->plugin->general->decrypt( $lvParam ) ) : array();
+
+		// Allow developers to manipulate link click parameters immediately after the link is clicked.
+		$event = new LinkClickEvent([
+			'parameters' => $parameters
+		]);
+		$this->trigger(self::EVENT_LINK_CLICK, $event);
+		$parameters = $event->parameters;
+
 		// Check to see if blockLeechAttempts is disabled or if this is not a leech attempt.
 		if ( $this->plugin->getSettings()->blockLeechAttempts === false || ! $this->isLeechAttempt() ) {
 			// Log/download the file or render the "missing" template if the file isn't found.

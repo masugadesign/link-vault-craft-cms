@@ -1,5 +1,25 @@
 # Changelog
 
+## 3.1.0 - YYYY-MM-DD
+
+### Added
+- Added a reporting tool to the control panel.
+- Added the **ModifyZipUrlFilesEvent** event class.
+- Added the **LinkClickEvent** event class.
+
+### Fixed
+- Fixed numerous deprecation errors in control panel templates.
+- Fixed date parameters issues that occurred when querying download records.
+- Fixed the installation migration to properly drop the custom fields table on uninstall.
+- Fixed a bug where element arrays were treated as objects.
+
+### Changed
+- Changed the name of the **FrontEndController** to **LinkVaultController**.
+
+### Removed
+- Removed the **LinkVaultDownload** element index page.
+- Removed searchable columns from **LinkVaultDownload** element.
+
 ## 3.0.5.7 - 2020-04-07
 
 ### Fixed

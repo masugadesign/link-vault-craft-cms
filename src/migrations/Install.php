@@ -53,6 +53,18 @@ class Install extends Migration
 				'uid' => $this->uid()
 			]);
 		}
+
+		if (!$this->db->tableExists('{{%linkvault_reports}}')) {
+			$this->createTable('{{%linkvault_reports}}', [
+				'id' => $this->primaryKey(),
+				'criteria' => $this->text(),
+				'orderBy' => $this->string(50),
+				'sort' => $this->string(4),
+				'dateCreated' => $this->dateTime()->notNull(),
+				'dateUpdated' => $this->dateTime()->notNull(),
+				'uid' => $this->uid()
+			]);
+		}
 	}
 
 	private function _upgradeFromCraft2()
@@ -111,8 +123,11 @@ class Install extends Migration
 		if ( $this->db->tableExists('{{%linkvault_downloads}}') ) {
 			$this->dropTable('{{%linkvault_downloads}}');
 		}
-		if ( $this->db->tableExists('{{%linkvault_downloads}}') ) {
-			$this->dropTable('{{%linkvault_downloads}}');
+		if ( $this->db->tableExists('{{%linkvault_customfields}}') ) {
+			$this->dropTable('{{%linkvault_customfields}}');
+		}
+		if ( $this->db->tableExists('{{%linkvault_reports}}') ) {
+			$this->dropTable('{{%linkvault_reports}}');
 		}
 	}
 }

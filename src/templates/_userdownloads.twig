@@ -2,35 +2,17 @@
 {% set title = 'User'|t ~ ' ' ~ type ~ 's - ' ~ user.username %}
 
 {% set crumbs = {
-	downloads: { label: "Download History"|t, url: url('linkvault') },
+	reports: { label: "Download History Reporting"|t, url: url('linkvault/reports') },
 	userDownloads: { label: user.username~" Downloads/Leech Attempts", url: url('linkvault/user', {userId:user.id})}
 } %}
 
-{% css %}
-ul.lvPagination {
-	list-style-type: none;
-	margin: 1rem 0;
-	padding: 0;
-}
-
-ul.lvPagination li {
-	disply: inline-block;
-	float: left;
-	padding: 5px;
-	text-align: center;
-}
-
-ul.lvPagination li a {
-	padding: 3px 8px 3px 8px;
-	border: 1px dotted #e3e5e8;
-}
-{% endcss %}
+{% do view.registerAssetBundle("Masuga\\LinkVault\\resources\\PaginationAssetBundle") %}
 
 {% paginate craft.linkvault.downloads.userId(user.id).type(type).orderBy('linkvault_downloads.dateCreated desc').limit(50) as pageInfo, pageDownloads %}
 
 {% block content %}
 
-<table class="data" style="width:100%" >
+<table class="data fullwidth collapsible" >
 	<thead>
 		<tr>
 			<th scope="col" class="header" >Date</th>
@@ -45,7 +27,7 @@ ul.lvPagination li a {
 			<td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
 			<td class="textual" >{{ download.fileName }}</td>
 			<td class="textual" >
-				{% set entry = craft.entries.id(download.elementId).first() %}
+				{% set entry = download.elementId ? craft.entries.id(download.elementId).one() : null %}
 				{% if entry is not empty %}
 					<a href="{{ entry.cpEditUrl }}" >{{ entry.title }}</a>
 					{% if entry.url is not empty %}
@@ -54,36 +36,28 @@ ul.lvPagination li a {
 				{% endif %}
 			</td>
 			<td class="textual" >
-				{% set asset = craft.assets.id(download.assetId).first() %}
+				{% set asset = download.assetId ? craft.assets.id(download.assetId).one() : null %}
 				{% if asset is not empty %}
-					{% if asset.url is not empty %}
-						<a href="{{ asset.url }}" >{{ asset.title }}</a>
+					{% if asset.cpEditUrl %}
+						<a href="{{ asset.cpEditUrl }}" >{{ asset.title|e }}</a>
 					{% else %}
-						{{ asset.title }}
+						{{ asset.title|e }}
+					{% endif %}
+					{% if asset.url is not empty %}
+						&nbsp;<a href="{{ asset.url }}" class="light smalltext" target="_blank">open</a>
 					{% endif %}
 				{% endif %}
 			</td>
 		</tr>
+	{% else %}
+		<tr><td colspan="4">There are no records associated with this user.</td></tr>
 	{% endfor %}
 	</tbody>
 </table>
 
-{% set queryString = '?' ~ craft.request.getQueryStringWithoutPath() %}
-<div>
-	<ul class="lvPagination">
-		<li><a href="{{ pageInfo.firstUrl ~ queryString }}">&#171;</a></li>
-		{% if pageInfo.prevUrl %}<li><a href="{{ pageInfo.prevUrl  ~ queryString}}">&#60;</a></li>{% endif %}
-		{% for page, url in pageInfo.getPrevUrls(5) %}
-			<li><a href="{{ url ~ queryString }}">{{ page }}</a></li>
-		{% endfor %}
-		<li><span class="current">{{ pageInfo.currentPage }}</span></li>
-		{% for page, url in pageInfo.getNextUrls(5) %}
-			<li><a href="{{ url ~ queryString }}">{{ page }}</a></li>
-		{% endfor %}
-		{% if pageInfo.nextUrl %}<li><a href="{{ pageInfo.nextUrl ~ queryString }}">&#62;</a></li>{% endif %}
-		<li><a href="{{ pageInfo.lastUrl ~ queryString }}">&#187;</a></li>
-	</ul>
-</div>
+{% if pageInfo.totalPages > 1 %}
+	{% include 'linkvault/_partials/pagination' %}
+{% endif %}
 
 {% endblock %}
 

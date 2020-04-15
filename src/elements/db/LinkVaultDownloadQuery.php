@@ -8,6 +8,11 @@ use craft\helpers\Db;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\LinkVaultDownload;
 
+/**
+ * This is the Link Vault Download element query class. It has been deprecated
+ * but should still be included with the plugin in case of updates.
+ * @deprecated
+ */
 class LinkVaultDownloadQuery extends ElementQuery
 {
 
@@ -25,6 +30,12 @@ class LinkVaultDownloadQuery extends ElementQuery
 	public $remoteIP = null;
 	public $after = null;
 	public $before = null;
+
+	/**
+	 * The instance of the Link Vault plugin.
+	 * @var LinkVault
+	 */
+	private $plugin = null;
 
 	/**
  	* @inheritdoc
@@ -57,12 +68,13 @@ class LinkVaultDownloadQuery extends ElementQuery
 
 	public function init()
 	{
+		parent::init();
+		$this->plugin = LinkVault::getInstance();
 		// Initialize class properties for the Link Vault custom fields.
-		$customFields = LinkVault::getInstance()->customFields->fetchAllCustomFields('fieldName');
+		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
 		foreach($customFields as $index => &$customField) {
 			$this->{$customField->fieldName} = null;
 		}
-		parent::init();
 	}
 
 	/**
@@ -91,7 +103,7 @@ class LinkVaultDownloadQuery extends ElementQuery
 			'linkvault_downloads.type',
 			'linkvault_downloads.isUrl'
 		];
-		$customFields = LinkVault::getInstance()->customFields->fetchAllCustomFields('fieldName');
+		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
 		// Add each user-defined field to the query and check to see if the field is included in the criteria.
 		foreach($customFields as $name => &$customField) {
 			$selectsArray[] = 'linkvault_downloads.'.$name;
@@ -129,13 +141,13 @@ class LinkVaultDownloadQuery extends ElementQuery
 			$this->subQuery->andWhere(Db::parseParam('linkvault_downloads.remoteIP', $this->remoteIP));
 		}
 		if ($this->after) {
-			$query->andWhere(DbHelper::parseDateParam('linkvault_downloads.dateCreated', '>='.$this->after));
+			$this->subQuery->andWhere(Db::parseDateParam('linkvault_downloads.dateCreated', '>='.$this->after));
 		}
 		if ($this->before) {
-			$query->andWhere(DbHelper::parseDateParam('linkvault_downloads.dateCreated', '<'.$this->before));
+			$this->subQuery->andWhere(Db::parseDateParam('linkvault_downloads.dateCreated', '<'.$this->before));
 		}
 		if ($this->dateCreated) {
-			$query->andWhere(DbHelper::parseDateParam('linkvault_downloads.dateCreated', $this->dateCreated));
+			$this->subQuery->andWhere(Db::parseDateParam('linkvault_downloads.dateCreated', $this->dateCreated));
 		}
 		foreach($customFields as $name => &$customField) {
 			if ( !empty($this->{$name}) ) {
@@ -151,11 +163,16 @@ class LinkVaultDownloadQuery extends ElementQuery
 	public function populate($rows)
 	{
 		$elements = parent::populate($rows);
-		$customFields = LinkVault::getInstance()->customFields->fetchAllCustomFields('fieldName');
+		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
 		// We need to manually populate the Link Vault custom field attributes on each element.
 		foreach($elements as $index => &$element) {
 			foreach($customFields as $name => &$customField) {
-				$element->{$name} = $rows[$index][$name] ?? null;
+				// Elements might be objects or arrays. Be sure to check for that.
+				if ( $this->asArray ) {
+					$element[$name] = $rows[$index][$name] ?? null;
+				} else {
+					$element->{$name} = $rows[$index][$name] ?? null;
+				}
 			}
 		}
 		return $elements;

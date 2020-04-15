@@ -17,8 +17,10 @@ use yii\base\Event;
 use Masuga\LinkVault\models\Settings;
 use Masuga\LinkVault\services\ArchiveService;
 use Masuga\LinkVault\services\CustomFieldsService;
+use Masuga\LinkVault\services\ExportService;
 use Masuga\LinkVault\services\FilesService;
 use Masuga\LinkVault\services\GeneralService;
+use Masuga\LinkVault\services\ReportsService;
 use Masuga\LinkVault\variables\LinkVaultVariable;
 use Masuga\LinkVault\widgets\LinkVaultTopDownloadsWidget;
 
@@ -90,8 +92,10 @@ class LinkVault extends Plugin
 		$this->setComponents([
 			'archive' => ArchiveService::class,
 			'customFields' => CustomFieldsService::class,
+			'export' => ExportService::class,
 			'files' => FilesService::class,
 			'general' => GeneralService::class,
+			'reports' => ReportsService::class
 		]);
 		// Register the Link Vault plugin log.
 		$fileTarget = new FileTarget([
@@ -100,12 +104,18 @@ class LinkVault extends Plugin
 		]);
 		// Register the site front-end routes.
 		Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) use($downloadTrigger) {
-			$event->rules[$downloadTrigger] = 'linkvault/front-end/serve';
+			$event->rules[$downloadTrigger] = 'linkvault/link-vault/serve';
 		});
 		// Register the control panel routes.
 		Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
 			$event->rules['linkvault'] = 'linkvault/downloads/download-index';
 			$event->rules['linkvault/user'] = 'linkvault/downloads/user-downloads';
+			$event->rules['linkvault/reports'] = 'linkvault/reports/index';
+			$event->rules['linkvault/reports/examples'] = 'linkvault/reports/examples';
+			$event->rules['linkvault/reports/delete'] = 'linkvault/reports/delete';
+			$event->rules['linkvault/reports/delete-records'] = 'linkvault/reports/delete-records';
+			$event->rules['linkvault/reports/save-report'] = 'linkvault/reports/save-report';
+			$event->rules['linkvault/export'] = 'linkvault/reports/export-csv';
 			$event->rules['linkvault/customfields'] = 'linkvault/custom-fields/custom-fields';
 			$event->rules['linkvault/customfields/new'] = 'linkvault/custom-fields/custom-field-form';
 			$event->rules['linkvault/customfields/create'] = 'linkvault/custom-fields/custom-field-submit';

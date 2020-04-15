@@ -17,6 +17,11 @@ use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\db\LinkVaultDownloadQuery;
 use Masuga\LinkVault\records\LinkVaultDownloadRecord;
 
+/**
+ * The Link Vault Download element class. This class is being deprecated so the
+ * records are stored in the DB without all the "element" pieces.
+ * @deprecated
+ */
 class LinkVaultDownload extends Element
 {
 
@@ -40,6 +45,12 @@ class LinkVaultDownload extends Element
 	private $_relatedElement = null;
 
 	/**
+	 * The instance of the Link Vault plugin.
+	 * @var LinkVault
+	 */
+	private $plugin = null;
+
+	/**
 	 * Override the great-great-great-great grandparent __set() so we can add
 	 * properties on-the-fly from the init() method. Remember that Link Vault
 	 * custom fields are not true Craft custom fields.
@@ -53,7 +64,8 @@ class LinkVaultDownload extends Element
 
 	public function init()
 	{
-		$customFields = LinkVault::getInstance()->customFields->fetchAllCustomFields('fieldName');
+		$this->plugin = LinkVault::getInstance();
+		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
 		foreach($customFields as $name => $field) {
 			$this->{$name} = null;
 		}
@@ -183,7 +195,13 @@ class LinkVaultDownload extends Element
 	 */
 	protected static function defineSearchableAttributes(): array
 	{
-		return ['dirName', 'fileName'];
+		/*
+		Sites with a lot of download records end up with a HUGE search index and
+		nobody is going to be "searching" download elements. It's easy enough to
+		query them directly.
+		*/
+		//return ['dirName', 'fileName'];
+		return [];
 	}
 
 	/**
@@ -288,7 +306,7 @@ class LinkVaultDownload extends Element
 		$record->isUrl = $this->isUrl;
 		$record->remoteIP = $this->remoteIP;
 		// Fetch the Link Vault custom fields and add the values to the record.
-		$customFields = LinkVault::getInstance()->customFields->fetchAllCustomFields('fieldName');
+		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
 		foreach($customFields as $name => $field) {
 			$record->{$name} = $this->{$name};
 		}

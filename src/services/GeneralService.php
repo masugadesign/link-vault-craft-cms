@@ -10,6 +10,7 @@ use craft\googlecloud\Volume as GoogleCloud;
 use craft\helpers\UrlHelper;
 use craft\volumes\Local;
 use yii\base\Component;
+use yii\helpers\Inflector;
 use yii\log\Logger;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\LinkVaultDownload;
