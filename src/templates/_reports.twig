@@ -148,11 +148,12 @@ window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
 	</thead>
 	<tbody>
 	{% for download in pageDownloads %}
-		{% set displayDirName = download.dirName|length > 25 ? '...' ~ download.dirName[0:24] : download.dirName %}
+		{% set stringStart = download.dirName|length - 25 %}
+		{% set displayDirName = download.dirName|length > 25 ? '...' ~ download.dirName[stringStart:] : download.dirName %}
 		<tr>
 			<td style="text-align:center" ><input type="checkbox" name="linkvaultrecords[]" value="{{ download.id }}" data-linkvault-checkbox ></td>
 			<td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
-			<td class="textual" >{{ (download.s3Bucket ?? download.googleBucket ?? displayDirName )|e }}</td>
+			<td class="textual" title="{{ (download.s3Bucket ?? download.dirName)|e }}" >{{ (download.s3Bucket ?? download.googleBucket ?? displayDirName )|e }}</td>
 			<td class="textual" >{{ download.fileName|e }}</td>
 			<td class="textual" >
 				{% set user = download.userId ? craft.users.id(download.userId).one() : null %}
