@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.1 - 2020-04-16
+
+### Fixed
+- Fixed the truncation of long folder paths in the table view.
+
 ## 3.1.0 - 2020-04-15
 
 ### Added
