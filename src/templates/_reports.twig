@@ -19,8 +19,8 @@
 {% block content %}
 
 <script type="text/javascript">
-window.csrfTokenName = "{{ craft.config.get('csrfTokenName') }}";
-window.csrfTokenValue = "{{ craft.request.getCsrfToken }}";
+window.csrfTokenName = "{{ craft.app.config.general.csrfTokenName }}";
+window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 </script>
 
 {% set orderByParam = orderBy %}
