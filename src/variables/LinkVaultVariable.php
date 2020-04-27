@@ -59,8 +59,8 @@ class LinkVaultVariable
 
 	/**
 	 * This template variable method outputs a string representation of a file's
-	 * size. The precision parameter represents the number of decimal places that
-	 * should be displayed.
+	 * size in base 2. The precision parameter represents the number of decimal
+	 * places that should be displayed.
 	 * @param mixed $parameter
 	 * @param integer $precision
 	 * @return string
@@ -68,6 +68,32 @@ class LinkVaultVariable
 	public function fileSize($parameter, $precision=2): string
 	{
 		return $this->plugin->general->fileSize($parameter, $precision);
+	}
+
+	/**
+	 * This template variable is an alias of the default behavior of the original
+	 * fileSize template variable. It exists to give clarity to developers so they
+	 * know exactly what they're getting.
+	 * @param mixed $parameter
+	 * @param int $precision
+	 * @return string
+	 */
+	public function baseTwoFileSize($parameter, $precision=2): string
+	{
+		return $this->fileSize($parameter, $precision);
+	}
+
+	/**
+	 * This template variable method outputs a string representation of a file's
+	 * size in base 10. The precision parameter represents the number of decimal
+	 * places that should be displayed.
+	 * @param mixed $parameter
+	 * @param integer $precision
+	 * @return string
+	 */
+	public function baseTenFileSize($parameter, $precision=2)
+	{
+		return $this->plugin->general->fileSize($parameter, $precision, false);
 	}
 
 	/**

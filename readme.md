@@ -169,6 +169,14 @@ bees.jpg is {{ craft.linkvault.fileSize('/home/user1337/hidden-files/bees.jpg') 
 {{ craft.linkvault.fileSize('https://example.com/songs/dance-me-to-the-end-of-love.flac') }}
 ```
 
+#### baseTwoFileSize (Added in v3.1.2)
+
+The __baseTwoFileSize__ template variable is an alias of the __fileSize__ template variable. _1024_ is used as the divisor.
+
+#### baseTenFileSize (Added in v3.1.2)
+
+The __baseTenFileSize__ template variable is similar to __fileSize__ and __baseTwoFileSize__ except the file size is calculated using _1000_ as the divisor.
+
 #### downloads
 
 The __downloads__ template variable fetches download records based on the specified criteria.

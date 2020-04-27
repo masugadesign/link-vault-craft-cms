@@ -160,17 +160,18 @@ class GeneralService extends Component
 	 * parameters.
 	 * @param mixed $parameter
 	 * @param integer $precision
+	 * @param bool $baseTwo
 	 * @return string
 	 */
-	public function fileSize($parameter, $precision=2): string
+	public function fileSize($parameter, $precision=2, $baseTwo=true): string
 	{
 		// Check to see if the $parameter is a valid URL.
 		if ( filter_var($parameter, FILTER_VALIDATE_URL) !== false ) {
-			$fileSize = $this->plugin->files->remoteFileSize($parameter, $precision);
+			$fileSize = $this->plugin->files->remoteFileSize($parameter, $precision, $baseTwo);
 		// Check to see if $parameter is an Asset.
 	} elseif ( $parameter instanceof Asset ) {
 			//$filePath = $this->plugin->files->getAssetPath($parameter);
-			$fileSize = $this->plugin->files->fileSizeString($parameter->size, $precision);
+			$fileSize = $this->plugin->files->fileSizeString($parameter->size, $precision, $baseTwo);
 		// Any object other than Asset is not supported.
 		} elseif ( is_object($parameter) ) {
 			$this->log(self::class.'::fileSize() - Object of type "'.get_class($parameter).'" is not supported by Link Vault.');
@@ -180,11 +181,11 @@ class GeneralService extends Component
 			$dirName = isset($parameter['dirName']) ? $this->plugin->files->normalizePath($parameter['dirName']) : '';
 			$fileName = isset($parameter['fileName']) ? $parameter['fileName'] : '';
 			$filePath = $dirName.$fileName;
-			$fileSize = $this->plugin->files->fileSize($filePath, $precision);
+			$fileSize = $this->plugin->files->fileSize($filePath, $precision, $baseTwo);
 		// Assume $parameter is a path string.
 		} else {
 			$filePath = $parameter;
-			$fileSize = $this->plugin->files->fileSize($filePath, $precision);
+			$fileSize = $this->plugin->files->fileSize($filePath, $precision, $baseTwo);
 		}
 		return $fileSize;
 	}
