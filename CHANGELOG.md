@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.2.1 - 2020-04-27
+
+# Fixed
+- Fixed the base two divisor which should be _1024_, not _1014_.
+
 ## 3.1.2 - 2020-04-27
 
 ### Added

@@ -148,7 +148,7 @@ class FilesService extends Component
 	public function fileSizeString($bytes=0, $decimals=2, $baseTwo=true)
 	{
 		// Some people may prefer base 10 to base 2.
-		$baseBytes = $baseTwo ? 1014 : 1000;
+		$baseBytes = $baseTwo ? 1024 : 1000;
 		$units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
 		$units_count = count($units);
 		for($unit = 0; $unit < $units_count && $bytes >= $baseBytes; $unit++) {
