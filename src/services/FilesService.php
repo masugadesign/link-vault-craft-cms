@@ -100,12 +100,13 @@ class FilesService extends Component
 	 * Get a human-readable file size for a given file path on the server.
 	 * @param string $filePath
 	 * @param integer $decimals
+	 * @param bool $baseTwo
 	 * @return string
 	 */
-	public function fileSize($filePath, $decimals=2)
+	public function fileSize($filePath, $decimals=2, $baseTwo=true)
 	{
 		$size = file_exists($filePath) ? filesize($filePath) : 0;
-		return $this->fileSizeString($size, $decimals);
+		return $this->fileSizeString($size, $decimals, $baseTwo);
 	}
 
 	/**
@@ -114,9 +115,10 @@ class FilesService extends Component
 	 * the time but an occasional failure occurs.
 	 * @param string $url
 	 * @param integer $decimals
+	 * @param bool $baseTwo
 	 * @return string
 	 */
-	public function remoteFileSize($url, $decimals=2)
+	public function remoteFileSize($url, $decimals=2, $baseTwo=true)
 	{
 		/*
 		$result = null;
@@ -133,25 +135,41 @@ class FilesService extends Component
 		*/
 		$head = array_change_key_case(get_headers($url, true));
 		$result = isset($head['content-length']) ? $head['content-length'] : null;
-		return ( is_numeric($result) && $result > 0 ) ? $this->fileSizeString($result, $decimals) : Craft::t('linkvault', 'Unknown');
+		return ( is_numeric($result) && $result > 0 ) ? $this->fileSizeString($result, $decimals, $baseTwo) : Craft::t('linkvault', 'Unknown');
 	}
 
 	/**
 	 * This method converts bytes into a human-readable file size.
 	 * @param integer $bytes
 	 * @param integer $decimals
+	 * @param bool $baseTwo
 	 * @return string
 	 */
-	public function fileSizeString($bytes=0, $decimals=2)
+	public function fileSizeString($bytes=0, $decimals=2, $baseTwo=true)
 	{
+		// Some people may prefer base 10 to base 2.
+		$baseBytes = $baseTwo ? 1014 : 1000;
 		$units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
 		$units_count = count($units);
-		for($unit = 0; $unit < $units_count && $bytes >= 1024; $unit++) {
-			$bytes /= 1024;
+		for($unit = 0; $unit < $units_count && $bytes >= $baseBytes; $unit++) {
+			$bytes /= $baseBytes;
 		}
 		// There are no partial bytes and we aren't concerned with fractions of KB.
 		$decimals = $unit < 2 ? 0 : $decimals;
-		return number_format($bytes, $decimals).' '.$units[$unit];
+		// 100 MB (base two) : 100 mB (base ten), traditionally.
+		$unitCased = $baseTwo ? $units[$unit] : lcfirst($units[$unit]);
+		return number_format($bytes, $decimals).' '.$unitCased;
+	}
+
+	/**
+	 * This method returns a base 10 file size string.
+	 * @param int $bytes
+	 * @param int $decimals
+	 * @return string
+	 */
+	public function baseTenFileSizeString($bytes=0, $decimals=2)
+	{
+		return $this->fileSizeString($bytes, $decimals, false);
 	}
 
 	/**

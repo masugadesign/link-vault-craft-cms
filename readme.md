@@ -169,6 +169,14 @@ bees.jpg is {{ craft.linkvault.fileSize('/home/user1337/hidden-files/bees.jpg') 
 {{ craft.linkvault.fileSize('https://example.com/songs/dance-me-to-the-end-of-love.flac') }}
 ```
 
+#### baseTwoFileSize (Added in v3.1.2)
+
+The __baseTwoFileSize__ template variable is an alias of the __fileSize__ template variable. _1024_ is used as the divisor.
+
+#### baseTenFileSize (Added in v3.1.2)
+
+The __baseTenFileSize__ template variable is similar to __fileSize__ and __baseTwoFileSize__ except the file size is calculated using _1000_ as the divisor.
+
 #### downloads
 
 The __downloads__ template variable fetches download records based on the specified criteria.
@@ -177,17 +185,17 @@ The __downloads__ template variable fetches download records based on the specif
 
 ```
 {# Example 15: Fetch the ten most recent download records for cheese.mpg. #}
-{% for record in craft.linkvault.downloads.fileName('cheese.mpg).limit(10) %}
+{% for record in craft.linkvault.downloads.fileName('cheese.mpg).limit(10).all() %}
     <p>User {{ record.userId }} downloaded it on {{ record.dateCreated }}</p>
 {% endfor %}
 
 {# Example 16: Fetch 5 most recent downloads that occurred prior to March 1, 2016. #}
-{% for record in craft.linkvault.downloads.before('2016-03-01').limit(10) %}
+{% for record in craft.linkvault.downloads.before('2016-03-01').limit(10).all() %}
     <p>User {{ record.userId }} downloaded {{ record.filename }} before March 1.</p>
 {% endfor %}
 
 {# Example 17: Fetch records based on custom field value. In this example, assume existence of "downloadPage" field. #}
-{% for record in craft.linkvault.downloads.downloadPage('super-mega-rockstar/free-songs') %}
+{% for record in craft.linkvault.downloads.downloadPage('super-mega-rockstar/free-songs').all() %}
     <p>User {{ record.userId }} downloaded {{ record.filename }} song file on {{ record.dateCreated }}</p>
 {% endfor %}
 ```
@@ -205,7 +213,7 @@ The __records__ template variables works in the same manner as __downloads__ and
 The __groupCount__ template variable queries record counts and groups them by a particular column name.
 
 ```
-{# Example 1: Fetch a particular user's top file downloads. Order the results by the count variable, descending. #}
+{# Example 18: Fetch a particular user's top file downloads. Order the results by the count variable, descending. #}
 {% set topDownloads = craft.linkvault.groupCount('fileName', {
     'userId' : currentUser.id,
     'order' : 'census desc'

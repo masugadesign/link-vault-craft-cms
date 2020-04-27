@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.2 - 2020-04-27
+
+### Added
+- Added the **baseTwoFileSize** and **baseTenFileSize** template variables.
+
+### Fixed
+- Fixed two deprecation errors.
+
 ## 3.1.1 - 2020-04-16
 
 ### Fixed
