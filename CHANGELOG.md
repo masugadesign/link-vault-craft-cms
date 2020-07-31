@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.3 - 2020-07-31
+
+### Fixed
+- Fixed issues with the Craft 2 to Craft 3 upgrade process and added correcting migrations.
+
 ## 3.1.2.1 - 2020-04-27
 
 ### Fixed
