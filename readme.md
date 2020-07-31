@@ -24,7 +24,7 @@ This is a commercial plugin for Craft CMS 3.
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "3.1.0",
+"masugadesign/linkvault": "3.1.3",
 ```
 
 ### Settings
