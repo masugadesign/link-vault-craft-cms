@@ -1,8 +1,11 @@
 <?php
+
 namespace Masuga\LinkVault\migrations;
 
 use Craft;
 use craft\db\Migration;
+use Masuga\LinkVault\elements\LinkVaultDownload;
+use Masuga\LinkVault\elements\LinkVaultCustomField;
 use Masuga\LinkVault\widgets\LinkVaultTopDownloadsWidget;
 
 class Install extends Migration
@@ -95,10 +98,10 @@ class Install extends Migration
 		// Update the element types.
 		$this->update('{{%elements}}', [
 			'type' => LinkVaultDownload::class
-		], ['type' => 'LinkVault_DownloadElementType']);
+		], ['type' => 'LinkVault_Download']);
 		$this->update('{{%elements}}', [
 			'type' => LinkVaultCustomField::class
-		], ['type' => 'LinkVault_CustomFieldElementType']);
+		], ['type' => 'LinkVault_CustomField']);
 		// Update the widget
 		$this->update('{{%widgets}}', [
 			'type' => LinkVaultTopDownloadsWidget::class
