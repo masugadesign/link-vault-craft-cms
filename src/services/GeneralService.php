@@ -9,6 +9,7 @@ use craft\elements\Asset;
 use craft\googlecloud\Volume as GoogleCloud;
 use craft\helpers\UrlHelper;
 use craft\volumes\Local;
+use craft\web\Response;
 use yii\base\Component;
 use yii\helpers\Inflector;
 use yii\log\Logger;
@@ -290,53 +291,51 @@ class GeneralService extends Component
 	}
 
 	/**
-	 * This method either redirects to an authenticated S3 URL, serves a local
-	 * file or returns an error status. All downloads are logged.
+	 * This method returns a response that will either result in a file download,
+	 * a redirect or null if the file/url could not be handled properly.
 	 * @param array $parameters
-	 * @return mixed
+	 * @return Response|null
 	 */
 	public function download($parameters=[])
 	{
 		//Craft::$app->plugins->call('linkVaultDownloadStart', array(&$parameters) );
-		$files		= $parameters['files'] ?? null;
-		$zipName	  = $parameters['zipName'] ?? null;
-		$filePath	 = $parameters['filePath'] ?? null;
-		$assetId	  = $parameters['assetId'] ?? null;
+		$files        = $parameters['files'] ?? null;
+		$zipName      = $parameters['zipName'] ?? null;
+		$filePath     = $parameters['filePath'] ?? null;
+		$assetId      = $parameters['assetId'] ?? null;
 		$downloadAs   = $parameters['downloadAs'] ?? basename($filePath);
-		$s3Bucket	 = $parameters['s3Bucket'] ?? null;
+		$s3Bucket     = $parameters['s3Bucket'] ?? null;
 		$googleBucket = $parameters['googleBucket'] ?? null;
-		$isUrl		= isset($parameters['isUrl']) && $parameters['isUrl'] == 1 ? true : false;
+		$isUrl        = isset($parameters['isUrl']) && $parameters['isUrl'] == 1 ? true : false;
 		$this->log("Download Attempt - filePath: $filePath | s3Bucket: $s3Bucket | googleBucket: $googleBucket");
 		// The file is a valid URL.
 		if ( $isUrl ) {
 			$this->logDownload($parameters);
-			Craft::$app->getResponse()->redirect($filePath);
+			$response = Craft::$app->getResponse()->redirect($filePath);
 		// The file path is a valid file found on the server.
 		} elseif ( $filePath && file_exists($filePath) ) {
 			$this->logDownload($parameters);
 			//$this->plugin->files->serveFile($filePath, $downloadAs);
-			Craft::$app->response->sendFile($filePath, $downloadAs);
-			//Craft::$app->plugins->call('linkVaultDownloadEnd', array(&$parameters) );
+			$response = Craft::$app->getResponse()->sendFile($filePath, $downloadAs);
 		// An asset ID was supplied.
 		} elseif ( $assetId ) {
 			$this->logDownload($parameters);
 			$file = Craft::$app->assets->getAssetById($assetId);
 			$localPath = $file->getCopyOfFile();
-			Craft::$app->response->sendFile($localPath, $downloadAs);
-			//Craft::$app->plugins->call('linkVaultDownloadEnd', array(&$parameters) );
+			$response = Craft::$app->getResponse()->sendFile($localPath, $downloadAs);
 		// Zip some files on-the-fly. (Link Vault Zipper)
 		} elseif ( $files && $zipName ) {
 			$archivePath = $this->plugin->archive->trackAndZipFiles($files, $zipName, $parameters);
 			$parameters['filePath'] = $archivePath;
 			$this->logDownload($parameters);
-			Craft::$app->response->sendFile($archivePath, $zipName);
-			//Craft::$app->plugins->call('linkVaultDownloadEnd', array(&$parameters) );
+			$response = Craft::$app->getResponse()->sendFile($archivePath, $zipName);
 			// Delete the temporary zip file from the storage folder.
 			unlink($archivePath);
 		// The file does not exist. Show the user an appropriate 404 page.
 		} else {
-			return 404;
+			$response = null;
 		}
+		return $response;
 	}
 
 	/**
