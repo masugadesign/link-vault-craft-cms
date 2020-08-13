@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.4 - 2020-08-13
+
+### Changed
+- **Masuga\LinkVault\services\GeneralService::download()** now returns an instance of **craft\web\Response** or _null_ if the download request could not be handled.
+- Link Vault now defaults to Craft's native 403/404 response handling if custom error templates are not set in Link Vault's plugin settings.
+
 ## 3.1.3 - 2020-07-31
 
 ### Fixed
