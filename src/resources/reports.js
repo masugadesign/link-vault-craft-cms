@@ -44,7 +44,7 @@ $(document).ready(function() {
 		});
 	});
 
-	$("#content").on('click', "#linkVaultCheckAll", function(event) {
+	$("#content").on("click", "#linkVaultCheckAll", function(event) {
 		if(this.checked) {
 			$("[data-linkvault-checkbox]").each(function() {
 				this.checked = true;
@@ -53,6 +53,12 @@ $(document).ready(function() {
 			$("[data-linkvault-checkbox]").each(function() {
 				this.checked = false;
 			});
+		}
+	});
+
+	$("#content").on("click", "#linkVaultDeleteSubmit", function(event) {
+		if ( !confirm("Are you sure you want to delete the checked records?") ) {
+			return false;
 		}
 	});
 });

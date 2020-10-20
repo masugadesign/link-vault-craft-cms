@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.5 - 2020-10-20
+
+### Added
+- Added a confirmation dialog before deleting records in the control panel.
+
+### Fixed
+- Records will no longer be deleted if none are checked at all.
+
 ## 3.1.4 - 2020-08-13
 
 ### Changed
