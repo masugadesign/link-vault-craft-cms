@@ -155,7 +155,8 @@ class ReportsController extends Controller
 		$request = Craft::$app->getRequest();
 		$ids = $request->getParam('linkvaultrecords');
 		$deleted = 0;
-		$records = LinkVaultDownload::find()->id($ids)->limit(null)->all();
+		// Make sure there are IDs otherwise all records will get deleted. Probably not desirable.
+		$records = $ids ? LinkVaultDownload::find()->id($ids)->limit(null)->all() : [];
 		// Each record must be deleted in a loop in order to trigger the element events.
 		foreach($records as &$record) {
 			$success = Craft::$app->elements->deleteElementById($record->id);
