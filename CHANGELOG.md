@@ -1,5 +1,7 @@
 # Changelog
 
+## 3.2.0 - YYYY-MM-DD
+
 ## 3.1.5 - 2020-10-20
 
 ### Added
