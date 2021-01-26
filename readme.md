@@ -24,7 +24,7 @@ This is a commercial plugin for Craft CMS 3.
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "3.1.5",
+"masugadesign/linkvault": "3.1.6",
 ```
 
 ### Settings
@@ -213,11 +213,10 @@ The __records__ template variables works in the same manner as __downloads__ and
 The __groupCount__ template variable queries record counts and groups them by a particular column name.
 
 ```
-{# Example 18: Fetch a particular user's top file downloads. Order the results by the count variable, descending. #}
+{# Example 18: Fetch a particular user's top five file downloads by `fileName`. Order the results by the count, descending. #}
 {% set topDownloads = craft.linkvault.groupCount('fileName', {
-    'userId' : currentUser.id,
-    'order' : 'census desc'
-}) %}
+    'userId' : currentUser.id
+}, 'COUNT(*) desc', 5) %}
 <ol>
 {% for topDownload in topDownloads %}
     <li>{{ topDownload.fileName }} ({{ topDownload.census|number_format(0) }} downloads)</li>

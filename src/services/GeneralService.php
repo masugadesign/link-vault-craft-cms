@@ -215,12 +215,13 @@ class GeneralService extends Component
 	 * @param integer $limit
 	 * @return array
 	 */
-	public function groupCount($columnName, $criteria=null, $order='COUNT(*) desc', $limit=100): array
+	public function groupCount($columnName, $criteria=null, $order='COUNT(*) desc', $limit=null): array
 	{
-		$tableName = '{{%linkvault_downloads}}';
 		$results = (new Query)->select([$columnName, "COUNT(*) AS `census`"])
-				->from($tableName)
+				->from('{{%linkvault_downloads}} AS d')
+				->join('INNER JOIN', '{{%elements}} AS e', 'd.id=e.id')
 				->where($criteria)
+				->andWhere(['is', 'e.dateDeleted', new \yii\db\Expression('null')])
 				->groupBy($columnName)
 				->orderBy($order)
 				->limit($limit)

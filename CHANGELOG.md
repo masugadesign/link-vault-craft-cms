@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.1.6 - 2021-01-26
+
+### Changed
+- The `groupCount` method in `General` now has a default limit of _null_ rather than 100.
+
+### Fixed
+- Fixed `groupCount` template variable method parameters to match corresponding method in the `General` service class.
+- Fixed `groupCount` method in `General` service class to omit soft-deleted records.
+
 ## 3.1.5 - 2020-10-20
 
 ### Added
