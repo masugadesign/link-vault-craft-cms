@@ -112,11 +112,13 @@ class LinkVaultVariable
 	 * a given column name and other criteria.
 	 * @param string $columnName
 	 * @param array $criteria
+	 * @param string $order
+	 * @param int $limit
 	 * @return array
 	 */
-	public function groupCount($columnName, $criteria=null): array
+	public function groupCount($columnName, $criteria=null, $order='COUNT(*) desc', $limit=null): array
 	{
-		return $this->plugin->general->groupCount($columnName, $criteria);
+		return $this->plugin->general->groupCount($columnName, $criteria, $order, $limit);
 	}
 
 	/**
