@@ -2,6 +2,12 @@
 
 ## 3.2.0 - YYYY-MM-DD
 
+## 3.1.7 - 2021-02-26
+
+### Fixed
+- Fixed the `type` criteria parameter conflict in the query used by the Link Vault Top Downloads Widget.
+- Removed the default colspan for the widget as it appears to override the configured column span value.
+
 ## 3.1.6 - 2021-01-26
 
 ### Changed
