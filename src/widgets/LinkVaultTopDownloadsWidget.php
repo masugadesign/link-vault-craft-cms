@@ -8,7 +8,6 @@ use Masuga\LinkVault\LinkVault;
 
 class LinkVaultTopDownloadsWidget extends Widget
 {
-	public $colspan = 4;
 
 	/**
 	 * @inheritdoc
@@ -23,9 +22,7 @@ class LinkVaultTopDownloadsWidget extends Widget
 	 */
 	public function getBodyHtml(): string
 	{
-		$criteria = array(
-			'type' => 'Download',
-		);
+		$criteria = ['d.type' => 'Download'];
 		$order = 'COUNT(*) desc';
 		$limit = 10;
 		$rows = LinkVault::getInstance()->general->groupCount('fileName', $criteria, $order, $limit);
