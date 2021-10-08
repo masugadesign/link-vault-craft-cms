@@ -42,7 +42,7 @@ class LinkVaultCustomField extends Element
 	 */
 	public static function hasContent(): bool
 	{
-		return true;
+		return false;
 	}
 
 	/**

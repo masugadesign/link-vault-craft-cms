@@ -94,7 +94,7 @@ class LinkVaultDownload extends Element
 	 */
 	public static function hasContent(): bool
 	{
-		return true;
+		return false;
 	}
 
 	/**
