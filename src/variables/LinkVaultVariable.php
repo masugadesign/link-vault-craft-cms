@@ -165,4 +165,38 @@ class LinkVaultVariable
 		return $this->plugin->reports->reports($criteria);
 	}
 
+	/**
+	 * This method fetches the array of filter types based on a supplied field
+	 * handle. It also allows for an optional selected value parameter.
+	 * @param string $fieldHandle
+	 * @param string $selected
+	 * @return string
+	 */
+	public function fieldFilterOptions($fieldHandle, $selected=null): string
+	{
+		return $this->plugin->reports->getFilterOptionsByFieldHandle($fieldHandle, true, $selected);
+	}
+
+	/**
+	 * This method converts an array of filters form inputs into Craft element
+	 * query criteria.
+	 * @param array $criteria
+	 * @return array
+	 */
+	public function formatFilterCriteria($criteria): array
+	{
+		return $this->plugin->reports->formatCriteria($criteria);
+	}
+
+	/**
+	 * This template variable returns an associative array of field option values
+	 * and labels for a given field handle.
+	 * @param string $fieldHandle
+	 * @return array
+	 */
+	public function fieldOptions($fieldHandle): array
+	{
+		return $this->plugin->reports->getFieldOptionsByFieldHandle($fieldHandle);
+	}
+
 }

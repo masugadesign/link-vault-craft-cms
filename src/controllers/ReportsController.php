@@ -176,4 +176,38 @@ class ReportsController extends Controller
 		return $this->renderTemplate('linkvault/_examples');
 	}
 
+	/**
+	 * This method action accepts an AJAX request including a field handle parameter
+	 * used to fetch the available filter for that field's type.
+	 * @return string
+	 */
+	public function actionFieldFilterOptions(): string
+	{
+		$request = Craft::$app->getRequest();
+		$view = Craft::$app->getView();
+		$fieldHandle = $request->getParam('fieldHandle');
+		$filterOptionsHtml = $fieldHandle ? $this->plugin->reports->getFilterOptionsByFieldHandle($fieldHandle) : '';
+		return $view->renderString($filterOptionsHtml);
+	}
+
+	/**
+	 * This method determines what the appropriate filter "value" field should be
+	 * based on whether or not a particular field has options or if it just needs
+	 * a plain text field.
+	 * @return string
+	 */
+	public function actionValueField(): string
+	{
+		$request = Craft::$app->getRequest();
+		$view = Craft::$app->getView();
+		// We need these three request parameters for the view. ("value" optional)
+		$templateParams = [
+			'fieldHandle' => $request->getParam('fieldHandle'),
+			'filterType' => $request->getParam('filterType'),
+			'fieldValue' => $request->getParam('value'),
+			'index' => $request->getParam('index'),
+		];
+		return $view->renderTemplate('linkvault/_partials/value-field', $templateParams);
+	}
+
 }

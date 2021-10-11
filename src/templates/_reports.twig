@@ -1,20 +1,22 @@
 {% extends '_layouts/cp' %}
 {% set title = 'Link Vault'|t %}
 {% set elementType = 'Masuga\\LinkVault\\elements\\LinkVaultDownload' %}
-
 {% set tabs = {
 	reports: { label: "Download History Reporting"|t, url: url('linkvault/reports') },
 	customFields: { label: "Custom Fields"|t, url: url('linkvault/customfields') }
 } %}
-
 {% set selectedTab = 'reports' %}
-
 {% set crumbs = {
 	downloads: { label: "Download History"|t, url: url('linkvault') }
 } %}
 
-{% do view.registerAssetBundle("Masuga\\LinkVault\\resources\\ReportsAssetBundle") %}
+{% do view.registerAssetBundle("Masuga\\LinkVault\\assetbundles\\cp\\CpAsset") %}
 
+{% if report %}
+	{% set filtersParam = report.getCriteriaArray %}
+{% else %}
+	{% set filtersParam = craft.app.request.getParam('criteria') ?: {0 : {'fieldHandle' : '', 'filterType' : '', 'value' : '' } } %}
+{% endif %}
 
 {% block content %}
 
@@ -29,96 +31,86 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 	{% set orderByParam = 'linkvault_downloads.' ~ orderBy %}
 {% endif %}
 
-{# The "criteria" variable is defined in the ReportsController@actionIndex method. #}
-{% paginate craft.linkvault.downloads(criteria).orderBy(orderByParam ~ ' ' ~ sort).limit(50) as pageInfo, pageDownloads %}
+{# Filterable field options (handle/column -> label) #}
+{% set fieldOptions = {
+	'id' : 'ID',
+	'fileName' : 'Filename',
+	'dirName' : 'Folder Path',
+	'elementId' : 'Related Element ID',
+	'assetId' : 'Asset ID',
+	'userId' : 'User ID',
+	's3Bucket' : 'S3 Bucket',
+	'downloadAs' : 'Download As',
+	'zipName' : 'Zip Name',
+	'isUrl' : 'Is URL?',
+	'remoteIP' : 'Remote IP Address',
+	'dateCreated' : 'Download Date'
+} %}
+
+{% set criteria = craft.linkvault.formatFilterCriteria(filtersParam) %}
+{% paginate craft.linkvault.records(criteria).orderBy(orderByParam ~ ' ' ~ sort).limit(50) as pageInfo, pageDownloads %}
 
 {% if report %}
 <h1>{{ report.title|e }}</h1>
 {% endif %}
 
-<form id="reportsForm" action="" method="get"
+
+<div class="pane" >
+	<form id="filtersForm" method="get" accept-charset="UTF-8" autocomplete="off"
 		data-export-action="{{ url('linkvault/export') }}"
 		data-save-report-action="{{ url('linkvault/reports/save-report') }}" >
+		{# Some hidden fields we can use to stash some dynamic information. #}
+		<input type="hidden" id="fieldFilterOptionsUrl" value="{{ url('linkvault/reports/field-filter-options') }}" >
+		<input type="hidden" id="valueFieldUrl" value="{{ url('linkvault/reports/value-field') }}" >
 
-<div class="pane" >
-	<p><a href="{{ url('linkvault/reports/examples') }}" >View filter examples</a></p>
-	<div class="field" >
-		<div class="select" >
-			<select id="downloadAttributes" >
-				<option value="" >Add Attribute Filter</option>
-				{% for value,label in criteriaAttributes %}
-				<option value="{{ value }}" >{{ label }}</option>
-				{% endfor %}
-			</select>
-		</div>
-	</div>
-	<div class="field" >
-		<input type="text" class="text" id="reportTitle" name="title" style="width:300px" placeholder="Report Title" {% if report %}value="{{ report.title }}"{% endif %} >
-		{% if report %}
-		<input type="hidden" name="reportId" value="{{ report.id }}" >
-		{% endif %}
-	</div>
-	<div class="field" >
-		<button id="saveReport" class="btn submit fullwidth" >Save Report Criteria</button>
-	</div>
-	{% if report %}
-	<div class="field" >
-		<a href="{{ url('linkvault/reports/delete', {'reportId' : report.id}) }}" >Delete Report</a>
-	</div>
-	{% endif %}
-	{#
-	<div class="field" >
-		<button id="addFilter" class="btn submit" >Add Filter</button>
-	</div>
-	#}
-</div>
-
-<div class="pane" >
-	<div id="criteriaFields" class="lvCriteria" >
-		{# Existing criteria filters should be displayed. #}
-		{% for fieldName,value in criteria  %}
-		<div class="field" >
-			<div class="heading">
-				<label>{{ fieldName }}</label>
+		<div id="filterFields" class="filterFields" >
+		{% for i,filterData in filtersParam %}
+			<div class="filterField" data-idx="{{ i }}" >
+				<div class="select" >
+					<select name="criteria[{{ i }}][fieldHandle]" data-select-field data-idx="{{ i }}" >
+						<option value="" >Select Field</option>
+					{% for value,label in fieldOptions %}
+						<option value="{{ value }}" {% if value == filterData.fieldHandle %}selected="selected"{% endif %} >{{ label|e }}</option>
+					{% endfor %}
+					</select>
+				</div>
+				<div class="select" >
+					<select name="criteria[{{ i }}][filterType]" class="filterType" data-select-filter-type data-idx="{{ i }}" >
+					{# Fetch filter options for previously submitted field filters. #}
+					{% if filterData.fieldHandle %}
+						{# Params : Field handle, the selected filter type #}
+						{{ craft.linkvault.fieldFilterOptions(filterData.fieldHandle, filterData.filterType)|raw }}
+					{% else %}
+						<option value="" > -- </option>
+					{% endif %}
+					</select>
+				</div>
+				<div class="valueFieldContainer" data-idx="{{ i }}" >
+					{% include 'linkvault/_partials/value-field' with {
+						'fieldHandle' : filterData.fieldHandle,
+						'filterType' : filterData.filterType,
+						'fieldValue' : filterData.value ?? '',
+						'index' : i
+					} %}
+				</div>
+				<a href="#" class="btn" data-remove-filter >-</a>
+				<a href="#" class="btn" data-add-filter >+</a>
 			</div>
-			<div class="input ltr" >
-				<input type="text" class="text" id="criteria_{{ fieldName }}" name="criteria[{{ fieldName }}]" value="{{ value }}" >
-				<a href="#" class="light remove-criteria" title="Remove criteria" data-remove-criteria >X</a>
-			</div>
-		</div>
 		{% endfor %}
-	</div>
-	<div class="field" >
-		<div class="heading">
-			<label>Order By</label>
 		</div>
-		<div class="select" >
-			<select name="orderBy" >
-			{% for fieldName,label in criteriaAttributes %}
-				<option value="{{ fieldName }}" {% if orderBy == fieldName %}selected="selected"{% endif %} >{{ label }}</option>
-			{% endfor %}
-			</select>
+
+		<div class="filterControls" >
+			<div class="filterFormControls" >
+				<input type="submit" class="btn submit" value="Refresh Results" >&nbsp;
+				<a href="{{ url(craft.app.request.pathInfo) }}" class="btn" >Clear Filters</a>
+				<a href="#" id="saveFilter" class="btn">Save Filter</a>
+			</div>
+			<div class="filterExportControls" >
+				<input type="submit" class="btn submit" name="exportSubmit" value="Export Total Results" >
+			</div>
 		</div>
-	</div>
-	<div class="field" >
-		<div class="heading">
-			<label>Sort</label>
-		</div>
-		<div class="select" >
-			<select name="sort" >
-				<option value="desc" {% if sort == 'desc' %}selected="selected"{% endif %} >DESC</option>
-				<option value="asc" {% if sort == 'asc' %}selected="selected"{% endif %} >ASC</option>
-			</select>
-		</div>
-	</div>
+	</form>
 </div>
-
-</form>
-
-<p>
-<button id="refreshResults" class="btn submit " >Refresh Results</button>
-<button id="exportAsCsv" class="btn submit " >Export as CSV</button>
-</p>
 
 {% if pageInfo.total > 0 %}
 <p>Showing {{ pageInfo.first }} &ndash; {{ pageInfo.last }} of {{ pageInfo.total|number_format }} results.</p>

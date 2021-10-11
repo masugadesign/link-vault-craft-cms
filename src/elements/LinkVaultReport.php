@@ -223,4 +223,15 @@ class LinkVaultReport extends Element
 		];
 		return UrlHelper::cpUrl('linkvault/reports').'?'.http_build_query($params);
 	}
+
+	/**
+	 * This method returns the report criteria as an array suitable for the report
+	 * form.
+	 * @return array
+	 */
+	public function getCriteriaArray(): array
+	{
+		$criteria = $this->criteria ? json_decode($this->criteria, true) : [];
+		return $criteria;
+	}
 }

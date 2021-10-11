@@ -62,6 +62,14 @@ class LinkVaultDownload extends Element
 		$this->{$name} = $value;
 	}
 
+	public function __get($name)
+	{
+		// Capitalizing the 'n' was a bad move.
+		if ( $name === 'filename' ) {
+			return $this->fileName;
+		}
+	}
+
 	public function init()
 	{
 		$this->plugin = LinkVault::getInstance();

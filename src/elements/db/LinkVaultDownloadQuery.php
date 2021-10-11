@@ -177,4 +177,15 @@ class LinkVaultDownloadQuery extends ElementQuery
 		}
 		return $elements;
 	}
+
+	/**
+	 * An alias of the `fileName` property setter. Why did I capitalize the 'n'?
+	 * @param mixed $value
+	 * @return self
+	 */
+	public function filename($value)
+	{
+		return $this->fileName = $value;
+	}
+
 }
