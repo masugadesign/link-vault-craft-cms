@@ -287,6 +287,15 @@ class ReportsService extends Component
 			'dateCreated' => ['is greater than', 'is less than', 'is equal to', 'is empty', 'is not empty'],
 			'dateUpdated' => ['is greater than', 'is less than', 'is equal to', 'is empty', 'is not empty'],
 		];
+		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
+		// Add the custom fields to the array with options appropriate for their type.
+		foreach($customFields as $customFieldHandle => &$customField) {
+			if ( in_array($customField->fieldType, ['varchar(250)', 'text']) ) {
+				$fields[$customFieldHandle] = ['contains', 'starts with', 'ends with', 'is equal to', 'is empty', 'is not empty'];
+			} else {
+				$fields[$customFieldHandle] = ['is equal to', 'is greater than', 'is less than'];
+			}
+		}
 		$options = $fields[$handle] ?? ['contains', 'starts with', 'ends with', 'is equal to', 'is empty', 'is not empty'];
 		if ( !empty($options) && $asHtml === true ) {
 			foreach($options as &$option) {

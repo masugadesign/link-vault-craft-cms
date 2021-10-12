@@ -4,6 +4,7 @@ namespace Masuga\LinkVault\variables;
 
 use Craft;
 use Masuga\LinkVault\LinkVault;
+use Masuga\LinkVault\elements\db\LinkVaultCustomFieldQuery;
 use Masuga\LinkVault\elements\db\LinkVaultDownloadQuery;
 use Masuga\LinkVault\elements\db\LinkVaultReportQuery;
 
@@ -131,6 +132,17 @@ class LinkVaultVariable
 	{
 		$criteria['type'] = 'Download';
 		return $this->plugin->general->records($criteria);
+	}
+
+	/**
+	 * This template variable constructs and configures a LinkVaultCustomFieldQuery
+	 * then returns it.
+	 * @param array $criteria
+	 * @return LinkVaultCustomFieldQuery
+	 */
+	public function customFields($criteria=[]): LinkVaultCustomFieldQuery
+	{
+		return $this->plugin->customFields->customFieldsQuery($criteria);
 	}
 
 	/**

@@ -47,6 +47,12 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 	'dateCreated' : 'Download Date'
 } %}
 
+{# Add the custom fields to the field options. #}
+{% set customFields = craft.linkvault.customFields.orderBy('fieldLabel').all() %}
+{% for customField in customFields %}
+	{% set fieldOptions = fieldOptions|merge({ (customField.fieldName) : customField.fieldLabel }) %}
+{% endfor %}
+
 {% set criteria = craft.linkvault.formatFilterCriteria(filtersParam) %}
 {% paginate craft.linkvault.records(criteria).orderBy(orderByParam ~ ' ' ~ sort).limit(50) as pageInfo, pageDownloads %}
 
@@ -124,7 +130,7 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 {{ redirectInput(craft.app.request.url) }}
 <input type="hidden" name="action" value="linkvault/reports/delete-records" >
 
-<table class="data fullwidth collapsible" style="margin-top:1rem;" >
+<table class="data fullwidth collapsible filteredTable" style="margin-top:1rem;" >
 	<thead>
 		<tr>
 			<th scope="col" class="header" style="text-align:center"><input type="checkbox" id="linkVaultCheckAll" name="linkvaultrecords[]" value="ALL" ></th>
@@ -134,7 +140,7 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 			<th scope="col" class="header" >User</th>
 			<th scope="col" class="header" >Asset</th>
 			{% for fieldName,value in criteria  %}
-			<th scope="col" class="header" >{{ fieldName|e }}</th>
+			<th scope="col" class="header" >{{ (fieldOptions[fieldName] ?? fieldName)|e }}</th>
 			{% endfor %}
 		</tr>
 	</thead>
@@ -167,7 +173,7 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 				{% endif %}
 			</td>
 			{% for fieldName,value in criteria %}
-			<td>{{  attribute(download, fieldName) }}</td>
+			<td class="filtered" >{{  attribute(download, fieldName) }}</td>
 			{% endfor %}
 		</tr>
 	{% endfor %}
