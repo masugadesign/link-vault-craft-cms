@@ -9,6 +9,7 @@ use craft\web\Controller;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\LinkVaultDownload;
 use Masuga\LinkVault\elements\LinkVaultReport;
+use Masuga\LinkVault\records\LinkVaultDownloadRecord;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -72,22 +73,15 @@ class ReportsController extends Controller
 		// Query the records in batches to prevent the request from using too much memory.
 		do {
 			$offset += $count;
-			$records = $this->plugin->general->records($formattedCriteria)
+			// Fetch the appropriate record IDs via a LinkVaultDownloadQuery
+			$recordIds = $this->plugin->general->records($formattedCriteria)
 				->orderBy($orderBy.' '.$sort)
 				->limit($limit)
-				->offset($offset)->all();
+				->offset($offset)->ids();
+			// Query the download *records* directly, not the elements. Otherwise we lose custom fields!
+			$records = LinkVaultDownloadRecord::find()->where(['IN', 'id', $recordIds])->all();
 			$count = count($records);
 			$recordsArray = ArrayHelper::toArray($records);
-			/*
-			@TODO: Instead of cleaning unwanted attributes out, let's just SELECT what we need.
-			Craft keeps adding new attributes that break the export of elements and it will be
-			tough to keep up with that.
-			*/
-			// Clean up odd criteria columns out of the record array, by reference.
-			foreach($recordsArray as &$record) {
-				// This method is also a "by reference" call, hence no return value.
-				$this->plugin->reports->cleanRecordArray($record);
-			}
 			// Set a boolean to determine whether or not we should include the column header.
 			$includeColumnHeader = ( $offset === 0 ) ? true : false;
 			$csvContent = $this->plugin->export->convertArrayToDelimitedContent($recordsArray, ',', $includeColumnHeader);

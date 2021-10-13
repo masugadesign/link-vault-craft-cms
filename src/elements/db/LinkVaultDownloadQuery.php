@@ -72,8 +72,8 @@ class LinkVaultDownloadQuery extends ElementQuery
 		$this->plugin = LinkVault::getInstance();
 		// Initialize class properties for the Link Vault custom fields.
 		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
-		foreach($customFields as $index => &$customField) {
-			$this->{$customField->fieldName} = null;
+		foreach($customFields as $fieldName => &$customField) {
+			$this->{$fieldName} = null;
 		}
 	}
 

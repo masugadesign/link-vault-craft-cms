@@ -67,7 +67,9 @@ class ExportService extends Component
 		if ( !empty($criteria) ) {
 			$reportName = 'linkvault-';
 			foreach($criteria as &$filter) {
-				$reportName .= "{$filter['fieldHandle']} {$filter['value']}";
+				// The 'value' key is not always defined.
+				$value = $filter['value'] ?? '';
+				$reportName .= "{$filter['fieldHandle']} {$value}";
 			}
 			$reportName = StringHelper::toKebabCase($reportName)."-{$currentDate}";
 		}
