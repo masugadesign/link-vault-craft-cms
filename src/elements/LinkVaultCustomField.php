@@ -81,7 +81,7 @@ class LinkVaultCustomField extends Element
 		return [
 			'id' => Craft::t('app', 'ID'),
 			'fieldLabel' => Craft::t('linkvault', 'Field Label'),
-			'fieldName' => Craft::t('linkvault', 'Field Name'),
+			'fieldName' => Craft::t('linkvault', 'Field Handle'),
 			'fieldType' => Craft::t('linkvault', 'Fild Type')
 		];
 	}

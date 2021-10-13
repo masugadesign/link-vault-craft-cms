@@ -62,7 +62,7 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 
 
 <div class="pane" >
-	<form id="filtersForm" method="get" accept-charset="UTF-8" autocomplete="off"
+	<form id="reportsForm" method="get" accept-charset="UTF-8" autocomplete="off"
 		data-export-action="{{ url('linkvault/export') }}"
 		data-save-report-action="{{ url('linkvault/reports/save-report') }}" >
 		{# Some hidden fields we can use to stash some dynamic information. #}
@@ -107,12 +107,13 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 
 		<div class="filterControls" >
 			<div class="filterFormControls" >
-				<input type="submit" class="btn submit" value="Refresh Results" >&nbsp;
+				<input type="submit" class="btn submit" id="refreshResults" value="Refresh Results" >&nbsp;
+				<input type="submit" class="btn submit" id="exportAsCsv" name="exportSubmit" value="Export as CSV" >&nbsp;
 				<a href="{{ url(craft.app.request.pathInfo) }}" class="btn" >Clear Filters</a>
-				<a href="#" id="saveFilter" class="btn">Save Filter</a>
 			</div>
 			<div class="filterExportControls" >
-				<input type="submit" class="btn submit" name="exportSubmit" value="Export Total Results" >
+				<input type="text" class="text" id="reportTitle" name="title" style="width:150px" placeholder="Report Title" value="{{ report.title ?? '' }}">&nbsp;
+				<button id="saveReport" class="btn submit">Save Report Criteria</button>
 			</div>
 		</div>
 	</form>
@@ -120,7 +121,6 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 
 {% if pageInfo.total > 0 %}
 <p>Showing {{ pageInfo.first }} &ndash; {{ pageInfo.last }} of {{ pageInfo.total|number_format }} results.</p>
-{% include 'linkvault/_partials/pagination' %}
 {% else %}
 <p>0 results.</p>
 {% endif %}
@@ -187,24 +187,10 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 
 </form> {# lvRecordsForm #}
 
+
 {% endblock %}
 
 {% block sidebar %}
-{#
-	<div class="buttons">
-		<table class="data fullwidth collapsible">
-			<tbody>
-				<tr>
-					<td><button id="refreshResults" class="btn submit fullwidth" >Refresh Results</button></td>
-				</tr>
-				<tr>
-					<td><button id="exportAsCsv" class="btn submit fullwidth" >Export as CSV</button></td>
-				</tr>
-			<tr>
-			</tbody>
-		</table>
-	</div>
-#}
 	{% set savedReports = craft.linkvault.reports.orderBy('title asc').all() %}
 	{% if savedReports|length %}
 	<h3>Run Saved Reports</h3>

@@ -12,7 +12,7 @@ $(".filterField").each(function() {
 $("body").on("change", "#groupId", function() {
 	// If entry type changes, remove all current filters.
 	$(".filterFields").html('');
-	$("#filtersForm").submit();
+	$("#reportsForm").submit();
 });
 
 // Add another filter by cloning this filter, emptying values and updating its numeric index.
@@ -108,57 +108,6 @@ function toggleValueFieldReadonly(index)
 	}
 }
 
-// Open "Save Filter" modal on click to "Save Filter" button
-var $saveFilterModal = $("#saveFilterModal");
-var modal = new Garnish.Modal($saveFilterModal, { autoShow: false });
-$("#saveFilter").on("click", function(){
-	$($saveFilterModal).addClass('modal');
-	modal.show();
-});
-
-// Close "Save Filter" modal on click to "Cancel" modal button
-$("#closeFilterModal").on("click", function(){
-	modal.hide();
-});
-
-// Save filter on click to "Save Filter" modal button
-$("#saveFilterButton").on("click", function(e){
-	e.preventDefault();
-
-	// Submit the filter form to make sure all selected filters are saved
-	$("#filtersForm").submit();
-
-	// Get the userId and filter title onto the main form
-	var userIdInput      = $("input[name='userId']");
-	var filterTitleInput = $("input[name='filterTitle']");
-
-	// Use the primary criteria-creation form,
-	// but submit it with a different action
-	// to run the input through the Filters::formatCriteria($input) method
-	// to create the savedFilter url
-	var actionUrl = $("input[name='saveFilterAction']").val();
-	var formData = $("#filtersForm").serializeArray();
-	formData.push(
-		{name: 'userId', value: $(userIdInput).val()},
-		{name: 'filterTitle', value: $(filterTitleInput).val()},
-		{'name' : window.csrfTokenName, 'value' : window.csrfTokenValue}
-	);
-
-	$.ajax({
-		"type": "POST",
-		"url": actionUrl,
-		"dataType": "json",
-		"data": formData,
-		"success": function(data, textStatus, jqXHR) {
-			modal.hide();
-		},
-		"error": function(jqXHR, textStatus, errorThrown) {
-			modal.hide();
-		}
-	});
-});
-
-
 // Delete filter on click to "Delete Filter" button
 $(".deleteFilterButton").on("click", function(e){
 	e.preventDefault();
@@ -211,7 +160,6 @@ $("#content").on("click", "#saveReport",  function(e) {
 	var saveReportUrl = $("#reportsForm").attr('data-save-report-action');
 	var formData = $("#reportsForm").serializeArray();
 	formData.push({'name' : window.csrfTokenName, 'value' : window.csrfTokenValue});
-	console.log(formData);
 	$.ajax({
 		"type": "POST",
 		"url": saveReportUrl,

@@ -35,14 +35,12 @@ class ReportsController extends Controller
 	public function actionIndex(): Response
 	{
 		$request = Craft::$app->getRequest();
-		$options = $this->plugin->reports->reportAttributeOptions();
 		$criteria = $request->getParam('criteria');
 		$orderBy = $request->getParam('orderBy');
 		$sort = $request->getParam('sort');
 		$reportId = $request->getParam('reportId');
 		return $this->renderTemplate('linkvault/_reports', [
 			'criteria' => $criteria,
-			'criteriaAttributes' => $options,
 			'orderBy' => $orderBy ?: 'dateCreated',
 			'sort' => $sort ?: 'desc',
 			'report' => $reportId ? $this->plugin->reports->fetchReportById($reportId) : null
@@ -69,10 +67,15 @@ class ReportsController extends Controller
 		// Determine an appropriate filename and file path for the generated file.
 		$reportName = $this->plugin->export->generateReportFileName($criteria).'.csv';
 		$reportPath = Craft::$app->getPath()->getRuntimePath().'/'.$reportName;
+		// Reformat the criteria for the element query.
+		$formattedCriteria = $this->plugin->reports->formatCriteria($criteria);
 		// Query the records in batches to prevent the request from using too much memory.
 		do {
 			$offset += $count;
-			$records = $this->plugin->general->records($criteria)->orderBy($orderBy.' '.$sort)->limit($limit)->offset($offset)->all();
+			$records = $this->plugin->general->records($formattedCriteria)
+				->orderBy($orderBy.' '.$sort)
+				->limit($limit)
+				->offset($offset)->all();
 			$count = count($records);
 			$recordsArray = ArrayHelper::toArray($records);
 			/*
