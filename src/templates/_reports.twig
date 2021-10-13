@@ -197,7 +197,8 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 	<nav>
 		<ul>
 		{% for savedReport in savedReports %}
-			<li><a href="{{ savedReport.getUrl() }}" >{{ savedReport.title|e }}</a></li>
+			{% set isSelected = report and report.id == savedReport.id ? true : false %}
+			<li><a href="{{ savedReport.getUrl() }}" {% if isSelected %}class="sel"{% endif %} >{{ savedReport.title|e }}</a></li>
 		{% endfor %}
 		</ul>
 	</nav>
