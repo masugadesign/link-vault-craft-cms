@@ -1,9 +1,10 @@
 # Changelog
 
-## 3.2.0 - YYYY-MM-DD
+## 3.2.0 - 2021-10-13
 
 ### Added
 - Added `customFields` template variable for querying defined `LinkVaultCustomField` elements.
+- Added confirmation dialog for saved report deletion.
 
 ### Changed
 - Redesigned the record history filter tool.
