@@ -176,6 +176,15 @@ $("#content").on("click", "#saveReport",  function(e) {
 	});
 });
 
+$("#content").on("click", "[data-delete-report]", function(e) {
+	e.preventDefault();
+	if ( confirm("Are you sure you want to delete this saved report?") ) {
+		window.location = $(this).attr('href');
+	} else {
+		return false;
+	}
+});
+
 $("#content").on("click", "#linkVaultCheckAll", function(event) {
 	if(this.checked) {
 		$("[data-linkvault-checkbox]").each(function() {

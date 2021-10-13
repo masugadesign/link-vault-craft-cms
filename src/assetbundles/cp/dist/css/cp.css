@@ -18,6 +18,7 @@
 
 .filterControls .filterExportControls {
 	float: right;
+	text-align: right;
 }
 
 .filterFields .filterField {

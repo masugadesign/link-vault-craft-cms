@@ -68,6 +68,9 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 		{# Some hidden fields we can use to stash some dynamic information. #}
 		<input type="hidden" id="fieldFilterOptionsUrl" value="{{ url('linkvault/reports/field-filter-options') }}" >
 		<input type="hidden" id="valueFieldUrl" value="{{ url('linkvault/reports/value-field') }}" >
+		{% if report %}
+		<input type="hidden" name="reportId" value="{{ report.id }}" >
+		{% endif %}
 
 		<div id="filterFields" class="filterFields" >
 		{% for i,filterData in filtersParam %}
@@ -113,7 +116,10 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 			</div>
 			<div class="filterExportControls" >
 				<input type="text" class="text" id="reportTitle" name="title" style="width:150px" placeholder="Report Title" value="{{ report.title ?? '' }}">&nbsp;
-				<button id="saveReport" class="btn submit">Save Report Criteria</button>
+				<button id="saveReport" class="btn" >Save Report</button>
+				{% if report %}
+					&nbsp;<a href="{{ url('linkvault/reports/delete', {'reportId' : report.id}) }}" class="btn" data-delete-report >Delete Report</a>
+				{% endif %}
 			</div>
 		</div>
 	</form>
