@@ -72,8 +72,8 @@ class LinkVaultDownloadQuery extends ElementQuery
 		$this->plugin = LinkVault::getInstance();
 		// Initialize class properties for the Link Vault custom fields.
 		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
-		foreach($customFields as $index => &$customField) {
-			$this->{$customField->fieldName} = null;
+		foreach($customFields as $fieldName => &$customField) {
+			$this->{$fieldName} = null;
 		}
 	}
 
@@ -177,4 +177,15 @@ class LinkVaultDownloadQuery extends ElementQuery
 		}
 		return $elements;
 	}
+
+	/**
+	 * An alias of the `fileName` property setter. Why did I capitalize the 'n'?
+	 * @param mixed $value
+	 * @return self
+	 */
+	public function filename($value)
+	{
+		return $this->fileName = $value;
+	}
+
 }

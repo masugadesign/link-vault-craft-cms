@@ -6,6 +6,7 @@ use Craft;
 use craft\helpers\ArrayHelper;
 use yii\base\Component;
 use Masuga\LinkVault\LinkVault;
+use Masuga\LinkVault\elements\db\LinkVaultCustomFieldQuery;
 use Masuga\LinkVault\elements\LinkVaultCustomField;
 use Masuga\LinkVault\records\LinkVaultCustomFieldRecord;
 
@@ -29,6 +30,21 @@ class CustomFieldsService extends Component
 		}
 		$fields = ArrayHelper::index($rows, $indexBy);
 		return $fields;
+	}
+
+	/**
+	 * This method constructs a LinkVaultCustomFieldQuery with optional criteria
+	 * and returns the query object.
+	 * @param array $criteria
+	 * @return LinkVaultCustomFieldQuery
+	 */
+	public function customFieldsQuery($criteria=[]): LinkVaultCustomFieldQuery
+	{
+		$query = LinkVaultCustomField::find();
+		if ($criteria) {
+			Craft::configure($query, $criteria);
+		}
+		return $query;
 	}
 
 	/**

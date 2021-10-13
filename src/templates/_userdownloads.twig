@@ -6,7 +6,7 @@
 	userDownloads: { label: user.username~" Downloads/Leech Attempts", url: url('linkvault/user', {userId:user.id})}
 } %}
 
-{% do view.registerAssetBundle("Masuga\\LinkVault\\resources\\PaginationAssetBundle") %}
+{% do view.registerAssetBundle("Masuga\\LinkVault\\assetbundles\\cp\\CpAsset") %}
 
 {% paginate craft.linkvault.downloads.userId(user.id).type(type).orderBy('linkvault_downloads.dateCreated desc').limit(50) as pageInfo, pageDownloads %}
 

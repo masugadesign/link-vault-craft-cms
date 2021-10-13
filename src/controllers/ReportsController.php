@@ -9,6 +9,7 @@ use craft\web\Controller;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\LinkVaultDownload;
 use Masuga\LinkVault\elements\LinkVaultReport;
+use Masuga\LinkVault\records\LinkVaultDownloadRecord;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -35,14 +36,12 @@ class ReportsController extends Controller
 	public function actionIndex(): Response
 	{
 		$request = Craft::$app->getRequest();
-		$options = $this->plugin->reports->reportAttributeOptions();
 		$criteria = $request->getParam('criteria');
 		$orderBy = $request->getParam('orderBy');
 		$sort = $request->getParam('sort');
 		$reportId = $request->getParam('reportId');
 		return $this->renderTemplate('linkvault/_reports', [
 			'criteria' => $criteria,
-			'criteriaAttributes' => $options,
 			'orderBy' => $orderBy ?: 'dateCreated',
 			'sort' => $sort ?: 'desc',
 			'report' => $reportId ? $this->plugin->reports->fetchReportById($reportId) : null
@@ -69,22 +68,20 @@ class ReportsController extends Controller
 		// Determine an appropriate filename and file path for the generated file.
 		$reportName = $this->plugin->export->generateReportFileName($criteria).'.csv';
 		$reportPath = Craft::$app->getPath()->getRuntimePath().'/'.$reportName;
+		// Reformat the criteria for the element query.
+		$formattedCriteria = $this->plugin->reports->formatCriteria($criteria);
 		// Query the records in batches to prevent the request from using too much memory.
 		do {
 			$offset += $count;
-			$records = $this->plugin->general->records($criteria)->orderBy($orderBy.' '.$sort)->limit($limit)->offset($offset)->all();
+			// Fetch the appropriate record IDs via a LinkVaultDownloadQuery
+			$recordIds = $this->plugin->general->records($formattedCriteria)
+				->orderBy($orderBy.' '.$sort)
+				->limit($limit)
+				->offset($offset)->ids();
+			// Query the download *records* directly, not the elements. Otherwise we lose custom fields!
+			$records = LinkVaultDownloadRecord::find()->where(['IN', 'id', $recordIds])->all();
 			$count = count($records);
 			$recordsArray = ArrayHelper::toArray($records);
-			/*
-			@TODO: Instead of cleaning unwanted attributes out, let's just SELECT what we need.
-			Craft keeps adding new attributes that break the export of elements and it will be
-			tough to keep up with that.
-			*/
-			// Clean up odd criteria columns out of the record array, by reference.
-			foreach($recordsArray as &$record) {
-				// This method is also a "by reference" call, hence no return value.
-				$this->plugin->reports->cleanRecordArray($record);
-			}
 			// Set a boolean to determine whether or not we should include the column header.
 			$includeColumnHeader = ( $offset === 0 ) ? true : false;
 			$csvContent = $this->plugin->export->convertArrayToDelimitedContent($recordsArray, ',', $includeColumnHeader);
@@ -174,6 +171,40 @@ class ReportsController extends Controller
 	public function actionExamples(): Response
 	{
 		return $this->renderTemplate('linkvault/_examples');
+	}
+
+	/**
+	 * This method action accepts an AJAX request including a field handle parameter
+	 * used to fetch the available filter for that field's type.
+	 * @return string
+	 */
+	public function actionFieldFilterOptions(): string
+	{
+		$request = Craft::$app->getRequest();
+		$view = Craft::$app->getView();
+		$fieldHandle = $request->getParam('fieldHandle');
+		$filterOptionsHtml = $fieldHandle ? $this->plugin->reports->getFilterOptionsByFieldHandle($fieldHandle) : '';
+		return $view->renderString($filterOptionsHtml);
+	}
+
+	/**
+	 * This method determines what the appropriate filter "value" field should be
+	 * based on whether or not a particular field has options or if it just needs
+	 * a plain text field.
+	 * @return string
+	 */
+	public function actionValueField(): string
+	{
+		$request = Craft::$app->getRequest();
+		$view = Craft::$app->getView();
+		// We need these three request parameters for the view. ("value" optional)
+		$templateParams = [
+			'fieldHandle' => $request->getParam('fieldHandle'),
+			'filterType' => $request->getParam('filterType'),
+			'fieldValue' => $request->getParam('value'),
+			'index' => $request->getParam('index'),
+		];
+		return $view->renderTemplate('linkvault/_partials/value-field', $templateParams);
 	}
 
 }

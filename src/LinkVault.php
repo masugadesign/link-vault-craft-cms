@@ -119,6 +119,9 @@ class LinkVault extends Plugin
 			$event->rules['linkvault/customfields'] = 'linkvault/custom-fields/custom-fields';
 			$event->rules['linkvault/customfields/new'] = 'linkvault/custom-fields/custom-field-form';
 			$event->rules['linkvault/customfields/create'] = 'linkvault/custom-fields/custom-field-submit';
+
+			$event->rules['linkvault/reports/field-filter-options'] = 'linkvault/reports/field-filter-options';
+			$event->rules['linkvault/reports/value-field'] = 'linkvault/reports/value-field';
 		});
 		// Generate the encryption key that is unique to this installation.
 		Event::on(Plugins::class, Plugins::EVENT_AFTER_INSTALL_PLUGIN, function (PluginEvent $event) {

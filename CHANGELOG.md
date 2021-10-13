@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.2.0 - 2021-10-13
+
+### Added
+- Added `customFields` template variable for querying defined `LinkVaultCustomField` elements.
+- Added confirmation dialog for saved report deletion.
+
+### Changed
+- Redesigned the record history filter tool.
+- Filtered columns appended to the report results table now have a different background color than the default columns.
+
+### Fixed
+- Link Vault custom field values are now included in the CSV export.
+- Saved Reports side nav active state now reflects currently selected report.
+
 ## 3.1.7 - 2021-02-26
 
 ### Fixed
