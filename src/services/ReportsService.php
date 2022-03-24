@@ -3,12 +3,12 @@
 namespace Masuga\LinkVault\services;
 
 use Craft;
-use craft\awss3\Volume as S3;
+use craft\awss3\Fs as S3;
 use craft\db\Query;
 use craft\elements\Asset;
-use craft\googlecloud\Volume as GoogleCloud;
+use craft\googlecloud\Fs as GoogleCloud;
 use craft\helpers\UrlHelper;
-use craft\volumes\Local;
+use craft\fs\Local;
 use yii\base\Component;
 use yii\helpers\Inflector;
 use yii\log\Logger;
@@ -48,7 +48,7 @@ class ReportsService extends Component
 		'is not empty' => ':notempty:'
 	];
 
-	public function init()
+	public function init(): void
 	{
 		$this->plugin = LinkVault::getInstance();
 		$this->debug = $this->plugin->getSettings()->debug;

@@ -16,15 +16,15 @@ This is a commercial plugin for Craft CMS 3.
 
 ## Requirements
 
-* Craft CMS v3.4.0+
-* PHP 7.0+
+* Craft CMS v4.0.0+
+* PHP 8.0.2+
 
 ## Installation
 
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "3.2.0",
+"masugadesign/linkvault": "3.3.0",
 ```
 
 ## Settings

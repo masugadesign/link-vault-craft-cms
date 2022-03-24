@@ -3,13 +3,13 @@
 namespace Masuga\LinkVault\services;
 
 use Craft;
-use craft\awss3\Volume as S3;
+use craft\awss3\Fs as S3;
 use craft\elements\Asset;
-use craft\googlecloud\Volume as GoogleCloud;
+use craft\googlecloud\Fs as GoogleCloud;
 use craft\helpers\FileHelper;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
-use craft\volumes\Local;
+use craft\fs\Local;
 use yii\base\Component;
 use Masuga\LinkVault\LinkVault;
 

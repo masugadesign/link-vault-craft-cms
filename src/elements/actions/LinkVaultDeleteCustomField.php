@@ -21,7 +21,7 @@ class LinkVaultDeleteCustomField extends ElementAction
 	 */
 	public $successMessage;
 
-	public function init()
+	public function init(): void
 	{
 		$this->confirmationMessage = Craft::t('linkvault', 'Are you sure you want to delete the selected Link Vault custom fields?');
 		$this->successMessage = Craft::t('linkvault', 'Custom fields deleted.');
@@ -49,7 +49,7 @@ class LinkVaultDeleteCustomField extends ElementAction
 	 * @inheritDoc IElementAction::getConfirmationMessage()
 	 * @return string|null
 	 */
-	public function getConfirmationMessage()
+	public function getConfirmationMessage(): ?string
 	{
 		return $this->confirmationMessage;
 	}

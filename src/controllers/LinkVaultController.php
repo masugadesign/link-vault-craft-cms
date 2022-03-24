@@ -24,7 +24,7 @@ class LinkVaultController extends Controller
 	 * Do not require an authenticated user for this controller.
 	 * @var boolean
 	 */
-	protected $allowAnonymous = true;
+	protected array|int|bool $allowAnonymous = true;
 
 	/**
 	 * The instance of the Link Vault plugin.
@@ -32,7 +32,7 @@ class LinkVaultController extends Controller
 	 */
 	private $plugin = null;
 
-	public function init()
+	public function init(): void
 	{
 		parent::init();
 		$this->plugin = LinkVault::getInstance();
@@ -59,7 +59,7 @@ class LinkVaultController extends Controller
 			// Log/download the file or render the "missing" template if the file isn't found.
 			$response = $this->plugin->general->download($parameters);
 			if ( ! $response ) {
-				$this->plugin->general->log("Download file does not exist: ".var_export($parameters,true), Logger::LEVEL_ERROR);
+				$this->plugin->general->log("Matching file does not exist: ".var_export($parameters,true));
 				$html = $this->renderErrorTemplate(404);
 				$response = Craft::$app->getResponse()->setStatusCode(404);
 				$response->content = $html;

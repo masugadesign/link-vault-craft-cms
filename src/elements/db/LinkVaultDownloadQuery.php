@@ -40,7 +40,7 @@ class LinkVaultDownloadQuery extends ElementQuery
 	/**
  	* @inheritdoc
  	*/
-	protected $defaultOrderBy = ['linkvault_downloads.dateCreated' => SORT_DESC];
+	protected array $defaultOrderBy = ['linkvault_downloads.dateCreated' => SORT_DESC];
 
 	/**
 	 * Override the established __set() method so we can add properties on-the-fly
@@ -66,7 +66,7 @@ class LinkVaultDownloadQuery extends ElementQuery
 		}
 	}
 
-	public function init()
+	public function init(): void
 	{
 		parent::init();
 		$this->plugin = LinkVault::getInstance();
@@ -80,7 +80,7 @@ class LinkVaultDownloadQuery extends ElementQuery
 	/**
 	 * @inheritdoc
 	 */
-	public function with($value)
+	public function with(array|string|null $value): ElementQuery
 	{
 		$this->with = $value;
 		return $this;
@@ -160,7 +160,7 @@ class LinkVaultDownloadQuery extends ElementQuery
 	/**
 	 * @inheritdoc
 	 */
-	public function populate($rows)
+	public function populate($rows): array
 	{
 		$elements = parent::populate($rows);
 		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');

@@ -26,9 +26,9 @@ class LinkVaultReportQuery extends ElementQuery
 	/**
  	* @inheritdoc
  	*/
-	protected $defaultOrderBy = ['linkvault_reports.dateCreated' => SORT_DESC];
+	protected array $defaultOrderBy = ['linkvault_reports.dateCreated' => SORT_DESC];
 
-	public function init()
+	public function init(): void
 	{
 		parent::init();
 		$this->plugin = LinkVault::getInstance();

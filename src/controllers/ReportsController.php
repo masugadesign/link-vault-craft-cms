@@ -22,7 +22,7 @@ class ReportsController extends Controller
 	 */
 	private $plugin = null;
 
-	public function init()
+	public function init(): void
 	{
 		parent::init();
 		$this->plugin = LinkVault::getInstance();
@@ -150,8 +150,11 @@ class ReportsController extends Controller
 	public function actionDeleteRecords(): Response
 	{
 		$request = Craft::$app->getRequest();
-		$ids = $request->getParam('linkvaultrecords');
+		$ids = array_filter($request->getParam('linkvaultrecords'), function($val) {
+			return is_numeric($val);
+		});
 		$deleted = 0;
+		//$this->plugin->general->log("Delete IDs : ".implode(',', $ids));
 		// Make sure there are IDs otherwise all records will get deleted. Probably not desirable.
 		$records = $ids ? LinkVaultDownload::find()->id($ids)->limit(null)->all() : [];
 		// Each record must be deleted in a loop in order to trigger the element events.

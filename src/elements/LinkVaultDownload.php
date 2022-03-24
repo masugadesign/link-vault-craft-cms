@@ -70,7 +70,7 @@ class LinkVaultDownload extends Element
 		}
 	}
 
-	public function init()
+	public function init(): void
 	{
 		$this->plugin = LinkVault::getInstance();
 		$customFields = $this->plugin->customFields->fetchAllCustomFields('fieldName');
@@ -290,7 +290,7 @@ class LinkVaultDownload extends Element
  	* @inheritdoc
  	* @throws Exception if existing record is not found.
  	*/
-	public function afterSave(bool $isNew)
+	public function afterSave(bool $isNew): void
 	{
 		if ( $isNew ) {
 			$record = new LinkVaultDownloadRecord;
@@ -394,7 +394,7 @@ class LinkVaultDownload extends Element
 	/**
 	 * @inheritdoc
 	 */
-	public static function eagerLoadingMap(array $sourceElements, string $handle)
+	public static function eagerLoadingMap(array $sourceElements, string $handle): array|false|null
 	{
 		if ($handle === 'user') {
 			$sourceElementIds = ArrayHelper::getColumn($sourceElements, 'id');
@@ -425,7 +425,7 @@ class LinkVaultDownload extends Element
 	/**
 	 * @inheritdoc
 	 */
-	public function setEagerLoadedElements(string $handle, array $elements)
+	public function setEagerLoadedElements(string $handle, array $elements): void
 	{
 		if ($handle === 'user') {
 			$user = $elements[0] ?? null;

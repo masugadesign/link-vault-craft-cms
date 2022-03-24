@@ -150,7 +150,7 @@ class LinkVaultCustomField extends Element
  	* @inheritdoc
  	* @throws Exception if existing record is not found.
  	*/
-	public function afterSave(bool $isNew)
+	public function afterSave(bool $isNew): void
 	{
 		if ( $isNew ) {
 			$record = new LinkVaultCustomFieldRecord;
