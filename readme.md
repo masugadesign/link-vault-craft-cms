@@ -3,7 +3,7 @@
 <img src="https://github.com/masugadesign/link-vault-craft-cms/blob/master/src/icon.svg" width="100" height="100">
 
 ### Protect and track downloads on your site. Prevent and track leech attempts.
-This is a commercial plugin for Craft CMS 3.
+This is a commercial plugin for Craft CMS 4.
 
 ## Table of Contents
 
@@ -24,7 +24,7 @@ This is a commercial plugin for Craft CMS 3.
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "3.3.0",
+"masugadesign/linkvault": "4.0.0",
 ```
 
 ## Settings
