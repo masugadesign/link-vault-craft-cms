@@ -3,11 +3,11 @@
 namespace Masuga\LinkVault\services;
 
 use Craft;
-use craft\awss3\Volume as S3;
+use craft\awss3\Fs as S3;
 use craft\elements\Asset;
-use craft\googlecloud\Volume as GoogleCloud;
+use craft\googlecloud\Fs as GoogleCloud;
 use craft\helpers\UrlHelper;
-use craft\volumes\Local;
+use craft\fs\Local;
 use yii\base\Component;
 use Masuga\LinkVault\LinkVault;
 
@@ -187,7 +187,9 @@ class FilesService extends Component
 		if (substr($path, -1) != '/') {
 			$path .= '/';
 		}
-		return Craft::getAlias($path);
+		$normPath = Craft::getAlias($path);
+		//$this->plugin->general->log("Normalized Path: `{$normPath}`");
+		return $normPath;
 	}
 
 	/**
@@ -199,11 +201,13 @@ class FilesService extends Component
 	{
 		$filePath = null;
 		$volume = $asset->getVolume();
-		if ( $volume instanceof Local ) {
+		$fs = $volume->getFs();
+		if ( $fs instanceof Local ) {
 			$filePath = $asset->getImageTransformSourcePath();
 		} else {
 			$filePath = $asset->getPath();
 		}
+		//$filePath = $asset->getPath();
 		return $filePath;
 	}
 
@@ -216,13 +220,15 @@ class FilesService extends Component
 	{
 		$path = null;
 		$volume = $asset->getVolume();
+		$fs = $volume->getFs();
 		// Locally sourced files.
-		if ( $volume instanceof Local ) {
+		if ( $fs instanceof Local ) {
 			$path = $this->getAssetPath($asset);
 		// S3, Google Cloud, Rackspace... Create a temp local copy.
 		} else {
 			$path = $asset->getCopyOfFile();
 		}
+		//$this->plugin->general->log("Asset Path : `{$path}`");
 		return $path;
 	}
 

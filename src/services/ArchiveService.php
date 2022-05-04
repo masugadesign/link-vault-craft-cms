@@ -93,8 +93,10 @@ class ArchiveService extends Component
 				// Add the item to the archive.
 				if ( filter_var($file, FILTER_VALIDATE_URL) !== false ) {
 					$zipArchive->addFromString($downloadAs, file_get_contents($file));
-				} else {
+				} elseif ( file_exists($path) ) {
 					$zipArchive->addFile($path, $downloadAs);
+				} else {
+					$this->plugin->general->log("File missing `{$path}`. Could not be added to the zip file.");
 				}
 				$this->plugin->general->logDownload($fileParams);
 			}

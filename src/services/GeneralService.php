@@ -3,12 +3,13 @@
 namespace Masuga\LinkVault\services;
 
 use Craft;
-use craft\awss3\Volume as S3;
+use craft\awss3\Fs as S3;
 use craft\db\Query;
 use craft\elements\Asset;
-use craft\googlecloud\Volume as GoogleCloud;
+use craft\googlecloud\Fs as GoogleCloud;
+use craft\helpers\FileHelper;
 use craft\helpers\UrlHelper;
-use craft\volumes\Local;
+use craft\fs\Local;
 use craft\web\Response;
 use yii\base\Component;
 use yii\helpers\Inflector;
@@ -46,6 +47,12 @@ class GeneralService extends Component
 	protected $encryptionKey = null;
 
 	/**
+	 * The full path to the service log file.
+	 * @var string|null
+	 */
+	private $logPath = null;
+
+	/**
 	 * The class initialization method.
 	 */
 	public function __construct()
@@ -53,6 +60,7 @@ class GeneralService extends Component
 		$this->plugin = LinkVault::getInstance();
 		$this->debug = $this->plugin->getSettings()->debug;
 		$this->settings = $this->plugin->getSettings();
+		$this->logPath = Craft::$app->getPath()->getLogPath().'/linkvault-'.date('Ym').'.log';
 	}
 
 	/**
@@ -71,10 +79,12 @@ class GeneralService extends Component
 			$filePath = $this->plugin->files->getAssetPath($file);
 			$parameters['assetId'] = $file->id;
 			$volume = $file->getVolume();
-			if ( $volume instanceof S3 ) {
-				$parameters['s3Bucket'] = $file->getVolume()->settings['bucket'];
-			} elseif ( $volume instanceof GoogleCloud ) {
-				$parameters['googleBucket'] = $file->getVolume()->settings['bucket'];
+			$fs = $volume->getFs();
+			$fsSettings = $fs->getSettings();
+			if ( $fs instanceof S3 ) {
+				$parameters['s3Bucket'] = $fsSettings['bucket'];
+			} elseif ( $fs instanceof GoogleCloud ) {
+				$parameters['googleBucket'] = $fsSettings['bucket'];
 			}
 		// Any object other than Asset is not supported. Log it to assist the developer in debug.
 		} elseif ( is_object($file) ) {
@@ -124,16 +134,17 @@ class GeneralService extends Component
 		// Check to see if $parameter is an Asset.
 		} elseif ( $parameter instanceof Asset ) {
 			$volume = $parameter->getVolume();
-			$volumeSettings = $volume->getSettings();
-			if ( $volume instanceof Local ) {
+			$fs = $volume->getFs();
+			$fsSettings = $fs->getSettings();
+			if ( $fs instanceof Local ) {
 				$fileParts = pathinfo( $this->plugin->files->getAssetPath($parameter) );
 				$parameters['fileName'] = $fileParts['filename'].'.'.$fileParts['extension'];
 				$parameters['dirName'] = $this->plugin->files->normalizePath($fileParts['dirname']);
-			} elseif ( $volume instanceof S3 ) {
-				$parameters['s3Bucket'] = $volumeSettings['bucket'] ?? null;
+			} elseif ( $fs instanceof S3 ) {
+				$parameters['s3Bucket'] = $fsSettings['bucket'] ?? null;
 				$parameters['fileName'] = $parameter->filename;
-			} elseif ( $volume instanceof GoogleCloud ) {
-				$parameters['googleBucket'] = $volumeSettings['bucket'] ?? null;
+			} elseif ( $fs instanceof GoogleCloud ) {
+				$parameters['googleBucket'] = $fsSettings['bucket'] ?? null;
 				$parameters['fileName'] = $parameter->filename;
 			} else {
 				$parameters = array();
@@ -299,7 +310,7 @@ class GeneralService extends Component
 	 */
 	public function download($parameters=[])
 	{
-		//Craft::$app->plugins->call('linkVaultDownloadStart', array(&$parameters) );
+		//$this->log("download \$parameters: ".print_r($parameters,true));
 		$files        = $parameters['files'] ?? null;
 		$zipName      = $parameters['zipName'] ?? null;
 		$filePath     = $parameters['filePath'] ?? null;
@@ -308,7 +319,6 @@ class GeneralService extends Component
 		$s3Bucket     = $parameters['s3Bucket'] ?? null;
 		$googleBucket = $parameters['googleBucket'] ?? null;
 		$isUrl        = isset($parameters['isUrl']) && $parameters['isUrl'] == 1 ? true : false;
-		$this->log("Download Attempt - filePath: $filePath | s3Bucket: $s3Bucket | googleBucket: $googleBucket");
 		// The file is a valid URL.
 		if ( $isUrl ) {
 			$this->logDownload($parameters);
@@ -366,11 +376,15 @@ class GeneralService extends Component
 	 * @param string $message
 	 * @param mixed $level
 	 */
-	public function log($message='', $level=Logger::LEVEL_INFO)
+	public function log($message, $devModeOnly=false)
 	{
-		if ( $this->debug === true ) {
-			Craft::getLogger()->log($message, $level, 'linkvault');
-		}
+		if ( ! $devModeOnly || $this->craftDevMode ) {
+ 			$timestamp = '['.date('Y-m-d g:i a').'] :: ';
+ 			FileHelper::writeToFile($this->logPath, $timestamp.$message.PHP_EOL, [
+ 				'append' => true,
+ 				'lock' => false // Will this prevent permission issues?
+ 			]);
+ 		}
 	}
 
 }

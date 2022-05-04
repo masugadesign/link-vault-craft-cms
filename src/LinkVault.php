@@ -7,7 +7,7 @@ use craft\base\Plugin;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
-use craft\log\FileTarget;
+use craft\helpers\FileHelper;
 use craft\services\Dashboard;
 use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
@@ -32,13 +32,13 @@ class LinkVault extends Plugin
 	 * index template by default.
 	 * @var boolean
 	 */
-	public $hasCpSection = true;
+	public bool $hasCpSection = true;
 
 	/**
 	 * Enables the plugin settings form.
 	 * @var boolean
 	 */
-	public $hasCpSettings = true;
+	public bool $hasCpSettings = true;
 
 	/**
 	 * The name of the plugin as it appears in the Craft control panel and
@@ -64,7 +64,7 @@ class LinkVault extends Plugin
 	 * This method returns the plugin's Settings model instance.
 	 * @return Settings
 	 */
-	protected function createSettingsModel(): Settings
+	protected function createSettingsModel(): ?\craft\base\Model
 	{
 		return new Settings();
 	}
@@ -73,7 +73,7 @@ class LinkVault extends Plugin
 	 * This method returns the settings form HTML content.
 	 * @return string
 	 */
-	protected function settingsHtml(): string
+	protected function settingsHtml(): ?string
 	{
 		return Craft::$app->getView()->renderTemplate('linkvault/_settings', [
 			'settings' => $this->getSettings()
@@ -84,7 +84,7 @@ class LinkVault extends Plugin
 	 * The plugin's initialization function is responsible for registering event
 	 * handlers, routes and other plugin components.
 	 */
-	public function init()
+	public function init(): void
 	{
 		parent::init();
 		$downloadTrigger = $this->getSettings()->downloadTrigger;
@@ -96,11 +96,6 @@ class LinkVault extends Plugin
 			'files' => FilesService::class,
 			'general' => GeneralService::class,
 			'reports' => ReportsService::class
-		]);
-		// Register the Link Vault plugin log.
-		$fileTarget = new FileTarget([
-			'logFile' => Craft::$app->getPath()->getLogPath().'/linkvault.log',
-			'categories' => ['linkvault']
 		]);
 		// Register the site front-end routes.
 		Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) use($downloadTrigger) {
