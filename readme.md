@@ -24,7 +24,7 @@ This is a commercial plugin for Craft CMS 4.
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "4.0.1",
+"masugadesign/linkvault": "4.0.2",
 ```
 
 ## Settings
@@ -73,16 +73,10 @@ The download URL accepts two parameters:
     <a href="{{ craft.linkvault.downloadUrl(download) }}" >Download This</a>
 {% endfor %}
 
-{# Example 2: Passing a system path. This method will vary based on your Asset source path setting. #}
-{% for download in entry.downloadableAssets.all() %}
-    {% set filePath = craft.linkvault.parseEnvironmentString( download.source.settings['path']~download.getFolder().path )~download.filename %}
-    <a href="{{ craft.linkvault.downloadUrl(filePath) }}" >Download This</a>
-{% endfor %}
-
-{# Example 3: A hard-coded full system path. #}
+{# Example 2: A hard-coded full system path. #}
 <a href="{{ craft.linkvault.downloadUrl('/home/user1337/www/uploads/songs/love.mp3') }}" >Download This</a>
 
-{# Example 4: A full URL to a remote file. #}
+{# Example 3: A full URL to a remote file. #}
 <a href="{{ craft.linkvault.downloadUrl('http://example.com/downloads/art/cat-rides-bike.zip') }}" >Download This</a>
 ```
 

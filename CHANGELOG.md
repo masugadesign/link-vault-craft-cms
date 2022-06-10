@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.2 - 2022-06-10
+
+### Fixed
+- Removed references to missing `FileService::parseEnvironmentString()` method.
+
 ## 4.0.1 - 2022-05-05
 
 ### Fixed

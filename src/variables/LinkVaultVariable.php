@@ -158,16 +158,6 @@ class LinkVaultVariable
 	}
 
 	/**
-	 * This template variable parses environment variables in a string.
-	 * @param string
-	 * @return string
-	 */
-	public function parseEnvironmentString($string): string
-	{
-		return $this->plugin->files->parseEnvironmentString($string);
-	}
-
-	/**
 	 * This method allows for querying saved Link Vault reports.
 	 * @param array $criteria
 	 * @return LinkVaultReportQuery
