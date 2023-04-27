@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3 - 2023-04-27
+
+### Fixed
+- Fixed an error that occurred when downloading and logging remote files where the URL contained no filename.
+
 ## 4.0.2 - 2022-06-10
 
 ### Fixed
