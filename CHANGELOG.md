@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.2.1 - 2023-04-27
+
+### Changed
+- Updated composer.json to prohibit installing Link Vault 3 in Craft 4 (use Link Vault 4+).
+
+### Fixed
+- Fixed an error that occurred when downloading and logging remote files where the URL contained no filename.
+
 ## 3.2.0 - 2021-10-13
 
 ### Added
