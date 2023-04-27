@@ -253,6 +253,8 @@ class GeneralService extends Component
 		// Create variables from the file data and session information.
 		$saveStatus = false;
 		$fileParts = pathinfo($recordData['filePath']);
+		$filename = $fileParts['filename'] ?? '';
+		$filename .= !empty($fileParts['extension']) ? ".{$fileParts['extension']}" : '';
 		$isUrl = isset($recordData['isUrl']) ? $recordData['isUrl'] : 0;
 		$user = Craft::$app->getUser();
 		// Prepare the download model.
@@ -264,11 +266,11 @@ class GeneralService extends Component
 		if ( !$isUrl ) {
 			$element->dirName = $element->s3Bucket || $element->googleBucket ? $fileParts['dirname'].'/' : $this->plugin->files->normalizePath($fileParts['dirname']);
 		}
-		$element->fileName = $isUrl ? $recordData['filePath'] : $fileParts['filename'].'.'.$fileParts['extension'];
+		$element->fileName = $isUrl ? $recordData['filePath'] : $filename;
 		$element->elementId = isset($recordData['elementId']) ? $recordData['elementId'] : null;
 		$element->assetId = isset($recordData['assetId']) ? $recordData['assetId'] : null;
 		$element->userId = isset($user->id) ? $user->id : null;
-		$element->downloadAs = isset($recordData['downloadAs']) ? $recordData['downloadAs'] : $fileParts['filename'].'.'.$fileParts['extension'];
+		$element->downloadAs = $recordData['downloadAs'] ?? $filename ?? $recordData['filePath'];
 		$element->zipName = isset($recordData['zipName']) ? $recordData['zipName'] : null;
 		$element->isUrl = $isUrl;
 		$element->remoteIP = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
