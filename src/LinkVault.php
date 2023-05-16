@@ -6,6 +6,7 @@ use Craft;
 use craft\base\Plugin;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\FileHelper;
 use craft\services\Dashboard;
@@ -14,6 +15,7 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 use yii\base\Event;
+use Masuga\LinkVault\elements\LinkVaultCustomField;
 use Masuga\LinkVault\models\Settings;
 use Masuga\LinkVault\services\ArchiveService;
 use Masuga\LinkVault\services\CustomFieldsService;
@@ -133,6 +135,12 @@ class LinkVault extends Plugin
 		// Register the plugin dashboard widgets.
 		Event::on(Dashboard::class, Dashboard::EVENT_REGISTER_WIDGET_TYPES, function(RegisterComponentTypesEvent $event) {
 			$event->types[] = LinkVaultTopDownloadsWidget::class;
+		});
+		Event::on(LinkVaultCustomField::class, LinkVaultCustomField::EVENT_REGISTER_ACTIONS, function(RegisterElementActionsEvent $event) {
+			$source = $event->source;
+			$actions = $event->actions;
+			// Remove the default `Edit` and `Duplicate` actions. Totally uncalled for. Craft 4 adds them. Why?
+			unset($event->actions[0], $event->actions[1]);
 		});
 	}
 

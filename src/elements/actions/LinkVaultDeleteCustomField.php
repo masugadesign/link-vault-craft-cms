@@ -5,10 +5,11 @@ namespace Masuga\LinkVault\elements\actions;
 use Craft;
 use craft\base\ElementAction;
 use craft\base\ElementActionInterface;
+use craft\elements\actions\DeleteActionInterface;
 use craft\elements\db\ElementQueryInterface;
 use Masuga\LinkVault\LinkVault;
 
-class LinkVaultDeleteCustomField extends ElementAction
+class LinkVaultDeleteCustomField extends ElementAction implements DeleteActionInterface
 {
 
 	/**
@@ -66,5 +67,21 @@ class LinkVaultDeleteCustomField extends ElementAction
 		$this->setMessage($this->successMessage);
 		return true;
 	}
+
+	/**
+     * @inheritdoc
+     */
+    public function canHardDelete(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setHardDelete(): void
+    {
+        $this->hard = true;
+    }
 
 }

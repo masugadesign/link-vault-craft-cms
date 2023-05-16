@@ -234,4 +234,37 @@ class LinkVaultReport extends Element
 		$criteria = $this->criteria ? json_decode($this->criteria, true) : [];
 		return $criteria;
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canSave(User $user): bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canDuplicate(User $user): bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canView(User $user): bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canDelete(User $user): bool
+	{
+		return true;
+	}
+
 }

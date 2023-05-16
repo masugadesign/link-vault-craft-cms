@@ -6,6 +6,7 @@ use Craft;
 use craft\base\Element;
 use craft\controllers\ElementIndexesController;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\User;
 use craft\helpers\DateTimeHelper;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\actions\LinkVaultDeleteCustomField;
@@ -167,6 +168,38 @@ class LinkVaultCustomField extends Element
 		$record->fieldType = $this->fieldType;
 		$record->save();
 		parent::afterSave($isNew);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canSave(User $user): bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canDuplicate(User $user): bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canView(User $user): bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canDelete(User $user): bool
+	{
+		return true;
 	}
 
 }

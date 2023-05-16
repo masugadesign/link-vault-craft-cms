@@ -438,4 +438,36 @@ class LinkVaultDownload extends Element
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function canSave(User $user): bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canDuplicate(User $user): bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canView(User $user): bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canDelete(User $user): bool
+	{
+		return true;
+	}
+
 }
