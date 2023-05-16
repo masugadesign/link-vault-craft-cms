@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.4 - 2023-05-16
+
+- Fixed element action permission issues arising from changes in Craft 4.3.
+- Removed some irrelevant element actions added to the Link Vault Custom Fields action menu by Craft.
+
 ## 4.0.3 - 2023-04-27
 
 ### Fixed
