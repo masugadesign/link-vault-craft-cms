@@ -11,6 +11,7 @@ use craft\helpers\DateTimeHelper;
 use Masuga\LinkVault\LinkVault;
 use Masuga\LinkVault\elements\actions\LinkVaultDeleteCustomField;
 use Masuga\LinkVault\elements\db\LinkVaultCustomFieldQuery;
+use Masuga\LinkVault\exceptions\LinkVaultInvalidRecordException;
 use Masuga\LinkVault\records\LinkVaultCustomFieldRecord;
 
 class LinkVaultCustomField extends Element
@@ -60,7 +61,7 @@ class LinkVaultCustomField extends Element
      */
     public function getUiLabel(): string
     {
-        return $this->_uiLabel ?? $this->uiLabel() ?? (string)$this;
+        return $this->fieldLabel;
     }
 
     /**
@@ -133,17 +134,6 @@ class LinkVaultCustomField extends Element
     }
 
     /**
-     * Returns the HTML for an editor HUD for the given element.
-     * @param BaseElementModel $element
-     * @return string
-     */
-    public function getEditorHtml(): string
-    {
-        $html .= parent::getEditorHtml();
-        return $html;
-    }
-
-    /**
      * @inheritDoc IElementType::getAvailableActions()
      * @param string|null $source
      * @return array|null
@@ -157,7 +147,7 @@ class LinkVaultCustomField extends Element
 
     /**
      * @inheritdoc
-     * @throws Exception if existing record is not found.
+     * @throws LinkVaultInvalidRecordException if existing record is not found.
      */
     public function afterSave(bool $isNew): void
     {
@@ -168,7 +158,7 @@ class LinkVaultCustomField extends Element
         } else {
             $record = LinkVaultCustomFieldRecord::findOne($this->id);
             if (!$record) {
-                throw new Exception('Invalid custom field ID: '.$this->id);
+                throw new LinkVaultInvalidRecordException('Invalid custom field ID: '.$this->id);
             }
         }
         $record->fieldName = $this->fieldName;
