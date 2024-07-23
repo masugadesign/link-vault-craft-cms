@@ -1,36 +1,36 @@
 
 {# This particular parameter may not always be set. Let's set it. #}
 {% if filterType is not defined %}
-	{% set filterType = '' %}
+    {% set filterType = '' %}
 {% endif %}
 {# For the default filter state, there may not even be a fieldHandle. #}
 {% if fieldHandle is not defined %}
-	{% set fieldHandle = '' %}
+    {% set fieldHandle = '' %}
 {% endif %}
 {# The field value is another parameter that might be absent. #}
 {% if fieldValue is not defined %}
-	{% set fieldValue = '' %}
+    {% set fieldValue = '' %}
 {% endif %}
 
 {# Fetch the field options by handle. #}
 {% set fieldOptions = fieldHandle ? craft.linkvault.fieldOptions(fieldHandle) : [] %}
 
 {% if fieldOptions is empty %}
-	<input class="text filterValue" type="text" name="criteria[{{ index }}][value]"
-		{% if 'empty' in filterType %}readonly="readonly"{% endif %}
-		data-filter-value data-idx="{{ index }}"
-		data-handle="{{ fieldHandle }}"
-		value="{{ fieldValue }}"  >
+    <input class="text filterValue" type="text" name="criteria[{{ index }}][value]"
+        {% if 'empty' in filterType %}readonly="readonly"{% endif %}
+        data-filter-value data-idx="{{ index }}"
+        data-handle="{{ fieldHandle }}"
+        value="{{ fieldValue }}"  >
 {% else %}
-	<div class="select" >
-		<select class="filterValue" id="filterSelect{{ index }}" name="criteria[{{ index }}][value]"
-			{% if 'empty' in filterType %}readonly="readonly"{% endif %}
-			data-filter-value="select"
-			data-idx="{{ index }}"
-			data-handle="{{ fieldHandle }}" >
-		{% for opValue,opLabel in fieldOptions %}
-			<option value="{{ opValue }}" {% if opValue|t is same as(fieldValue|t) %}selected="selected"{% endif %} >{{ opLabel|e }}</option>
-		{% endfor %}
-		</select>
-	</div>
+    <div class="select" >
+        <select class="filterValue" id="filterSelect{{ index }}" name="criteria[{{ index }}][value]"
+            {% if 'empty' in filterType %}readonly="readonly"{% endif %}
+            data-filter-value="select"
+            data-idx="{{ index }}"
+            data-handle="{{ fieldHandle }}" >
+        {% for opValue,opLabel in fieldOptions %}
+            <option value="{{ opValue }}" {% if opValue|t is same as(fieldValue|t) %}selected="selected"{% endif %} >{{ opLabel|e }}</option>
+        {% endfor %}
+        </select>
+    </div>
 {% endif %}

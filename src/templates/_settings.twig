@@ -1,29 +1,29 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.hidden({
-	first:        true,
-	required:     true,
-	id:           'encryptionKey',
-	name:         'encryptionKey',
-	value:        settings.encryptionKey,
-	autofocus:    true,
-	errors:       settings.getErrors('encryptionKey')
+    first:        true,
+    required:     true,
+    id:           'encryptionKey',
+    name:         'encryptionKey',
+    value:        settings.encryptionKey,
+    autofocus:    true,
+    errors:       settings.getErrors('encryptionKey')
 }) }}
 
 {{ forms.textField({
-	label:         "Leech Attempt Template"|t,
-	id:            'leechTemplate',
-	name:          'leechTemplate',
-	instructions:  "This template will load with a 403 status whenever someone attempts to leech a download URL as long as leech blocking is enabled."|t,
-	value:         settings.leechTemplate,
-	errors:        settings.getErrors('leechTemplate')
+    label:         "Leech Attempt Template"|t,
+    id:            'leechTemplate',
+    name:          'leechTemplate',
+    instructions:  "This template will load with a 403 status whenever someone attempts to leech a download URL as long as leech blocking is enabled."|t,
+    value:         settings.leechTemplate,
+    errors:        settings.getErrors('leechTemplate')
 }) }}
 
 {{ forms.textField({
-	label:        "Missing File Template"|t,
-	id:           'missingTemplate',
-	name:         'missingTemplate',
-	instructions: "This template will load with a 404 status whenever someone attempts to download a file that doesn't exist."|t,
-	value:        settings.missingTemplate,
-	errors:       settings.getErrors('missingTemplate')
+    label:        "Missing File Template"|t,
+    id:           'missingTemplate',
+    name:         'missingTemplate',
+    instructions: "This template will load with a 404 status whenever someone attempts to download a file that doesn't exist."|t,
+    value:        settings.missingTemplate,
+    errors:       settings.getErrors('missingTemplate')
 }) }}

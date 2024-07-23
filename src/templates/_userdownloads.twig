@@ -2,8 +2,8 @@
 {% set title = 'User'|t ~ ' ' ~ type ~ 's - ' ~ user.username %}
 
 {% set crumbs = {
-	reports: { label: "Download History Reporting"|t, url: url('linkvault/reports') },
-	userDownloads: { label: user.username~" Downloads/Leech Attempts", url: url('linkvault/user', {userId:user.id})}
+    reports: { label: "Download History Reporting"|t, url: url('linkvault/reports') },
+    userDownloads: { label: user.username~" Downloads/Leech Attempts", url: url('linkvault/user', {userId:user.id})}
 } %}
 
 {% do view.registerAssetBundle("Masuga\\LinkVault\\assetbundles\\cp\\CpAsset") %}
@@ -13,70 +13,70 @@
 {% block content %}
 
 <table class="data fullwidth collapsible" >
-	<thead>
-		<tr>
-			<th scope="col" class="header" >Date</th>
-			<th scope="col" class="header" >File Name</th>
-			<th scope="col" class="header" >Element Title</th>
-			<th scope="col" class="header" >Asset</th>
-		</tr>
-	</thead>
-	<tbody>
-	{% for download in pageDownloads %}
-		<tr>
-			<td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
-			<td class="textual" >{{ download.fileName }}</td>
-			<td class="textual" >
-				{% set entry = download.elementId ? craft.entries.id(download.elementId).one() : null %}
-				{% if entry is not empty %}
-					<a href="{{ entry.cpEditUrl }}" >{{ entry.title }}</a>
-					{% if entry.url is not empty %}
-						&nbsp;|&nbsp;<a href="{{ entry.url }}" target="_blank">Entry Page &rarr;</a>
-					{% endif %}
-				{% endif %}
-			</td>
-			<td class="textual" >
-				{% set asset = download.assetId ? craft.assets.id(download.assetId).one() : null %}
-				{% if asset is not empty %}
-					{% if asset.cpEditUrl %}
-						<a href="{{ asset.cpEditUrl }}" >{{ asset.title|e }}</a>
-					{% else %}
-						{{ asset.title|e }}
-					{% endif %}
-					{% if asset.url is not empty %}
-						&nbsp;<a href="{{ asset.url }}" class="light smalltext" target="_blank">open</a>
-					{% endif %}
-				{% endif %}
-			</td>
-		</tr>
-	{% else %}
-		<tr><td colspan="4">There are no records associated with this user.</td></tr>
-	{% endfor %}
-	</tbody>
+    <thead>
+        <tr>
+            <th scope="col" class="header" >Date</th>
+            <th scope="col" class="header" >File Name</th>
+            <th scope="col" class="header" >Element Title</th>
+            <th scope="col" class="header" >Asset</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for download in pageDownloads %}
+        <tr>
+            <td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
+            <td class="textual" >{{ download.fileName }}</td>
+            <td class="textual" >
+                {% set entry = download.elementId ? craft.entries.id(download.elementId).one() : null %}
+                {% if entry is not empty %}
+                    <a href="{{ entry.cpEditUrl }}" >{{ entry.title }}</a>
+                    {% if entry.url is not empty %}
+                        &nbsp;|&nbsp;<a href="{{ entry.url }}" target="_blank">Entry Page &rarr;</a>
+                    {% endif %}
+                {% endif %}
+            </td>
+            <td class="textual" >
+                {% set asset = download.assetId ? craft.assets.id(download.assetId).one() : null %}
+                {% if asset is not empty %}
+                    {% if asset.cpEditUrl %}
+                        <a href="{{ asset.cpEditUrl }}" >{{ asset.title|e }}</a>
+                    {% else %}
+                        {{ asset.title|e }}
+                    {% endif %}
+                    {% if asset.url is not empty %}
+                        &nbsp;<a href="{{ asset.url }}" class="light smalltext" target="_blank">open</a>
+                    {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="4">There are no records associated with this user.</td></tr>
+    {% endfor %}
+    </tbody>
 </table>
 
 {% if pageInfo.totalPages > 1 %}
-	{% include 'linkvault/_partials/pagination' %}
+    {% include 'linkvault/_partials/pagination' %}
 {% endif %}
 
 {% endblock %}
 
 {% block sidebar %}
-	<div class="buttons">
-		<div class="select" >
-			<select id="lvTypeFilter" name="type" data-refresh >
-				<option value="{{ url('linkvault/user', {userId : user.id, type : 'Download'}) }}" {% if type == 'Download' %}selected="selected"{% endif %} >Downloads</option>
-				<option value="{{ url('linkvault/user', {userId : user.id, type : 'Leech Attempt'}) }}" {% if type == 'Leech Attempt' %}selected="selected"{% endif %} >Leech Attempts</option>
-			</select>
-		</div>
-	</div>
+    <div class="buttons">
+        <div class="select" >
+            <select id="lvTypeFilter" name="type" data-refresh >
+                <option value="{{ url('linkvault/user', {userId : user.id, type : 'Download'}) }}" {% if type == 'Download' %}selected="selected"{% endif %} >Downloads</option>
+                <option value="{{ url('linkvault/user', {userId : user.id, type : 'Leech Attempt'}) }}" {% if type == 'Leech Attempt' %}selected="selected"{% endif %} >Leech Attempts</option>
+            </select>
+        </div>
+    </div>
 {% endblock %}
 
 {% set lvJs %}
 $(document).ready(function() {
-	$('[data-refresh]').change(function() {
-		window.location.href = $(this).val();
-	});
+    $('[data-refresh]').change(function() {
+        window.location.href = $(this).val();
+    });
 });
 {% endset %}
 {% js lvJs %}

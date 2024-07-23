@@ -2,20 +2,20 @@
 {% set title = 'Link Vault'|t %}
 {% set elementType = 'Masuga\\LinkVault\\elements\\LinkVaultDownload' %}
 {% set tabs = {
-	reports: { label: "Download History Reporting"|t, url: url('linkvault/reports') },
-	customFields: { label: "Custom Fields"|t, url: url('linkvault/customfields') }
+    reports: { label: "Download History Reporting"|t, url: url('linkvault/reports') },
+    customFields: { label: "Custom Fields"|t, url: url('linkvault/customfields') }
 } %}
 {% set selectedTab = 'reports' %}
 {% set crumbs = {
-	downloads: { label: "Download History"|t, url: url('linkvault') }
+    downloads: { label: "Download History"|t, url: url('linkvault') }
 } %}
 
 {% do view.registerAssetBundle("Masuga\\LinkVault\\assetbundles\\cp\\CpAsset") %}
 
 {% if report %}
-	{% set filtersParam = report.getCriteriaArray %}
+    {% set filtersParam = report.getCriteriaArray %}
 {% else %}
-	{% set filtersParam = craft.app.request.getParam('criteria') ?: {0 : {'fieldHandle' : '', 'filterType' : '', 'value' : '' } } %}
+    {% set filtersParam = craft.app.request.getParam('criteria') ?: {0 : {'fieldHandle' : '', 'filterType' : '', 'value' : '' } } %}
 {% endif %}
 
 {% block content %}
@@ -28,29 +28,29 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 {% set orderByParam = orderBy %}
 {# Timestamps are ambiguous. Let's prefix with the table name. #}
 {% if orderBy in ['dateCreated', 'dateUpdated'] %}
-	{% set orderByParam = 'linkvault_downloads.' ~ orderBy %}
+    {% set orderByParam = 'linkvault_downloads.' ~ orderBy %}
 {% endif %}
 
 {# Filterable field options (handle/column -> label) #}
 {% set fieldOptions = {
-	'id' : 'ID',
-	'fileName' : 'Filename',
-	'dirName' : 'Folder Path',
-	'elementId' : 'Related Element ID',
-	'assetId' : 'Asset ID',
-	'userId' : 'User ID',
-	's3Bucket' : 'S3 Bucket',
-	'downloadAs' : 'Download As',
-	'zipName' : 'Zip Name',
-	'isUrl' : 'Is URL?',
-	'remoteIP' : 'Remote IP Address',
-	'dateCreated' : 'Download Date'
+    'id' : 'ID',
+    'fileName' : 'Filename',
+    'dirName' : 'Folder Path',
+    'elementId' : 'Related Element ID',
+    'assetId' : 'Asset ID',
+    'userId' : 'User ID',
+    's3Bucket' : 'S3 Bucket',
+    'downloadAs' : 'Download As',
+    'zipName' : 'Zip Name',
+    'isUrl' : 'Is URL?',
+    'remoteIP' : 'Remote IP Address',
+    'dateCreated' : 'Download Date'
 } %}
 
 {# Add the custom fields to the field options. #}
 {% set customFields = craft.linkvault.customFields.orderBy('fieldLabel').all() %}
 {% for customField in customFields %}
-	{% set fieldOptions = fieldOptions|merge({ (customField.fieldName) : customField.fieldLabel }) %}
+    {% set fieldOptions = fieldOptions|merge({ (customField.fieldName) : customField.fieldLabel }) %}
 {% endfor %}
 
 {% set criteria = craft.linkvault.formatFilterCriteria(filtersParam) %}
@@ -62,67 +62,67 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 
 
 <div class="pane" >
-	<form id="reportsForm" method="get" accept-charset="UTF-8" autocomplete="off"
-		data-export-action="{{ url('linkvault/export') }}"
-		data-save-report-action="{{ url('linkvault/reports/save-report') }}" >
-		{# Some hidden fields we can use to stash some dynamic information. #}
-		<input type="hidden" id="fieldFilterOptionsUrl" value="{{ url('linkvault/reports/field-filter-options') }}" >
-		<input type="hidden" id="valueFieldUrl" value="{{ url('linkvault/reports/value-field') }}" >
-		{% if report %}
-		<input type="hidden" name="reportId" value="{{ report.id }}" >
-		{% endif %}
+    <form id="reportsForm" method="get" accept-charset="UTF-8" autocomplete="off"
+        data-export-action="{{ url('linkvault/export') }}"
+        data-save-report-action="{{ url('linkvault/reports/save-report') }}" >
+        {# Some hidden fields we can use to stash some dynamic information. #}
+        <input type="hidden" id="fieldFilterOptionsUrl" value="{{ url('linkvault/reports/field-filter-options') }}" >
+        <input type="hidden" id="valueFieldUrl" value="{{ url('linkvault/reports/value-field') }}" >
+        {% if report %}
+        <input type="hidden" name="reportId" value="{{ report.id }}" >
+        {% endif %}
 
-		<div id="filterFields" class="filterFields" >
-		{% for i,filterData in filtersParam %}
-			<div class="filterField" data-idx="{{ i }}" >
-				<div class="select" >
-					<select name="criteria[{{ i }}][fieldHandle]" data-select-field data-idx="{{ i }}" >
-						<option value="" >Select Field</option>
-					{% for value,label in fieldOptions %}
-						<option value="{{ value }}" {% if value == filterData.fieldHandle %}selected="selected"{% endif %} >{{ label|e }}</option>
-					{% endfor %}
-					</select>
-				</div>
-				<div class="select" >
-					<select name="criteria[{{ i }}][filterType]" class="filterType" data-select-filter-type data-idx="{{ i }}" >
-					{# Fetch filter options for previously submitted field filters. #}
-					{% if filterData.fieldHandle %}
-						{# Params : Field handle, the selected filter type #}
-						{{ craft.linkvault.fieldFilterOptions(filterData.fieldHandle, filterData.filterType)|raw }}
-					{% else %}
-						<option value="" > -- </option>
-					{% endif %}
-					</select>
-				</div>
-				<div class="valueFieldContainer" data-idx="{{ i }}" >
-					{% include 'linkvault/_partials/value-field' with {
-						'fieldHandle' : filterData.fieldHandle,
-						'filterType' : filterData.filterType,
-						'fieldValue' : filterData.value ?? '',
-						'index' : i
-					} %}
-				</div>
-				<a href="#" class="btn" data-remove-filter >-</a>
-				<a href="#" class="btn" data-add-filter >+</a>
-			</div>
-		{% endfor %}
-		</div>
+        <div id="filterFields" class="filterFields" >
+        {% for i,filterData in filtersParam %}
+            <div class="filterField" data-idx="{{ i }}" >
+                <div class="select" >
+                    <select name="criteria[{{ i }}][fieldHandle]" data-select-field data-idx="{{ i }}" >
+                        <option value="" >Select Field</option>
+                    {% for value,label in fieldOptions %}
+                        <option value="{{ value }}" {% if value == filterData.fieldHandle %}selected="selected"{% endif %} >{{ label|e }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="select" >
+                    <select name="criteria[{{ i }}][filterType]" class="filterType" data-select-filter-type data-idx="{{ i }}" >
+                    {# Fetch filter options for previously submitted field filters. #}
+                    {% if filterData.fieldHandle %}
+                        {# Params : Field handle, the selected filter type #}
+                        {{ craft.linkvault.fieldFilterOptions(filterData.fieldHandle, filterData.filterType)|raw }}
+                    {% else %}
+                        <option value="" > -- </option>
+                    {% endif %}
+                    </select>
+                </div>
+                <div class="valueFieldContainer" data-idx="{{ i }}" >
+                    {% include 'linkvault/_partials/value-field' with {
+                        'fieldHandle' : filterData.fieldHandle,
+                        'filterType' : filterData.filterType,
+                        'fieldValue' : filterData.value ?? '',
+                        'index' : i
+                    } %}
+                </div>
+                <a href="#" class="btn" data-remove-filter >-</a>
+                <a href="#" class="btn" data-add-filter >+</a>
+            </div>
+        {% endfor %}
+        </div>
 
-		<div class="filterControls" >
-			<div class="filterFormControls" >
-				<input type="submit" class="btn submit" id="refreshResults" value="Refresh Results" >&nbsp;
-				<input type="submit" class="btn submit" id="exportAsCsv" name="exportSubmit" value="Export as CSV" >&nbsp;
-				<a href="{{ url(craft.app.request.pathInfo) }}" class="btn" >Clear Filters</a>
-			</div>
-			<div class="filterExportControls" >
-				<input type="text" class="text" id="reportTitle" name="title" style="width:150px" placeholder="Report Title" value="{{ report.title ?? '' }}">&nbsp;
-				<button id="saveReport" class="btn" >Save Report</button>
-				{% if report %}
-					&nbsp;<a href="{{ url('linkvault/reports/delete', {'reportId' : report.id}) }}" class="btn" data-delete-report >Delete Report</a>
-				{% endif %}
-			</div>
-		</div>
-	</form>
+        <div class="filterControls" >
+            <div class="filterFormControls" >
+                <input type="submit" class="btn submit" id="refreshResults" value="Refresh Results" >&nbsp;
+                <input type="submit" class="btn submit" id="exportAsCsv" name="exportSubmit" value="Export as CSV" >&nbsp;
+                <a href="{{ url(craft.app.request.pathInfo) }}" class="btn" >Clear Filters</a>
+            </div>
+            <div class="filterExportControls" >
+                <input type="text" class="text" id="reportTitle" name="title" style="width:150px" placeholder="Report Title" value="{{ report.title ?? '' }}">&nbsp;
+                <button id="saveReport" class="btn" >Save Report</button>
+                {% if report %}
+                    &nbsp;<a href="{{ url('linkvault/reports/delete', {'reportId' : report.id}) }}" class="btn" data-delete-report >Delete Report</a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
 </div>
 
 {% if pageInfo.total > 0 %}
@@ -137,58 +137,58 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 <input type="hidden" name="action" value="linkvault/reports/delete-records" >
 
 <table class="data fullwidth collapsible filteredTable" style="margin-top:1rem;" >
-	<thead>
-		<tr>
-			<th scope="col" class="header" style="text-align:center"><input type="checkbox" id="linkVaultCheckAll" name="linkvaultrecords[]" value="ALL" ></th>
-			<th scope="col" class="header" >Date</th>
-			<th scope="col" class="header" >Bucket/Directory</th>
-			<th scope="col" class="header" >File Name</th>
-			<th scope="col" class="header" >User</th>
-			<th scope="col" class="header" >Asset</th>
-			{% for fieldName,value in criteria  %}
-			<th scope="col" class="header" >{{ (fieldOptions[fieldName] ?? fieldName)|e }}</th>
-			{% endfor %}
-		</tr>
-	</thead>
-	<tbody>
-	{% for download in pageDownloads %}
-		{% set stringStart = download.dirName|length - 25 %}
-		{% set displayDirName = download.dirName|length > 25 ? '...' ~ download.dirName[stringStart:] : download.dirName %}
-		<tr>
-			<td style="text-align:center" ><input type="checkbox" name="linkvaultrecords[]" value="{{ download.id }}" data-linkvault-checkbox ></td>
-			<td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
-			<td class="textual" title="{{ (download.s3Bucket ?? download.dirName)|e }}" >{{ (download.s3Bucket ?? download.googleBucket ?? displayDirName )|e }}</td>
-			<td class="textual" >{{ download.fileName|e }}</td>
-			<td class="textual" >
-				{% set user = download.userId ? craft.users.id(download.userId).one() : null %}
-				{% if user is not empty %}
-					<a href="{{ url('linkvault/user?userId=' ~ user.id) }}" >{{ (user.fullName ?: user.email)|e }}</a>
-				{% endif %}
-			</td>
-			<td class="textual" >
-				{% set asset = download.assetId ? craft.assets.id(download.assetId).one() : null %}
-				{% if asset is not empty %}
-					{% if asset.cpEditUrl %}
-						<a href="{{ asset.cpEditUrl }}" >{{ asset.title|e }}</a>
-					{% else %}
-						{{ asset.title|e }}
-					{% endif %}
-					{% if asset.url is not empty %}
-						&nbsp;<a href="{{ asset.url }}" class="light smalltext" target="_blank">open</a>
-					{% endif %}
-				{% endif %}
-			</td>
-			{% for fieldName,value in criteria %}
-			<td class="filtered" >{{  attribute(download, fieldName) }}</td>
-			{% endfor %}
-		</tr>
-	{% endfor %}
-	</tbody>
+    <thead>
+        <tr>
+            <th scope="col" class="header" style="text-align:center"><input type="checkbox" id="linkVaultCheckAll" name="linkvaultrecords[]" value="ALL" ></th>
+            <th scope="col" class="header" >Date</th>
+            <th scope="col" class="header" >Bucket/Directory</th>
+            <th scope="col" class="header" >File Name</th>
+            <th scope="col" class="header" >User</th>
+            <th scope="col" class="header" >Asset</th>
+            {% for fieldName,value in criteria  %}
+            <th scope="col" class="header" >{{ (fieldOptions[fieldName] ?? fieldName)|e }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for download in pageDownloads %}
+        {% set stringStart = download.dirName|length - 25 %}
+        {% set displayDirName = download.dirName|length > 25 ? '...' ~ download.dirName[stringStart:] : download.dirName %}
+        <tr>
+            <td style="text-align:center" ><input type="checkbox" name="linkvaultrecords[]" value="{{ download.id }}" data-linkvault-checkbox ></td>
+            <td class="textual" >{{ download.dateCreated|date('F j, Y g:i a') }}</td>
+            <td class="textual" title="{{ (download.s3Bucket ?? download.dirName)|e }}" >{{ (download.s3Bucket ?? download.googleBucket ?? displayDirName )|e }}</td>
+            <td class="textual" >{{ download.fileName|e }}</td>
+            <td class="textual" >
+                {% set user = download.userId ? craft.users.id(download.userId).one() : null %}
+                {% if user is not empty %}
+                    <a href="{{ url('linkvault/user?userId=' ~ user.id) }}" >{{ (user.fullName ?: user.email)|e }}</a>
+                {% endif %}
+            </td>
+            <td class="textual" >
+                {% set asset = download.assetId ? craft.assets.id(download.assetId).one() : null %}
+                {% if asset is not empty %}
+                    {% if asset.cpEditUrl %}
+                        <a href="{{ asset.cpEditUrl }}" >{{ asset.title|e }}</a>
+                    {% else %}
+                        {{ asset.title|e }}
+                    {% endif %}
+                    {% if asset.url is not empty %}
+                        &nbsp;<a href="{{ asset.url }}" class="light smalltext" target="_blank">open</a>
+                    {% endif %}
+                {% endif %}
+            </td>
+            {% for fieldName,value in criteria %}
+            <td class="filtered" >{{  attribute(download, fieldName) }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>
 
 {% include 'linkvault/_partials/pagination' %}
 <div class="actions-container" >
-	<input type="submit" id="linkVaultDeleteSubmit" class="btn submit" value="Deleted Checked Records" >
+    <input type="submit" id="linkVaultDeleteSubmit" class="btn submit" value="Deleted Checked Records" >
 </div>
 
 </form> {# lvRecordsForm #}
@@ -197,16 +197,16 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 {% endblock %}
 
 {% block sidebar %}
-	{% set savedReports = craft.linkvault.reports.orderBy('title asc').all() %}
-	{% if savedReports|length %}
-	<h3>Run Saved Reports</h3>
-	<nav>
-		<ul>
-		{% for savedReport in savedReports %}
-			{% set isSelected = report and report.id == savedReport.id ? true : false %}
-			<li><a href="{{ savedReport.getUrl() }}" {% if isSelected %}class="sel"{% endif %} >{{ savedReport.title|e }}</a></li>
-		{% endfor %}
-		</ul>
-	</nav>
-	{% endif %}
+    {% set savedReports = craft.linkvault.reports.orderBy('title asc').all() %}
+    {% if savedReports|length %}
+    <h3>Run Saved Reports</h3>
+    <nav>
+        <ul>
+        {% for savedReport in savedReports %}
+            {% set isSelected = report and report.id == savedReport.id ? true : false %}
+            <li><a href="{{ savedReport.getUrl() }}" {% if isSelected %}class="sel"{% endif %} >{{ savedReport.title|e }}</a></li>
+        {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
 {% endblock %}

@@ -1,15 +1,15 @@
 <div class="lvPaginationContainer" >
-	<ul class="lvPagination">
-		<li><a href="{{ pageInfo.firstUrl }}" class="btn">&#171;</a></li>
-		{% if pageInfo.prevUrl %}<li><a href="{{ pageInfo.prevUrl }}" class="btn">&#60;</a></li>{% endif %}
-		{% for page, url in pageInfo.getPrevUrls(5) %}
-			<li><a href="{{ url }}" class="btn">{{ page }}</a></li>
-		{% endfor %}
-		<li><span class="current">{{ pageInfo.currentPage }}</span></li>
-		{% for page, url in pageInfo.getNextUrls(5) %}
-			<li><a href="{{ url }}" class="btn">{{ page }}</a></li>
-		{% endfor %}
-		{% if pageInfo.nextUrl %}<li><a href="{{ pageInfo.nextUrl }}" class="btn">&#62;</a></li>{% endif %}
-		<li><a href="{{ pageInfo.lastUrl }}" class="btn">&#187;</a></li>
-	</ul>
+    <ul class="lvPagination">
+        <li><a href="{{ pageInfo.firstUrl }}" class="btn">&#171;</a></li>
+        {% if pageInfo.prevUrl %}<li><a href="{{ pageInfo.prevUrl }}" class="btn">&#60;</a></li>{% endif %}
+        {% for page, url in pageInfo.getPrevUrls(5) %}
+            <li><a href="{{ url }}" class="btn">{{ page }}</a></li>
+        {% endfor %}
+        <li><span class="current">{{ pageInfo.currentPage }}</span></li>
+        {% for page, url in pageInfo.getNextUrls(5) %}
+            <li><a href="{{ url }}" class="btn">{{ page }}</a></li>
+        {% endfor %}
+        {% if pageInfo.nextUrl %}<li><a href="{{ pageInfo.nextUrl }}" class="btn">&#62;</a></li>{% endif %}
+        <li><a href="{{ pageInfo.lastUrl }}" class="btn">&#187;</a></li>
+    </ul>
 </div>

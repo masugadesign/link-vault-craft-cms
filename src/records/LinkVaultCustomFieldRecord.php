@@ -8,21 +8,21 @@ use yii\db\ActiveQueryInterface;
 
 class LinkVaultCustomFieldRecord extends ActiveRecord
 {
-	/**
-	 * @inheritdoc
-	 */
-	public static function tableName(): string
-	{
-		return '{{%linkvault_customfields}}';
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function tableName(): string
+    {
+        return '{{%linkvault_customfields}}';
+    }
 
-	/**
-	 * Returns the custom field record's element.
-	 * @return ActiveQueryInterface The relational query object.
-	 */
-	public function getElement(): ActiveQueryInterface
-	{
-		return $this->hasOne(Element::class, ['id' => 'id']);
-	}
+    /**
+     * Returns the custom field record's element.
+     * @return ActiveQueryInterface The relational query object.
+     */
+    public function getElement(): ActiveQueryInterface
+    {
+        return $this->hasOne(Element::class, ['id' => 'id']);
+    }
 
 }
