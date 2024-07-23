@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.0 -
+
+- Added support for Craft 5.
+
 ## 4.0.4 - 2023-05-16
 
 - Fixed element action permission issues arising from changes in Craft 4.3.
