@@ -1,11 +1,7 @@
 # Link Vault for Craft CMS
 
-> [!WARNING]
-> This is a discontinued commercial plugin and should not be installed without a previously purchased license.
-> For more information, see: https://www.gomasuga.com/blog/discontinuing-craft-plugin-sales
-
 ### Protect and track downloads on your site. Prevent and track leech attempts.
-This is a commercial plugin for Craft CMS 4.
+This is a commercial plugin for Craft CMS 5.
 
 ## Table of Contents
 
@@ -18,15 +14,15 @@ This is a commercial plugin for Craft CMS 4.
 
 ## Requirements
 
-* Craft CMS v4.0.0+
-* PHP 8.0.2+
+* Craft CMS v5.0.0+
+* PHP 8.2+
 
 ## Installation
 
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "4.0.4",
+"masugadesign/linkvault": "5.0.0",
 ```
 
 ## Settings
@@ -46,7 +42,7 @@ Link Vault has a number of config variables that can be overridden by creating a
 ```
 <?php
 
-return array(
+return [
     // Set to "true" for additional logging.
     'debug' => false,
     // The route URI to use when generating download URLs.
@@ -55,7 +51,7 @@ return array(
     'blockLeechAttempts' => true,
     // Set to "true" to log leech attempts.
     'logLeechAttempts' => true
-);
+];
 ```
 
 ## Template Variables
