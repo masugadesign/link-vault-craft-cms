@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.0 -
+## 5.0.0 - 2024-07-24
 
 - Added support for Craft 5.
 
