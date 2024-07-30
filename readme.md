@@ -22,7 +22,7 @@ This is a commercial plugin for Craft CMS 5.
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "5.0.0",
+"masugadesign/linkvault": "5.0.1",
 ```
 
 ## Settings
@@ -60,7 +60,7 @@ return [
 
 The download URL accepts two parameters:
 
-* file - This may either be an instance of an _Asset_ element or it may be a string path to a file on the server.
+* file - This may either be an instance of an _Asset_ element or it may be a system path (string) to a file on the server. It can exist anywhere as long as the path is accessible by the webserver.
 * additional parameters - This is an array of custom fields or other variables to be saved to the download record.
 
 **Examples**
