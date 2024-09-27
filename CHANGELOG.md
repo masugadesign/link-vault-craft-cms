@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.2 - 2024-09-27
+
+- Download URLs can now serve files inline.
+
 ## 5.0.1 - 2024-07-30
 
 - Replaced the icon.svg file with the updated design.
