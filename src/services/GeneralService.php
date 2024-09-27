@@ -318,6 +318,7 @@ class GeneralService extends Component
         $filePath     = $parameters['filePath'] ?? null;
         $assetId      = $parameters['assetId'] ?? null;
         $downloadAs   = $parameters['downloadAs'] ?? basename($filePath);
+        $inline       = $parameters['inline'] ?? false;
         $s3Bucket     = $parameters['s3Bucket'] ?? null;
         $googleBucket = $parameters['googleBucket'] ?? null;
         $isUrl        = isset($parameters['isUrl']) && $parameters['isUrl'] == 1 ? true : false;
@@ -329,13 +330,13 @@ class GeneralService extends Component
         } elseif ( $filePath && file_exists($filePath) ) {
             $this->logDownload($parameters);
             //$this->plugin->files->serveFile($filePath, $downloadAs);
-            $response = Craft::$app->getResponse()->sendFile($filePath, $downloadAs);
+            $response = Craft::$app->getResponse()->sendFile($filePath, $downloadAs, [ 'inline' => $inline ]);
         // An asset ID was supplied.
         } elseif ( $assetId ) {
             $this->logDownload($parameters);
             $file = Craft::$app->assets->getAssetById($assetId);
             $localPath = $file->getCopyOfFile();
-            $response = Craft::$app->getResponse()->sendFile($localPath, $downloadAs);
+            $response = Craft::$app->getResponse()->sendFile($localPath, $downloadAs, [ 'inline' => $inline ]);
         // Zip some files on-the-fly. (Link Vault Zipper)
         } elseif ( $files && $zipName ) {
             $archivePath = $this->plugin->archive->trackAndZipFiles($files, $zipName, $parameters);
