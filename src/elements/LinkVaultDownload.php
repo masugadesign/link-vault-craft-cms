@@ -264,17 +264,6 @@ class LinkVaultDownload extends Element
 	}
 
 	/**
-	 * Returns the HTML for an editor HUD for the given element.
-	 * @param BaseElementModel $element
-	 * @return string
-	 */
-	public function getEditorHtml(): string
-	{
-		$html .= parent::getEditorHtml();
-		return $html;
-	}
-
-	/**
 	 * @inheritDoc IElementType::getAvailableActions()
 	 * @param string|null $source
 	 * @return array|null
@@ -298,7 +287,7 @@ class LinkVaultDownload extends Element
 		} else {
 			$record = LinkVaultDownloadRecord::findOne($this->id);
 			if (!$record) {
-				throw new Exception('Invalid download ID: '.$this->id);
+				throw new \Exception('Invalid download ID: '.$this->id);
 			}
 		}
 		$record->assetId = $this->assetId;
