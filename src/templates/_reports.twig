@@ -179,7 +179,12 @@ window.csrfTokenValue = "{{ craft.app.request.getCsrfToken }}";
 				{% endif %}
 			</td>
 			{% for fieldName,value in criteria %}
-			<td class="filtered" >{{  attribute(download, fieldName) }}</td>
+				{% if attribute(download, fieldName) is instance of('DateTime') %}
+					{% set outputValue = attribute(download, fieldName)|date('Y-m-d H:i:s') %}
+				{% else %}
+					{% set outputValue = attribute(download, fieldName)|t %}
+				{% endif %}
+				<td class="filtered" >{{ outputValue|e }}</td>
 			{% endfor %}
 		</tr>
 	{% endfor %}
