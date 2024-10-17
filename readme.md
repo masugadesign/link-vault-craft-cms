@@ -22,7 +22,7 @@ This is a commercial plugin for Craft CMS 5.
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "5.0.2",
+"masugadesign/linkvault": "5.0.3",
 ```
 
 ## Settings

@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.3 - 2024-10-17
+
+- Fixed DateTime string rendering in the reports.
+
 ## 5.0.2 - 2024-09-27
 
 - Download URLs can now serve files inline.
