@@ -16,7 +16,7 @@ This is a commercial plugin for Craft CMS 4.
 
 ## Requirements
 
-* Craft CMS v4.0.0+
+* Craft CMS v4.12.0+
 * PHP 8.0.2+
 
 ## Installation
@@ -24,7 +24,7 @@ This is a commercial plugin for Craft CMS 4.
 Add the following to your composer.json requirements. Be sure to adjust the version number to match the version you wish to install.
 
 ```
-"masugadesign/linkvault": "4.0.4",
+"masugadesign/linkvault": "4.0.5",
 ```
 
 ## Settings
