@@ -278,7 +278,7 @@ class GeneralService extends Component
             $element->$fieldName = isset($recordData[$fieldName]) ? $recordData[$fieldName] : null;
         }
         // Attempt to save the element.
-        $saveStatus = Craft::$app->elements->saveElement($element);
+        $saveStatus = Craft::$app->elements->saveElement($element, updateSearchIndex: false);
         return $saveStatus;
     }
 

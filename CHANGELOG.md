@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.4 - 2026-08-25
+
+- Disabled search index updating upon saving the LinkVaultDownload element.
+
 ## 5.0.3 - 2024-10-17
 
 - Fixed DateTime string rendering in the reports.
@@ -15,6 +19,14 @@
 ## 5.0.0 - 2024-07-24
 
 - Added support for Craft 5.
+
+## 4.0.6 - 2026-08-21
+
+- Disabled search index updating upon saving the LinkVaultDownload element.
+
+## 4.0.5 - 2024-10-17
+
+- Fixed DateTime string rendering in the reports.
 
 ## 4.0.4 - 2023-05-16
 
